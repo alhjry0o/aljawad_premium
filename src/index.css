@@ -1,0 +1,184 @@
+@import "tailwindcss";
+
+/* ============================================================
+   Aljawad Design System — Theme Tokens
+   Light = brand-tinted (never plain white UI)
+   Dark  = near-black + deep green + rich navy
+   ============================================================ */
+
+:root,
+[data-theme="dark"] {
+  --bg: #030605;
+  --bg-deep: #000000;
+  --surface: #09110f;
+  --elevated: #0d1a17;
+  --panel: #0a1512;
+  --line: rgba(222, 247, 238, 0.09);
+  --line-strong: rgba(222, 247, 238, 0.18);
+  --text: #eaf4f0;
+  --muted: #8ea39c;
+  --faint: #5d706a;
+  --primary: #1fa36a;
+  --primary-soft: #0f3a2a;
+  --primary-ink: #04150f;
+  --navy: #0d1f3f;
+  --navy-soft: #101c33;
+  --accent: #3b82f6;
+  --glow: rgba(31, 163, 106, 0.35);
+  --sheen: rgba(255, 255, 255, 0.06);
+  --success: #2bb673;
+  --warning: #d4a13a;
+  --error: #e05a5a;
+  --overlay: rgba(0, 0, 0, 0.72);
+  --hero-ink: #ffffff;
+  color-scheme: dark;
+}
+
+[data-theme="light"] {
+  --bg: #e7efe9;
+  --bg-deep: #dce7df;
+  --surface: #dde8e1;
+  --elevated: #f2f7f3;
+  --panel: #ffffff;
+  --line: rgba(9, 40, 31, 0.12);
+  --line-strong: rgba(9, 40, 31, 0.22);
+  --text: #07211a;
+  --muted: #4c655c;
+  --faint: #7d938a;
+  --primary: #0e6b45;
+  --primary-soft: #cde3d6;
+  --primary-ink: #ffffff;
+  --navy: #102a4d;
+  --navy-soft: #dbe3ee;
+  --accent: #1d4ed8;
+  --glow: rgba(14, 107, 69, 0.22);
+  --sheen: rgba(255, 255, 255, 0.6);
+  --success: #0e7a4e;
+  --warning: #9a6d12;
+  --error: #b53b3b;
+  --overlay: rgba(4, 22, 17, 0.6);
+  --hero-ink: #ffffff;
+  color-scheme: light;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-bgdeep: var(--bg-deep);
+  --color-surface: var(--surface);
+  --color-elevated: var(--elevated);
+  --color-panel: var(--panel);
+  --color-line: var(--line);
+  --color-linestrong: var(--line-strong);
+  --color-ink: var(--text);
+  --color-muted: var(--muted);
+  --color-faint: var(--faint);
+  --color-primary: var(--primary);
+  --color-primarysoft: var(--primary-soft);
+  --color-primaryink: var(--primary-ink);
+  --color-navy: var(--navy);
+  --color-navysoft: var(--navy-soft);
+  --color-accent: var(--accent);
+  --color-danger: var(--error);
+  --color-warn: var(--warning);
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 22px;
+  --radius-xl: 32px;
+  --font-sans: "IBM Plex Sans Arabic", "Inter", system-ui, -apple-system, sans-serif;
+  --font-display: "IBM Plex Sans Arabic", "Inter", system-ui, sans-serif;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overscroll-behavior-y: none;
+}
+
+::selection {
+  background: var(--primary);
+  color: var(--primary-ink);
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  scrollbar-width: none;
+}
+
+.snap-x-mandatory {
+  scroll-snap-type: x mandatory;
+}
+.snap-center-item {
+  scroll-snap-align: center;
+}
+
+/* Brand grain / architectural linework */
+.jw-grid {
+  background-image: linear-gradient(var(--line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--line) 1px, transparent 1px);
+  background-size: 56px 56px;
+}
+
+.jw-hairline {
+  background: linear-gradient(90deg, transparent, var(--line-strong), transparent);
+}
+
+/* Reveal on scroll */
+.reveal {
+  opacity: 0;
+  transform: translateY(26px);
+  transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+.reveal.is-in {
+  opacity: 1;
+  transform: none;
+}
+
+[data-motion="reduced"] .reveal {
+  opacity: 1;
+  transform: none;
+  transition: none;
+}
+
+@keyframes jw-float {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50% { transform: translate3d(0, -8px, 0); }
+}
+@keyframes jw-sweep {
+  0% { transform: translateX(-120%) skewX(-18deg); }
+  100% { transform: translateX(220%) skewX(-18deg); }
+}
+@keyframes jw-pulse {
+  0%, 100% { opacity: 0.35; }
+  50% { opacity: 0.8; }
+}
+@keyframes jw-rise {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: none; }
+}
+
+.jw-float { animation: jw-float 7s ease-in-out infinite; }
+.jw-rise { animation: jw-rise 0.7s cubic-bezier(0.16, 1, 0.3, 1) both; }
+
+[data-motion="reduced"] .jw-float,
+[data-motion="reduced"] .jw-rise {
+  animation: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal { transition: none; opacity: 1; transform: none; }
+  .jw-float { animation: none; }
+}
