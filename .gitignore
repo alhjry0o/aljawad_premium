@@ -4,3 +4,6 @@ android/.gradle/
 android/app/build/
 android/build/
 .DS_Store
+release.keystore
+*.keystore
+*.jks
