@@ -26,6 +26,10 @@ import { cn } from './utils/cn';
 
 /* ----------------------------------------------------- Bottom navigation */
 
+const MAIN_TAB_ROUTES = ['home', 'services', 'requests', 'projects', 'more'] as const;
+const isMainTabRoute = (name: string) =>
+  (MAIN_TAB_ROUTES as readonly string[]).includes(name);
+
 const TABS: { key: TabKey; icon: GlyphName; labelKey: Parameters<ReturnType<typeof useI18n>['t']>[0] }[] = [
   { key: 'home', icon: 'home', labelKey: 'nav.home' },
   { key: 'services', icon: 'grid', labelKey: 'nav.services' },
@@ -35,8 +39,11 @@ const TABS: { key: TabKey; icon: GlyphName; labelKey: Parameters<ReturnType<type
 ];
 
 function BottomNav() {
-  const { tab, goTab } = useNav();
+  const { tab, goTab, route } = useNav();
   const { t, dir } = useI18n();
+
+  if (!isMainTabRoute(route.name)) return null;
+
   const index = TABS.findIndex((item) => item.key === tab);
 
   return (
@@ -161,8 +168,12 @@ function Outlet() {
     <main
      ref={ref}
      key={key}
-     className={cn('min-h-[100svh] pb-28', !isHome && 'pt-[env(safe-area-inset-top)]')}
-    >
+     className={cn(
+       'min-h-[100svh]',
+       !isHome && 'pt-[env(safe-area-inset-top)]',
+       isMainTabRoute(route.name) ? 'pb-28' : 'pb-8',
+     )}
+   >
       {screen}
     </main>
   );
