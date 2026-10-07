@@ -116,6 +116,7 @@ function Outlet() {
   }, [route]);
 
   const key = JSON.stringify(route);
+  const isHome = route.name === 'home';
 
   const screen = (() => {
     switch (route.name) {
@@ -157,7 +158,11 @@ function Outlet() {
   })();
 
   return (
-    <main ref={ref} key={key} className="min-h-[100svh] pb-28">
+    <main
+     ref={ref}
+     key={key}
+     className={cn('min-h-[100svh] pb-28', !isHome && 'pt-[env(safe-area-inset-top)]')}
+    >
       {screen}
     </main>
   );
