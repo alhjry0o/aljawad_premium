@@ -117,9 +117,9 @@ function Outlet() {
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    el.classList.remove('jw-rise');
+    el.classList.remove('jw-fade-in');
     void el.offsetWidth;
-    el.classList.add('jw-rise');
+    el.classList.add('jw-fade-in');
   }, [route]);
 
   const key = JSON.stringify(route);
