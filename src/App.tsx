@@ -1,9 +1,12 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { Capacitor } from '@capacitor/core';
+import { App as CapacitorApp } from '@capacitor/app';
 import { I18nProvider, useI18n } from './core/i18n';
 import { ThemeProvider } from './core/theme';
 import { NavigationProvider, useNav, type TabKey } from './core/navigation';
 import { RequestsProvider } from './core/store';
 import { Glyph, type GlyphName } from './components/icons';
+import { Toast } from './components/kit';
 import { HomeScreen } from './features/home/HomeScreen';
 import { ServicesScreen } from './features/services/ServicesScreen';
 import { ServiceDetailScreen } from './features/services/ServiceDetailScreen';
@@ -108,6 +111,66 @@ function BottomNav() {
   );
 }
 
+/* ----------------------------------------------------- Android back button */
+
+function useAndroidBackButton() {
+  const { route, canGoBack, back, goTab } = useNav();
+  const [toast, setToast] = useState<string | null>(null);
+  const lastPressRef = useRef(0);
+  const stateRef = useRef({ route, canGoBack, back, goTab });
+
+  useEffect(() => {
+    stateRef.current = { route, canGoBack, back, goTab };
+  }, [route, canGoBack, back, goTab]);
+
+  useEffect(() => {
+    if (!Capacitor.isNativePlatform()) return;
+
+    let handle: { remove: () => void } | undefined;
+    let cancelled = false;
+
+    CapacitorApp.addListener('backButton', () => {
+      const s = stateRef.current;
+      const isMain = isMainTabRoute(s.route.name);
+      const isHome = s.route.name === 'home';
+
+      // 1. في شاشة فرعية ← ارجع للخلف
+      if (s.canGoBack) {
+        s.back();
+        return;
+      }
+
+      // 2. في تبويب غير الرئيسية ← اذهب للرئيسية
+      if (isMain && !isHome) {
+        s.goTab('home');
+        return;
+      }
+
+      // 3. في الرئيسية ← ضغطتان للخروج
+      if (isHome) {
+        const now = Date.now();
+        if (now - lastPressRef.current < 2000) {
+          CapacitorApp.exitApp();
+        } else {
+          lastPressRef.current = now;
+          setToast('اضغط مرة أخرى للخروج');
+          window.setTimeout(() => setToast(null), 2000);
+        }
+      }
+    }).then((h) => {
+      if (cancelled) h.remove();
+      else handle = h;
+    });
+
+    return () => {
+      cancelled = true;
+      handle?.remove();
+    };
+  }, []);
+
+  return toast;
+}
+
 /* ----------------------------------------------------- Router outlet */
 
 function Outlet() {
@@ -180,10 +243,12 @@ function Outlet() {
 }
 
 function Shell() {
+  const backToast = useAndroidBackButton();
   return (
     <div className="mx-auto min-h-[100svh] w-full max-w-[520px] bg-[color:var(--bg)] text-[color:var(--text)] shadow-[0_0_120px_rgba(0,0,0,0.45)]">
       <Outlet />
       <BottomNav />
+      {backToast && <Toast message={backToast} />}
     </div>
   );
 }
