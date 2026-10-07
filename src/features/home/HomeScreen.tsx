@@ -194,7 +194,7 @@ function QuickActions() {
     { icon: 'whatsapp' as const, label: t('quick.whatsapp'), run: () => externalActions.whatsapp(appConfig.contact.whatsapp) },
   ];
   return (
-    <div className="-mt-7 px-5">
+    <div className="relative z-10 -mt-10 px-5 pb-2">
       <div className="grid grid-cols-4 gap-2 rounded-[var(--radius-md)] border border-[color:var(--line)] bg-[color:var(--elevated)] p-2 shadow-[0_24px_60px_-34px_rgba(0,0,0,0.9)]">
         {items.map((item) => (
           <button
