@@ -66,39 +66,28 @@ export const appConfig: AppConfiguration = {
  * (see README → Asset Guide) without touching any component.
  */
 export const appAssets = {
-  hero: 'https://images.pexels.com/photos/39470846/pexels-photo-39470846.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=900&w=1400',
-  aboutVisual:
-    'https://images.pexels.com/photos/38096888/pexels-photo-38096888.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=800&w=1200',
-  contactVisual:
-    'https://images.pexels.com/photos/39470842/pexels-photo-39470842.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=800&w=1200',
+  hero: '/images/hero/home_hero.jpg',
+  aboutVisual: '/images/about/about_visual.jpg',
+  contactVisual: '/images/contact/contact_visual.jpg',
   services: {
-    cleaning:
-      'https://images.pexels.com/photos/5707706/pexels-photo-5707706.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=800&w=1200',
-    facade:
-      'https://images.pexels.com/photos/12040693/pexels-photo-12040693.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=800&w=1200',
-    industrial:
-      'https://images.pexels.com/photos/36090543/pexels-photo-36090543.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=800&w=1200',
-    pools:
-      'https://images.pexels.com/photos/7974836/pexels-photo-7974836.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=800&w=1200',
-    pest: 'https://images.pexels.com/photos/5953827/pexels-photo-5953827.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=800&w=1200',
-    insulation:
-      'https://images.pexels.com/photos/25288042/pexels-photo-25288042.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=800&w=1200',
-    mep: 'https://images.pexels.com/photos/14614266/pexels-photo-14614266.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=800&w=1200',
-    manpower:
-      'https://images.pexels.com/photos/12919779/pexels-photo-12919779.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=800&w=1200',
-    facilities:
-      'https://images.pexels.com/photos/26729563/pexels-photo-26729563.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=800&w=1200',
-    equipment:
-      'https://images.pexels.com/photos/14204601/pexels-photo-14204601.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=800&w=1200',
-    construction:
-      'https://images.pexels.com/photos/5505131/pexels-photo-5505131.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=800&w=1200',
+    cleaning: '/images/services/service_1.jpg',
+    facade: '/images/services/service_2.jpg',
+    industrial: '/images/services/service_3.jpg',
+    pools: '/images/services/service_4.jpg',
+    pest: '/images/services/service_5.jpg',
+    insulation: '/images/services/service_6.jpg',
+    mep: '/images/services/service_7.jpg',
+    manpower: '/images/services/service_8.jpg',
+    facilities: '/images/services/service_9.jpg',
+    equipment: '/images/services/service_10.jpg',
+    construction: '/images/services/service_11.jpg',
   },
   projects: {
-    p01: 'https://images.pexels.com/photos/31849530/pexels-photo-31849530.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=900&w=1300',
-    p02: 'https://images.pexels.com/photos/14011664/pexels-photo-14011664.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=900&w=1300',
-    p03: 'https://images.pexels.com/photos/30617023/pexels-photo-30617023.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=900&w=1300',
-    p04: 'https://images.pexels.com/photos/34153042/pexels-photo-34153042.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=900&w=1300',
-    p05: 'https://images.pexels.com/photos/6957079/pexels-photo-6957079.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=900&w=1300',
-    p06: 'https://images.pexels.com/photos/9108224/pexels-photo-9108224.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=900&w=1300',
+    p01: '/images/projects/project_1.jpg',
+    p02: '/images/projects/project_2.jpg',
+    p03: '/images/projects/project_3.jpg',
+    p04: '/images/projects/project_4.jpg',
+    p05: '/images/projects/project_5.jpg',
+    p06: '/images/projects/project_6.jpg',
   },
 } as const;
