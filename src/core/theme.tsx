@@ -1,4 +1,6 @@
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
+import { Capacitor } from '@capacitor/core';
+import { StatusBar, Style } from '@capacitor/status-bar';
 
 export type ThemeMode = 'system' | 'light' | 'dark';
 export type ResolvedTheme = 'light' | 'dark';
@@ -17,6 +19,12 @@ const MOTION_KEY = 'aljawad.motion';
 
 const systemTheme = (): ResolvedTheme =>
   typeof matchMedia !== 'undefined' && matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+
+// ألوان شريط الحالة (تطابق متغيرات --bg في index.css)
+const STATUS_BAR_COLORS = {
+  dark: '#030605',
+  light: '#c8dcd6',
+};
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
   const [mode, setModeState] = useState<ThemeMode>(() => {
@@ -38,6 +46,18 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
     localStorage.setItem(MODE_KEY, mode);
+
+    // تحديث شريط الحالة وأزرار التنقل في تطبيق أندرويد
+    if (Capacitor.isNativePlatform()) {
+      const isDark = theme === 'dark';
+      const bgColor = isDark ? STATUS_BAR_COLORS.dark : STATUS_BAR_COLORS.light;
+
+      StatusBar.setStyle({ style: isDark ? Style.Dark : Style.Light }).catch(() => {});
+
+      // setBackgroundColor مدعوم على Android 14 وما دون
+      // على Android 15+ الشريط شفاف تلقائيًا، لكن نبقيه للتوافق
+      StatusBar.setBackgroundColor({ color: bgColor }).catch(() => {});
+    }
   }, [theme, mode]);
 
   useEffect(() => {
