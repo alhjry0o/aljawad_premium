@@ -117,7 +117,7 @@ function Hero() {
       <div className="jw-grid absolute inset-0 opacity-[0.07]" />
 
       <div
-        className="relative flex min-h-[94svh] flex-col justify-between px-5 pb-10 pt-[calc(env(safe-area-inset-top)+1.5rem)]"
+        className="relative flex min-h-[94svh] flex-col px-5 pb-10 pt-[calc(env(safe-area-inset-top)+1.5rem)]"
         style={{ opacity: reducedMotion ? 1 : Math.max(0.25, 1 - p / 620) }}
       >
         <div className="flex items-center justify-between">
@@ -135,7 +135,7 @@ function Hero() {
           </span>
         </div>
 
-        <div className="mt-16">
+        <div className="mt-auto pt-16">
           <div className="jw-rise mb-5 flex items-center gap-3 text-[0.66rem] uppercase tracking-[0.28em] text-[#5fe0a5]">
             <span className="h-px w-8 bg-[#5fe0a5]/50" />
             {t('hero.eyebrow')}
