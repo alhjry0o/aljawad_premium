@@ -198,7 +198,7 @@ export function ScreenHeader({
   const { back, canGoBack } = useNav();
   const { t } = useI18n();
   return (
-    <header className="sticky top-0 z-30 border-b border-[color:var(--line)] bg-[color:var(--bg)]/85 px-5 py-3.5 backdrop-blur-xl">
+    <header className="sticky top-[env(safe-area-inset-top)] z-30 border-b border-[color:var(--line)] bg-[color:var(--bg)]/85 px-5 py-3.5 backdrop-blur-xl">
       <div className="flex items-center gap-3">
         {canGoBack && (
           <button
