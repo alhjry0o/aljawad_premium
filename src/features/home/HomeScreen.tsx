@@ -117,7 +117,7 @@ function Hero() {
       <div className="jw-grid absolute inset-0 opacity-[0.07]" />
 
       <div
-        className="relative flex min-h-[94svh] flex-col px-5 pb-10 pt-[calc(env(safe-area-inset-top)+1.5rem)]"
+        className="relative flex min-h-[94svh] flex-col px-5 pb-32 pt-[calc(env(safe-area-inset-top)+1.5rem)]"
         style={{ opacity: reducedMotion ? 1 : Math.max(0.25, 1 - p / 620) }}
       >
         <div className="flex items-center justify-between">
