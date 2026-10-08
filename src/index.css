@@ -196,3 +196,13 @@ body {
 [data-motion="reduced"] .jw-fade-in {
   animation: none;
 }
+
+/* ====================================================
+   تثبيت أزرار الرجوع العائمة في جميع الشاشات الفرعية
+   تُلغي absolute وتستخدم fixed بدلًا عنه
+   ==================================================== */
+button[class*="safe-area-inset-top"] {
+  position: fixed !important;
+  top: calc(env(safe-area-inset-top) + 1rem) !important;
+  z-index: 40 !important;
+}
