@@ -49,15 +49,13 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 
     // تحديث شريط الحالة وأزرار التنقل في تطبيق أندرويد
     if (Capacitor.isNativePlatform()) {
-      const isDark = theme === 'dark';
-      const bgColor = isDark ? STATUS_BAR_COLORS.dark : STATUS_BAR_COLORS.light;
+      const bgColor = theme === 'dark' ? STATUS_BAR_COLORS.dark : STATUS_BAR_COLORS.light;
 
-      StatusBar.setStyle({ style: isDark ? Style.Dark : Style.Light }).catch(() => {});
+      // كل الثيمات عندنا داكنة → الأيقونات يجب أن تكون فاتحة دائمًا
+      StatusBar.setStyle({ style: Style.Light }).catch(() => {});
 
-      // setBackgroundColor مدعوم على Android 14 وما دون
-      // على Android 15+ الشريط شفاف تلقائيًا، لكن نبقيه للتوافق
       StatusBar.setBackgroundColor({ color: bgColor }).catch(() => {});
-    }
+     }
   }, [theme, mode]);
 
   useEffect(() => {
