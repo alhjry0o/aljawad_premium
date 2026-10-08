@@ -246,6 +246,13 @@ function Shell() {
   const backToast = useAndroidBackButton();
   return (
     <div className="mx-auto min-h-[100svh] w-full max-w-[520px] bg-[color:var(--bg)] text-[color:var(--text)] shadow-[0_0_120px_rgba(0,0,0,0.45)]">
+      {/* طبقة تغطية منطقة شريط الإشعارات — تطبَّق على كل الشاشات */}
+      <div
+        aria-hidden
+        className="pointer-events-none fixed inset-x-0 top-0 z-20 mx-auto w-full max-w-[520px] bg-[color:var(--bg)]"
+        style={{ height: 'env(safe-area-inset-top)' }}
+      />
+
       <Outlet />
       <BottomNav />
       {backToast && <Toast message={backToast} />}
