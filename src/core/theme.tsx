@@ -51,9 +51,11 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     if (Capacitor.isNativePlatform()) {
       const bgColor = theme === 'dark' ? STATUS_BAR_COLORS.dark : STATUS_BAR_COLORS.light;
 
-      // كل الثيمات عندنا داكنة → الأيقونات يجب أن تكون فاتحة دائمًا
-      StatusBar.setStyle({ style: Style.Light }).catch(() => {});
-
+      
+      // كل الثيمات عندنا داكنة → أيقونات بيضاء دائمًا
+      // ملاحظة: Style.Dark في Capacitor = أيقونات بيضاء (لخلفيات داكنة)
+      StatusBar.setStyle({ style: Style.Dark }).catch(() => {});
+      
       StatusBar.setBackgroundColor({ color: bgColor }).catch(() => {});
      }
   }, [theme, mode]);
