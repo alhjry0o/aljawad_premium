@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { appAssets, appConfig } from '../../data/company';
 import { searchServices, services } from '../../data/services';
-import { projects } from '../../data/projects';
+import { useProjects } from '../../core/projectsStore';
 import { useI18n } from '../../core/i18n';
 import { useNav } from '../../core/navigation';
 import { useTheme } from '../../core/theme';
@@ -276,6 +276,7 @@ function WhyAljawad() {
 function FeaturedProjects() {
   const { t, bi } = useI18n();
   const { push } = useNav();
+  const { projects } = useProjects();
   const featured = projects.filter((p) => p.featured);
   const [lead, ...rest] = featured;
 
