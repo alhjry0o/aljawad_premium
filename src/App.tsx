@@ -5,6 +5,7 @@ import { I18nProvider, useI18n } from './core/i18n';
 import { ThemeProvider } from './core/theme';
 import { NavigationProvider, useNav, type TabKey } from './core/navigation';
 import { RequestsProvider } from './core/store';
+import { ProjectsProvider } from './core/projectsStore';   // ← أضف هذا
 import { Glyph, type GlyphName } from './components/icons';
 import { Toast } from './components/kit';
 import { HomeScreen } from './features/home/HomeScreen';
@@ -265,9 +266,11 @@ export default function App() {
     <ThemeProvider>
       <I18nProvider>
         <RequestsProvider>
-          <NavigationProvider>
-            <Shell />
-          </NavigationProvider>
+          <ProjectsProvider>
+            <NavigationProvider>
+              <Shell />
+            </NavigationProvider>
+          </ProjectsProvider>
         </RequestsProvider>
       </I18nProvider>
     </ThemeProvider>
