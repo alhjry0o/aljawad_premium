@@ -1,0 +1,123 @@
+{
+  "version": 1,
+  "updatedAt": "2026-10-11",
+  "projects": [
+    {
+      "id": "project-01",
+      "demo": true,
+      "code": "DEMO · 01",
+      "title": { "ar": "برج مكاتب — تنظيف واجهات", "en": "Office Tower — Facade Cleaning" },
+      "serviceId": "facade",
+      "year": "—",
+      "scope": {
+        "ar": ["تنظيف واجهات زجاجية", "معدات رفع", "عمل على الارتفاعات", "جدولة ليلية"],
+        "en": ["Glass facade cleaning", "Lifting equipment", "Work at height", "Night scheduling"]
+      },
+      "summary": { "ar": "نموذج توضيحي لمشروع تنظيف واجهات برج مكاتب متعدد الأدوار.", "en": "Illustrative example of a multi-storey office tower facade cleaning project." },
+      "context": { "ar": "يوضح هذا النموذج كيفية عرض مشاريع تنظيف الواجهات داخل التطبيق.", "en": "This placeholder demonstrates how facade projects are presented inside the app." },
+      "cover": "https://cdn.jsdelivr.net/gh/alhjrY0o/aljawad_premium@main/public/images/projects/project_1.jpg",
+      "gallery": [
+        "https://cdn.jsdelivr.net/gh/alhjrY0o/aljawad_premium@main/public/images/projects/project_4.jpg",
+        "https://cdn.jsdelivr.net/gh/alhjrY0o/aljawad_premium@main/public/images/projects/project_6.jpg"
+      ],
+      "featured": true
+    },
+    {
+      "id": "project-02",
+      "demo": true,
+      "code": "DEMO · 02",
+      "title": { "ar": "منشأة ضيافة — تشغيل وصيانة", "en": "Hospitality Facility — O&M" },
+      "serviceId": "facilities",
+      "year": "—",
+      "scope": {
+        "ar": ["فرق تشغيل", "صيانة وقائية", "نظافة يومية", "تقارير دورية"],
+        "en": ["Operating teams", "Preventive maintenance", "Daily cleaning", "Periodic reporting"]
+      },
+      "summary": { "ar": "نموذج توضيحي لعقد تشغيل وصيانة متكامل لمنشأة ضيافة.", "en": "Illustrative example of an integrated O&M contract." },
+      "context": { "ar": "يعرض هذا النموذج بنية عقد التشغيل والصيانة.", "en": "This placeholder shows the structure of an O&M engagement." },
+      "cover": "https://cdn.jsdelivr.net/gh/alhjrY0o/aljawad_premium@main/public/images/projects/project_2.jpg",
+      "gallery": [
+        "https://cdn.jsdelivr.net/gh/alhjrY0o/aljawad_premium@main/public/images/projects/project_5.jpg",
+        "https://cdn.jsdelivr.net/gh/alhjrY0o/aljawad_premium@main/public/images/projects/project_1.jpg"
+      ],
+      "featured": true
+    },
+    {
+      "id": "project-03",
+      "demo": true,
+      "code": "DEMO · 03",
+      "title": { "ar": "مشروع إنشائي — تشطيبات وعزل", "en": "Construction Project — Finishing & Insulation" },
+      "serviceId": "construction",
+      "year": "—",
+      "scope": {
+        "ar": ["أعمال إنشائية", "تشطيبات", "عزل مائي", "تنظيف ما بعد الإنشاء"],
+        "en": ["Construction works", "Finishing", "Waterproofing", "Post-construction cleaning"]
+      },
+      "summary": { "ar": "نموذج توضيحي لمشروع إنشائي.", "en": "Illustrative construction project." },
+      "context": { "ar": "يوضح النموذج تسلسل الأعمال من الهيكل إلى التسليم.", "en": "Demonstrates the sequence from structure to handover." },
+      "cover": "https://cdn.jsdelivr.net/gh/alhjrY0o/aljawad_premium@main/public/images/projects/project_3.jpg",
+      "gallery": [
+        "https://cdn.jsdelivr.net/gh/alhjrY0o/aljawad_premium@main/public/images/projects/project_6.jpg",
+        "https://cdn.jsdelivr.net/gh/alhjrY0o/aljawad_premium@main/public/images/projects/project_2.jpg"
+      ],
+      "featured": true
+    },
+    {
+      "id": "project-04",
+      "demo": true,
+      "code": "DEMO · 04",
+      "title": { "ar": "مجمع صناعي — تنظيف أرضيات", "en": "Industrial Complex — Floor Cleaning" },
+      "serviceId": "industrial",
+      "year": "—",
+      "scope": {
+        "ar": ["جلي وتلميع", "إزالة الزيوت", "العلامات الأرضية", "برنامج دوري"],
+        "en": ["Grinding and polishing", "Oil removal", "Floor markings", "Periodic program"]
+      },
+      "summary": { "ar": "نموذج توضيحي لبرنامج تنظيف دوري.", "en": "Illustrative periodic cleaning program." },
+      "context": { "ar": "نموذج لعرض برامج التنظيف الصناعي الدورية.", "en": "A placeholder for periodic industrial cleaning programs." },
+      "cover": "https://cdn.jsdelivr.net/gh/alhjrY0o/aljawad_premium@main/public/images/projects/project_4.jpg",
+      "gallery": [
+        "https://cdn.jsdelivr.net/gh/alhjrY0o/aljawad_premium@main/public/images/projects/project_3.jpg"
+      ],
+      "featured": false
+    },
+    {
+      "id": "project-05",
+      "demo": true,
+      "code": "DEMO · 05",
+      "title": { "ar": "فيلا خاصة — نظافة ومسابح", "en": "Private Villa — Cleaning & Pool" },
+      "serviceId": "pools",
+      "year": "—",
+      "scope": {
+        "ar": ["تنظيف عميق", "تنظيف المسبح", "المفروشات", "جدولة شهرية"],
+        "en": ["Deep cleaning", "Pool cleaning", "Upholstery", "Monthly scheduling"]
+      },
+      "summary": { "ar": "نموذج توضيحي لخدمة دورية لفيلا خاصة.", "en": "Illustrative periodic service for a private villa." },
+      "context": { "ar": "نموذج لعرض الخدمات السكنية الدورية.", "en": "Placeholder for periodic residential services." },
+      "cover": "https://cdn.jsdelivr.net/gh/alhjrY0o/aljawad_premium@main/public/images/projects/project_5.jpg",
+      "gallery": [
+        "https://cdn.jsdelivr.net/gh/alhjrY0o/aljawad_premium@main/public/images/projects/project_2.jpg"
+      ],
+      "featured": false
+    },
+    {
+      "id": "project-06",
+      "demo": true,
+      "code": "DEMO · 06",
+      "title": { "ar": "مبنى مرتفع — عزل وصيانة", "en": "High-rise — Insulation & Maintenance" },
+      "serviceId": "insulation",
+      "year": "—",
+      "scope": {
+        "ar": ["عزل مائي", "عزل حراري", "عزل خزانات", "صيانة"],
+        "en": ["Waterproofing", "Thermal insulation", "Tank insulation", "Maintenance"]
+      },
+      "summary": { "ar": "نموذج توضيحي لأعمال عزل وصيانة.", "en": "Illustrative insulation and maintenance works." },
+      "context": { "ar": "نموذج لعرض أعمال العزل.", "en": "Placeholder for insulation works." },
+      "cover": "https://cdn.jsdelivr.net/gh/alhjrY0o/aljawad_premium@main/public/images/projects/project_6.jpg",
+      "gallery": [
+        "https://cdn.jsdelivr.net/gh/alhjrY0o/aljawad_premium@main/public/images/projects/project_1.jpg"
+      ],
+      "featured": false
+    }
+  ]
+}
