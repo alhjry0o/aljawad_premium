@@ -81,7 +81,7 @@ export function ProjectsScreen() {
 }
 
 export function ProjectDetailScreen({ id }: { id: string }) {
-  const project = getProject(id);
+  const project = useProject(id);
   const { t, bi, list } = useI18n();
   const { push, back } = useNav();
   const { reducedMotion } = useTheme();
