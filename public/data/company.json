@@ -1,0 +1,30 @@
+{
+  "version": 1,
+  "updatedAt": "2026-10-11",
+  "config": {
+    "appName": { "ar": "الجواد", "en": "Aljawad" },
+    "companyName": {
+      "ar": "شركة الجواد الدولية العربية",
+      "en": "Aljawad International Arabia Company"
+    },
+    "version": "1.0.0 (Demo)",
+    "projectsCount": 1450,
+    "contact": {
+      "phone": "920013406",
+      "mobile1": "0535091378",
+      "mobile2": "0561116199",
+      "whatsapp": "05542471982",
+      "email": "info@aljawadservices.com",
+      "website": "aljawadservices.com",
+      "address": {
+        "ar": "الرياض، العليا، أمام الرياض جاليري",
+        "en": "Riyadh, Al Olaya, opposite Riyadh Gallery"
+      },
+      "mapsQuery": "Al Olaya, Riyadh, Saudi Arabia"
+    },
+    "developer": {
+      "name": { "ar": "عبدالله الحجري", "en": "Abdullah AL-Hjry" },
+      "phone": "+967779966185"
+    }
+  }
+}
