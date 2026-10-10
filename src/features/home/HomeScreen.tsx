@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
-import { appAssets, appConfig } from '../../data/company';
+import { appAssets } from '../../data/company';
+import { useCompany } from '../../core/companyStore';
 import { searchServices, services } from '../../data/services';
 import { useProjects } from '../../core/projectsStore';
 import { useI18n } from '../../core/i18n';
@@ -88,6 +89,7 @@ function HeroSearch() {
 function Hero() {
   const { t, bi } = useI18n();
   const { push } = useNav();
+  const { config: appConfig } = useCompany();
   const { reducedMotion } = useTheme();
   const y = useScrollY();
   const p = reducedMotion ? 0 : Math.min(y, 520);
@@ -187,6 +189,7 @@ function Hero() {
 function QuickActions() {
   const { t } = useI18n();
   const { push } = useNav();
+  const { config: appConfig } = useCompany();
   const items = [
     { icon: 'receipt' as const, label: t('quick.request'), run: () => push({ name: 'flow', kind: 'service' }) },
     { icon: 'quote' as const, label: t('quick.quote'), run: () => push({ name: 'flow', kind: 'quote' }) },
@@ -234,6 +237,7 @@ function BrandStatement() {
 
 function WhyAljawad() {
   const { t, lang } = useI18n();
+  const { config: appConfig } = useCompany();
   const points = [
     { n: '01', title: t('why.1.title'), body: t('why.1.body'), icon: 'manpower' as const },
     { n: '02', title: t('why.2.title'), body: t('why.2.body'), icon: 'layers' as const },
@@ -403,6 +407,7 @@ function ClosingCTA() {
 export function BrandFooter() {
   const { t, bi } = useI18n();
   const { push } = useNav();
+  const { config: appConfig } = useCompany();
   const c = appConfig.contact;
   return (
     <footer className="border-t border-[color:var(--line)] bg-[color:var(--bgdeep)] px-5 pb-10 pt-12">
