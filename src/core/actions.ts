@@ -1,5 +1,3 @@
-import { appConfig } from '../data/company';
-
 const open = (url: string): boolean => {
   try {
     const win = window.open(url, '_blank', 'noopener,noreferrer');
@@ -32,7 +30,7 @@ export const externalActions = {
     open(`mailto:${address}${subject ? `?subject=${encodeURIComponent(subject)}` : ''}`),
   maps: (query: string) =>
     open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`),
-  website: () => open(`https://${appConfig.contact.website}`),
+  website: (url: string) => open(`https://${url}`),
   copy: async (value: string): Promise<boolean> => {
     try {
       await navigator.clipboard.writeText(value);
