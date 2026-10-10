@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { getProject, projects } from '../../data/projects';
+import { useProject, useProjects } from '../../core/projectsStore';
 import { getService, services } from '../../data/services';
 import { useI18n } from '../../core/i18n';
 import { useNav } from '../../core/navigation';
@@ -11,13 +11,14 @@ export function ProjectsScreen() {
   const { t, bi } = useI18n();
   const { push } = useNav();
   const [filter, setFilter] = useState<string>('all');
+  const { projects } = useProjects();
 
   const usedServices = useMemo(
     () => services.filter((s) => projects.some((p) => p.serviceId === s.id)),
-    [],
+    [projects],
   );
   const visible = filter === 'all' ? projects : projects.filter((p) => p.serviceId === filter);
-
+  
   return (
     <div className="pb-10">
       <ScreenHeader
