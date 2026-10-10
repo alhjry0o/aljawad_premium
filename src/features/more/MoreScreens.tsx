@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { appAssets, appConfig } from '../../data/company';
+import { appAssets } from '../../data/company';
+import { useCompany } from '../../core/companyStore';
 import { services } from '../../data/services';
 import { useI18n } from '../../core/i18n';
 import { useNav, type Route } from '../../core/navigation';
@@ -51,6 +52,7 @@ export function MoreScreen() {
   const { t, bi } = useI18n();
   const { push } = useNav();
   const { theme } = useTheme();
+  const { config: appConfig } = useCompany();
 
   const go = (route: Route) => () => push(route);
 
@@ -77,7 +79,7 @@ export function MoreScreen() {
       <Section title={t('more.company')}>
         <HubRow icon="layers" label={t('about.title')} onClick={go({ name: 'about' })} />
         <HubRow icon="phone" label={t('contact.title')} onClick={go({ name: 'contact' })} />
-        <HubRow icon="globe" label={t('more.website')} onClick={() => externalActions.website()} />
+        <HubRow icon="globe" label={t('more.website')} onClick={() => externalActions.website(appConfig.contact.website)} />
       </Section>
 
       <Section title={t('more.app')}>
@@ -115,6 +117,7 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 
 export function AboutScreen() {
   const { t, bi } = useI18n();
+  const { config: appConfig } = useCompany();
   return (
     <div className="pb-10">
       <ScreenHeader title={t('about.title')} />
@@ -159,6 +162,7 @@ export function AboutScreen() {
 
 export function ContactScreen() {
   const { t, bi } = useI18n();
+  const { config: appConfig } = useCompany();
   const c = appConfig.contact;
   const [toast, setToast] = useState<string | null>(null);
   const [message, setMessage] = useState('');
@@ -284,6 +288,7 @@ export function SettingsScreen() {
   const { t, lang, setLang } = useI18n();
   const { mode, setMode, reducedMotion, setReducedMotion } = useTheme();
   const { clear } = useRequests();
+  const { config: appConfig } = useCompany();
   const [toast, setToast] = useState<string | null>(null);
 
   const modes: { value: ThemeMode; label: string; icon: GlyphName }[] = [
@@ -417,6 +422,7 @@ export function LegalScreen({ kind }: { kind: 'privacy' | 'terms' }) {
 
 export function DeveloperScreen() {
   const { t, bi } = useI18n();
+  const { config: appConfig } = useCompany();
   const dev = appConfig.developer;
   return (
     <div className="pb-14">
