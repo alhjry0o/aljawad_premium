@@ -141,6 +141,29 @@
       "cover": "https://cdn.jsdelivr.net/gh/alhjrY0o/aljawad_premium@main/public/images/projects/project_7.jpg",
       "gallery": [],
       "featured": true
+    },
+    {
+      "id": "project-08",
+      "demo": false,
+      "code": "PROJECT · 08",
+      "title": { "ar": "مشروع تنظيف واجهات", "en": "Facade Cleaning Project" },
+      "serviceId": "facade",
+      "year": "—",
+      "scope": {
+        "ar": ["إزالة الأتربة والأوساخ", "استعادة لمعان الواجهة", "معدات حديثة", "معايير سلامة عالية"],
+        "en": ["Dust & dirt removal", "Restoring facade shine", "Modern equipment", "High safety standards"]
+      },
+      "summary": {
+        "ar": "تنفيذ مشروع تنظيف واجهات زجاجية وحجرية لأحد العملاء في مدينة الرياض باستخدام أحدث المعدات.",
+        "en": "Execution of glass and stone facade cleaning for a client in Riyadh using the latest equipment."
+      },
+      "context": {
+        "ar": "قامت شركة الجواد الدولية العربية بتنفيذ مشروع تنظيف واجهات لأحد عملائها في مدينة الرياض، باستخدام أحدث المعدات ومواد التنظيف المخصصة للواجهات الزجاجية والحجرية. تضمنت الأعمال إزالة الأتربة والأوساخ المتراكمة، واستعادة اللمعان والجمالية للواجهة، مع التنفيذ بأعلى معايير السلامة والجودة. خدمات تنظيف الواجهات تعكس المظهر الحضاري للمباني وتمنحها رونقاً مميزاً يدوم طويلاً.",
+        "en": "Aljawad International Arabia Company executed a facade cleaning project for a client in Riyadh, using the latest equipment and cleaning materials specialized for glass and stone facades. The works included removing accumulated dust and dirt, restoring the facade's shine and beauty, while executing with the highest safety and quality standards. Facade cleaning services reflect the civilizational appearance of buildings and give them a distinctive lasting elegance."
+      },
+      "cover": "https://cdn.jsdelivr.net/gh/alhjrY0o/aljawad_premium@main/public/images/projects/project_8.jpg",
+      "gallery": [],
+      "featured": true
     }
   ]
 }
