@@ -211,3 +211,23 @@ button[class*="safe-area-inset-top"] {
 .keyboard-open .hide-on-keyboard {
   display: none !important;
 }
+
+/* ====================================================
+   منع تحديد النص والنسخ (يُشبه التطبيقات الأصلية)
+   مع السماح بحقول الإدخال للعمل بشكل طبيعي
+   ==================================================== */
+* {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* السماح بالتحديد في حقول الإدخال والمناطق القابلة للتحرير */
+input,
+textarea,
+[contenteditable="true"] {
+  -webkit-user-select: text;
+  user-select: text;
+  -webkit-touch-callout: default;
+}
