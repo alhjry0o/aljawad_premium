@@ -54,7 +54,7 @@ function BottomNav() {
   return (
     <nav
       aria-label={t('nav.home')}
-      className="pointer-events-none fixed inset-x-0 bottom-0 z-40 px-4 pb-[max(env(safe-area-inset-bottom),0.75rem)]"
+      className="hide-on-keyboard pointer-events-none fixed inset-x-0 bottom-0 z-40 px-4 pb-[max(env(safe-area-inset-bottom),0.75rem)]"
     >
       <div className="pointer-events-auto relative mx-auto max-w-md overflow-hidden rounded-[var(--radius-lg)] border border-[color:var(--line-strong)] bg-[color:var(--elevated)]/92 backdrop-blur-2xl shadow-[0_24px_60px_-28px_rgba(0,0,0,0.9)]">
         {/* active indicator */}
@@ -173,6 +173,27 @@ function useAndroidBackButton() {
   return toast;
 }
 
+/* ----------------------------------------------------- Keyboard watcher */
+
+function useKeyboardWatcher() {
+  useEffect(() => {
+    const vv = window.visualViewport;
+    if (!vv) return;
+    const handler = () => {
+      const isOpen = vv.height < window.innerHeight * 0.75;
+      document.documentElement.classList.toggle('keyboard-open', isOpen);
+    };
+    vv.addEventListener('resize', handler);
+    vv.addEventListener('scroll', handler);
+    handler();
+    return () => {
+      vv.removeEventListener('resize', handler);
+      vv.removeEventListener('scroll', handler);
+      document.documentElement.classList.remove('keyboard-open');
+    };
+  }, []);
+}
+
 /* ----------------------------------------------------- Router outlet */
 
 function Outlet() {
@@ -246,6 +267,7 @@ function Outlet() {
 
 function Shell() {
   const backToast = useAndroidBackButton();
+  useKeyboardWatcher();
   return (
     <div className="mx-auto min-h-[100svh] w-full max-w-[520px] bg-[color:var(--bg)] text-[color:var(--text)] shadow-[0_0_120px_rgba(0,0,0,0.45)]">
       {/* طبقة تغطية منطقة شريط الإشعارات — تطبَّق على كل الشاشات */}
