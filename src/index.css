@@ -206,3 +206,8 @@ button[class*="safe-area-inset-top"] {
   top: calc(env(safe-area-inset-top) + 1rem) !important;
   z-index: 40 !important;
 }
+
+/* إخفاء عناصر محددة عند ظهور الكيبورد */
+.keyboard-open .hide-on-keyboard {
+  display: none !important;
+}
