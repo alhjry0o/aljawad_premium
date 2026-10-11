@@ -118,6 +118,29 @@
         "https://cdn.jsdelivr.net/gh/alhjrY0o/aljawad_premium@main/public/images/projects/project_1.jpg"
       ],
       "featured": false
+    }, 
+    {
+      "id": "project-07",
+      "demo": false,
+      "code": "PROJECT · 07",
+      "title": { "ar": "مشروع عزل خزانات", "en": "Tank Insulation Project" },
+      "serviceId": "insulation",
+      "year": "—",
+      "scope": {
+      "ar": ["عزل إيبوكسي أزرق", "44 خزان فيلا", "مواد عالية الجودة", "حماية من التسرب والتلوث"],
+      "en": ["Blue epoxy insulation", "44 villa tanks", "High-quality materials", "Leak & contamination protection"]
+      },
+      "summary": {
+        "ar": "تنفيذ مشروع عزل إيبوكسي أزرق لعدد 44 خزان فيلا لصالح أحد عملاء شركات المقاولات والإسكان.",
+        "en": "Execution of a blue epoxy insulation project for 44 villa tanks for a contracting & housing client."
+      },
+      "context": {
+        "ar": "قامت شركة الجواد الدولية العربية بتنفيذ مشروع عزل خزانات إيبوكسي أزرق لعدد 44 خزان فيلا، باستخدام مواد إيبوكسي عالية الجودة تضمن متانة العزل وحماية المياه من التسرب والتلوث، مع تنفيذ بأعلى معايير السلامة والجودة. يضمن هذا النوع من العزل مياهًا صحية ونقية ويحافظ على الخزان لفترة أطول.",
+        "en": "Aljawad International Arabia Company executed a blue epoxy tank insulation project for 44 villa tanks, using high-quality epoxy materials ensuring insulation durability and protecting water from leakage and contamination, following the highest safety and quality standards. This type of insulation ensures healthy, pure water and extends tank lifespan."
+      },
+      "cover": "https://cdn.jsdelivr.net/gh/alhjrY0o/aljawad_premium@main/public/images/projects/project_7.jpg",
+      "gallery": [],
+      "featured": true
     }
   ]
 }
