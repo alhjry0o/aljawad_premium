@@ -117,13 +117,14 @@ function BottomNav() {
 
 function useAndroidBackButton() {
   const { route, canGoBack, back, goTab } = useNav();
+  const { lang } = useI18n();
   const [toast, setToast] = useState<string | null>(null);
   const lastPressRef = useRef(0);
-  const stateRef = useRef({ route, canGoBack, back, goTab });
+  const stateRef = useRef({ route, canGoBack, back, goTab, lang });
 
   useEffect(() => {
-    stateRef.current = { route, canGoBack, back, goTab };
-  }, [route, canGoBack, back, goTab]);
+    stateRef.current = { route, canGoBack, back, goTab, lang };
+  }, [route, canGoBack, back, goTab, lang]);
 
   useEffect(() => {
     if (!Capacitor.isNativePlatform()) return;
@@ -155,7 +156,7 @@ function useAndroidBackButton() {
           CapacitorApp.exitApp();
         } else {
           lastPressRef.current = now;
-          setToast('اضغط مرة أخرى للخروج');
+          setToast(s.lang === 'ar' ? 'اضغط مرة أخرى للخروج' : 'Press again to exit');
           window.setTimeout(() => setToast(null), 2000);
         }
       }
