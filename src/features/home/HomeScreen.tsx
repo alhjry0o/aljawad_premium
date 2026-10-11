@@ -49,14 +49,14 @@ function HeroSearch() {
       </div>
 
       {open && (
-        <div className="jw-rise absolute inset-x-0 top-[calc(100%+0.5rem)] z-20 overflow-hidden rounded-[var(--radius-md)] border border-white/12 bg-[#060b0a]/95 backdrop-blur-2xl">
+         <div className="jw-rise absolute inset-x-0 top-[calc(100%+0.5rem)] z-30 overflow-hidden rounded-[var(--radius-md)] border border-white/12 bg-[#060b0a]/95 backdrop-blur-2xl shadow-[0_24px_60px_-20px_rgba(0,0,0,0.9)]">
           {results.length === 0 ? (
             <div className="px-5 py-7 text-center">
               <p className="text-[0.9rem] font-semibold text-white">{t('search.empty')}</p>
               <p className="mt-1 text-[0.75rem] text-white/50">{t('search.emptyHint')}</p>
             </div>
           ) : (
-            <ul>
+            <ul className="no-scrollbar max-h-[55vh] overflow-y-auto">
               {results.map((s) => (
                 <li key={s.id}>
                   <button
@@ -95,18 +95,20 @@ function Hero() {
   const p = reducedMotion ? 0 : Math.min(y, 520);
 
   return (
-    <section className="relative min-h-[94svh] overflow-hidden bg-[#030605]">
+    <section className="relative min-h-[94svh] bg-[#030605]">
+     <div className="absolute inset-0 overflow-hidden">
       <div
         className="absolute inset-0 will-change-transform"
         style={{ transform: `translate3d(0, ${p * 0.25}px, 0) scale(${1 + p * 0.0004})` }}
       >
-        <img
-          src={appAssets.hero}
-          alt=""
-          className="h-full w-full object-cover opacity-70"
-          fetchPriority="high"
-        />
-      </div>
+       <img
+        src={appAssets.hero}
+        alt=""
+        className="h-full w-full object-cover opacity-70"
+        fetchPriority="high"
+      />
+    </div>
+  </div>
       <div className="absolute inset-0 bg-gradient-to-b from-[#030605]/75 via-[#030605]/55 to-[#030605]" />
       <div
         className="absolute inset-0 opacity-70"
@@ -118,11 +120,11 @@ function Hero() {
       />
       <div className="jw-grid absolute inset-0 opacity-[0.07]" />
 
-      <div
-        className="relative flex min-h-[94svh] flex-col px-5 pb-32 pt-[calc(env(safe-area-inset-top)+1.5rem)]"
-        style={{ opacity: reducedMotion ? 1 : Math.max(0.25, 1 - p / 620) }}
-      >
-        <div className="flex items-center justify-between">
+      <div className="relative flex min-h-[94svh] flex-col px-5 pb-32 pt-[calc(env(safe-area-inset-top)+1.5rem)]">
+        <div
+         className="flex items-center justify-between"
+         style={{ opacity: reducedMotion ? 1 : Math.max(0.25, 1 - p / 620) }}
+        >
           <div className="flex items-center gap-2.5">
             <BrandMark size={34} />
             <div className="leading-tight">
@@ -137,7 +139,10 @@ function Hero() {
           </span>
         </div>
 
-        <div className="mt-auto pt-16">
+        <div
+         className="mt-auto pt-16"
+         style={{ opacity: reducedMotion ? 1 : Math.max(0.25, 1 - p / 620) }}
+        >
           <div className="jw-rise mb-5 flex items-center gap-3 text-[0.66rem] uppercase tracking-[0.28em] text-[#5fe0a5]">
             <span className="h-px w-8 bg-[#5fe0a5]/50" />
             {t('hero.eyebrow')}
