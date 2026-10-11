@@ -134,9 +134,6 @@ function Hero() {
               <div className="text-[0.6rem] uppercase tracking-[0.25em] text-white/45">ALJAWAD</div>
             </div>
           </div>
-          <span className="rounded-full border border-white/15 px-3 py-1 text-[0.6rem] uppercase tracking-[0.2em] text-white/55">
-            {t('common.offline')}
-          </span>
         </div>
 
         <div
