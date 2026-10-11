@@ -238,15 +238,20 @@ export function TextField({
   label,
   error,
   hint,
+  type,
   ...rest
 }: InputHTMLAttributes<HTMLInputElement> & { label: string; error?: string; hint?: string }) {
+  const isLtrInput =
+    type === 'date' || type === 'time' || type === 'datetime-local' || type === 'tel';
   return (
     <div>
       <Label hint={hint}>{label}</Label>
       <input
         {...rest}
+        type={type}
+        dir={isLtrInput ? 'ltr' : undefined}
         aria-invalid={Boolean(error)}
-        className={cn(fieldClass, error && 'border-[color:var(--error)]')}
+        className={cn(fieldClass, isLtrInput && 'text-end', error && 'border-[color:var(--error)]')}
       />
       {error && <p className="mt-1.5 text-[0.72rem] text-[color:var(--error)]">{error}</p>}
     </div>
