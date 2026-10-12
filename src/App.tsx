@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Capacitor } from '@capacitor/core';
 import { App as CapacitorApp } from '@capacitor/app';
 import { I18nProvider, useI18n } from './core/i18n';
@@ -232,67 +232,79 @@ function useKeyboardWatcher() {
 function Outlet() {
   const { route } = useNav();
   const ref = useRef<HTMLDivElement>(null);
+  const scrollMapRef = useRef<Record<string, number>>({});
+  const prevKeyRef = useRef<string>('');
+  const currentKey = JSON.stringify(route);
 
+  // حفظ موضع التمرير عند كل تمرير
+  useEffect(() => {
+    const onScroll = () => {
+      const k = prevKeyRef.current;
+      if (k) scrollMapRef.current[k] = window.scrollY;
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  // استعادة موضع التمرير عند تغيير المسار
+  useLayoutEffect(() => {
+    const target = scrollMapRef.current[currentKey] ?? 0;
+    prevKeyRef.current = currentKey;
+
+    let r1 = 0;
+    let r2 = 0;
+    r1 = requestAnimationFrame(() => {
+      window.scrollTo(0, target);
+      r2 = requestAnimationFrame(() => window.scrollTo(0, target));
+    });
+    return () => {
+      cancelAnimationFrame(r1);
+      cancelAnimationFrame(r2);
+    };
+  }, [currentKey]);
+
+  // تأثير fade-in
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
     el.classList.remove('jw-fade-in');
     void el.offsetWidth;
     el.classList.add('jw-fade-in');
-  }, [route]);
+  }, [currentKey]);
 
-  const key = JSON.stringify(route);
   const isHome = route.name === 'home';
 
   const screen = (() => {
     switch (route.name) {
-      case 'home':
-        return <HomeScreen />;
-      case 'services':
-        return <ServicesScreen />;
-      case 'service':
-        return <ServiceDetailScreen id={route.id} />;
-      case 'requests':
-        return <RequestsScreen />;
-      case 'request':
-        return <RequestDetailScreen id={route.id} />;
-      case 'flow':
-        return <RequestFlowScreen kind={route.kind} serviceId={route.serviceId} />;
-      case 'success':
-        return <SuccessScreen id={route.id} />;
-      case 'projects':
-        return <ProjectsScreen />;
-      case 'project':
-        return <ProjectDetailScreen id={route.id} />;
-      case 'more':
-        return <MoreScreen />;
-      case 'about':
-        return <AboutScreen />;
-      case 'contact':
-        return <ContactScreen />;
-      case 'settings':
-        return <SettingsScreen />;
-      case 'privacy':
-        return <LegalScreen kind="privacy" />;
-      case 'terms':
-        return <LegalScreen kind="terms" />;
-      case 'developer':
-        return <DeveloperScreen />;
-      default:
-        return <HomeScreen />;
+      case 'home': return <HomeScreen />;
+      case 'services': return <ServicesScreen />;
+      case 'service': return <ServiceDetailScreen id={route.id} />;
+      case 'requests': return <RequestsScreen />;
+      case 'request': return <RequestDetailScreen id={route.id} />;
+      case 'flow': return <RequestFlowScreen kind={route.kind} serviceId={route.serviceId} />;
+      case 'success': return <SuccessScreen id={route.id} />;
+      case 'projects': return <ProjectsScreen />;
+      case 'project': return <ProjectDetailScreen id={route.id} />;
+      case 'more': return <MoreScreen />;
+      case 'about': return <AboutScreen />;
+      case 'contact': return <ContactScreen />;
+      case 'settings': return <SettingsScreen />;
+      case 'privacy': return <LegalScreen kind="privacy" />;
+      case 'terms': return <LegalScreen kind="terms" />;
+      case 'developer': return <DeveloperScreen />;
+      default: return <HomeScreen />;
     }
   })();
 
   return (
     <main
-     ref={ref}
-     key={key}
-     className={cn(
-       'min-h-[100svh]',
-       !isHome && 'pt-[env(safe-area-inset-top)]',
-       isMainTabRoute(route.name) ? 'pb-28' : 'pb-8',
-     )}
-   >
+      ref={ref}
+      className={cn(
+        'min-h-[100svh]',
+        !isHome && 'pt-[env(safe-area-inset-top)]',
+        isMainTabRoute(route.name) ? 'pb-28' : 'pb-8',
+      )}
+    >
       {screen}
     </main>
   );
