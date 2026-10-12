@@ -352,6 +352,50 @@ export function OptionGrid({
   );
 }
 
+/* ---------------------------------------------------------- Animated counter */
+
+export function Counter({
+  to,
+  duration = 1600,
+  locale = 'en-US',
+}: {
+  to: number;
+  duration?: number;
+  locale?: string;
+}) {
+  const [value, setValue] = useState(0);
+  const ref = useRef<HTMLSpanElement>(null);
+  const startedRef = useRef(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting && !startedRef.current) {
+            startedRef.current = true;
+            const start = performance.now();
+            const tick = (now: number) => {
+              const t = Math.min(1, (now - start) / duration);
+              const eased = 1 - Math.pow(1 - t, 3);
+              setValue(Math.round(to * eased));
+              if (t < 1) requestAnimationFrame(tick);
+              else setValue(to);
+            };
+            requestAnimationFrame(tick);
+          }
+        });
+      },
+      { threshold: 0.35 },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, [to, duration]);
+
+  return <span ref={ref}>{value.toLocaleString(locale)}</span>;
+}
+
 /* ---------------------------------------------------------- Misc */
 
 export function Divider() {
