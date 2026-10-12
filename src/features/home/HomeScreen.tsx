@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from 'react';
 import { appAssets } from '../../data/company';
 import { services } from '../../data/services';
 import { useCompany } from '../../core/companyStore';
@@ -7,7 +8,7 @@ import { useNav } from '../../core/navigation';
 import { useTheme } from '../../core/theme';
 import { externalActions } from '../../core/actions';
 import { BrandMark, Glyph, MaterialIcon3D } from '../../components/icons';
-import { Button, DemoBadge, Reveal, SectionHead, useScrollY } from '../../components/kit';
+import { Button, Counter, DemoBadge, Reveal, SectionHead, useScrollY } from '../../components/kit';
 import { ServiceCarousel } from '../services/ServiceCarousel';
 import { uiEvents } from '../../core/uiEvents';
 
@@ -184,29 +185,132 @@ function BrandStatement() {
 }
 
 function WhyAljawad() {
-  const { t, lang } = useI18n();
+  const { t, bi, lang } = useI18n();
   const { config: appConfig } = useCompany();
+  const locale = lang === 'ar' ? 'ar-EG' : 'en-US';
+
+  const statsLabels = {
+    kicker: { ar: 'نظرة على أرقامنا', en: 'By the numbers' },
+    title: { ar: 'الجواد في أرقام', en: 'Aljawad in numbers' },
+    projectsLabel: { ar: 'مشروع منفذ بنجاح', en: 'Projects delivered' },
+    satisfaction: { ar: 'رضا العملاء', en: 'Client satisfaction' },
+    experience: { ar: 'سنوات من الخبرة', en: 'Years of expertise' },
+  };
+
   const points = [
     { n: '01', title: t('why.1.title'), body: t('why.1.body'), icon: 'manpower' as const },
     { n: '02', title: t('why.2.title'), body: t('why.2.body'), icon: 'layers' as const },
     { n: '03', title: t('why.3.title'), body: t('why.3.body'), icon: 'equipment' as const },
     { n: '04', title: t('why.4.title'), body: t('why.4.body'), icon: 'construction' as const },
   ];
+
   return (
     <section className="relative overflow-hidden border-y border-[color:var(--line)] bg-[color:var(--surface)] py-16">
       <div className="jw-grid absolute inset-0 opacity-30" />
+
       <div className="relative">
+        {/* ================ Stats Showcase Card ================ */}
         <Reveal className="px-5">
-          <h2 className="text-[2rem] font-extrabold leading-tight tracking-tight">{t('why.title')}</h2>
-          <div className="mt-6 flex items-baseline gap-3">
-            <span className="bg-gradient-to-b from-[color:var(--primary)] to-[color:var(--accent)] bg-clip-text text-[3.4rem] font-black leading-none tracking-tighter text-transparent">
-              {appConfig.projectsCount.toLocaleString(lang === 'ar' ? 'ar-EG' : 'en-US')}+
-            </span>
-            <span className="text-[0.85rem] font-medium text-[color:var(--muted)]">{t('why.counter')}</span>
+          <div className="relative overflow-hidden rounded-[var(--radius-lg)] border border-[color:var(--line-strong)] bg-gradient-to-br from-[#0a1a2e] via-[#0a1f24] to-[#04140f] p-6 shadow-[0_30px_80px_-30px_rgba(0,0,0,0.9)]">
+            {/* decorative grid + glows */}
+            <div className="jw-grid absolute inset-0 opacity-[0.09]" />
+            <div
+              className="pointer-events-none absolute -top-24 -end-24 h-64 w-64 rounded-full opacity-40 blur-3xl"
+              style={{ background: 'radial-gradient(circle, #2bd38c, transparent 70%)' }}
+            />
+            <div
+              className="pointer-events-none absolute -bottom-24 -start-24 h-64 w-64 rounded-full opacity-30 blur-3xl"
+              style={{ background: 'radial-gradient(circle, #3b82f6, transparent 70%)' }}
+            />
+
+            <div className="relative">
+              {/* header */}
+              <div className="flex items-start justify-between">
+                <div>
+                  <div className="text-[0.62rem] uppercase tracking-[0.3em] text-[#5fe0a5]">
+                    {bi(statsLabels.kicker)}
+                  </div>
+                  <h3 className="mt-1.5 text-[1.15rem] font-extrabold tracking-tight text-white">
+                    {bi(statsLabels.title)}
+                  </h3>
+                </div>
+                <div className="grid h-9 w-9 place-items-center rounded-full border border-white/15 bg-white/5">
+                  <span className="h-2 w-2 rounded-full bg-[#2bd38c] shadow-[0_0_12px_#2bd38c]" />
+                </div>
+              </div>
+
+              {/* main stat */}
+              <div className="mt-7">
+                <div className="text-[3.4rem] font-black leading-none tracking-tighter text-white">
+                  <Counter to={appConfig.projectsCount} locale={locale} />
+                  <span className="text-[#2bd38c]">+</span>
+                </div>
+                <div className="mt-2 text-[0.78rem] text-white/55">
+                  {bi(statsLabels.projectsLabel)}
+                </div>
+              </div>
+
+              {/* sparkline */}
+              <div className="mt-6 h-16 w-full">
+                <svg viewBox="0 0 300 60" className="h-full w-full" preserveAspectRatio="none">
+                  <defs>
+                    <linearGradient id="jw-spark-fill" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="#2bd38c" stopOpacity="0.45" />
+                      <stop offset="100%" stopColor="#2bd38c" stopOpacity="0" />
+                    </linearGradient>
+                    <linearGradient id="jw-spark-line" x1="0" y1="0" x2="1" y2="0">
+                      <stop offset="0%" stopColor="#2bd38c" />
+                      <stop offset="100%" stopColor="#7fc5ff" />
+                    </linearGradient>
+                  </defs>
+                  <path
+                    d="M0,46 C40,44 70,46 110,32 C150,18 190,28 230,14 C260,5 285,8 300,4 L300,60 L0,60 Z"
+                    fill="url(#jw-spark-fill)"
+                  />
+                  <path
+                    d="M0,46 C40,44 70,46 110,32 C150,18 190,28 230,14 C260,5 285,8 300,4"
+                    fill="none"
+                    stroke="url(#jw-spark-line)"
+                    strokeWidth="1.8"
+                    strokeLinecap="round"
+                  />
+                  <circle cx="110" cy="32" r="3" fill="#0a1f24" stroke="#2bd38c" strokeWidth="2" />
+                  <circle cx="230" cy="14" r="3" fill="#0a1f24" stroke="#7fc5ff" strokeWidth="2" />
+                </svg>
+              </div>
+
+              {/* secondary stats */}
+              <div className="mt-4 grid grid-cols-2 gap-3">
+                <div className="rounded-[var(--radius-sm)] border border-white/8 bg-white/[0.03] p-4 backdrop-blur">
+                  <div className="text-[1.55rem] font-extrabold leading-none tracking-tight text-[#5fe0a5]">
+                    <Counter to={98} locale={locale} />
+                    <span className="text-[1.05rem]">%</span>
+                  </div>
+                  <div className="mt-2 text-[0.68rem] leading-snug text-white/55">
+                    {bi(statsLabels.satisfaction)}
+                  </div>
+                </div>
+                <div className="rounded-[var(--radius-sm)] border border-white/8 bg-white/[0.03] p-4 backdrop-blur">
+                  <div className="text-[1.55rem] font-extrabold leading-none tracking-tight text-[#7fc5ff]">
+                    <Counter to={12} locale={locale} />
+                    <span className="text-[1.05rem]">+</span>
+                  </div>
+                  <div className="mt-2 text-[0.68rem] leading-snug text-white/55">
+                    {bi(statsLabels.experience)}
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </Reveal>
 
-        <ul className="mt-10">
+        {/* ================ Title ================ */}
+        <Reveal className="mt-14 px-5">
+          <h2 className="text-[2rem] font-extrabold leading-tight tracking-tight">{t('why.title')}</h2>
+        </Reveal>
+
+        {/* ================ Points ================ */}
+        <ul className="mt-8">
           {points.map((p, i) => (
             <Reveal as="li" key={p.n} delay={i * 80}>
               <div className="flex items-start gap-4 border-t border-[color:var(--line)] px-5 py-6">
