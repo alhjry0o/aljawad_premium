@@ -231,3 +231,22 @@ textarea,
   user-select: text;
   -webkit-touch-callout: default;
 }
+
+/* إجبار حقول التاريخ/الوقت على اتجاه LTR مع محاذاة لليمين */
+.jw-ltr-input {
+  direction: ltr !important;
+  text-align: end !important;
+  unicode-bidi: plaintext;
+}
+
+.jw-ltr-input::-webkit-datetime-edit {
+  direction: ltr;
+}
+
+.jw-ltr-input::-webkit-datetime-edit-fields-wrapper {
+  direction: ltr;
+}
+
+.jw-ltr-input::-webkit-datetime-edit-text {
+  direction: ltr;
+}
