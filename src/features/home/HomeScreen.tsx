@@ -113,7 +113,7 @@ function Hero() {
         </div>
 
         <div className="jw-rise mt-10 space-y-4" style={{ animationDelay: '420ms' }}>
-          <HeroSearch />
+          <HeroSearchButton />
           <div className="flex items-center gap-3">
             <Button onClick={() => push({ name: 'flow', kind: 'service' })} icon="arrow">
               {t('hero.cta.primary')}
