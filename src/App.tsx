@@ -178,36 +178,50 @@ function useAndroidBackButton() {
 
 function useKeyboardWatcher() {
   useEffect(() => {
-    const isEditable = (el: EventTarget | null): boolean => {
-      const node = el as HTMLElement | null;
-      if (!node) return false;
-      const tag = node.tagName;
+    const vv = window.visualViewport;
+    const isEditable = (el: Element | null): boolean => {
+      if (!el) return false;
+      const tag = el.tagName;
       return (
         tag === 'INPUT' ||
         tag === 'TEXTAREA' ||
         tag === 'SELECT' ||
-        node.isContentEditable === true
+        (el as HTMLElement).isContentEditable
       );
     };
 
-    const onFocusIn = (e: FocusEvent) => {
-      if (isEditable(e.target)) {
-        document.documentElement.classList.add('keyboard-open');
-      }
+    const update = () => {
+      const vvReduced = vv ? window.innerHeight - vv.height > 150 : false;
+      const focusedInput = isEditable(document.activeElement);
+      document.documentElement.classList.toggle('keyboard-open', vvReduced || focusedInput);
     };
+
+    let t1 = 0;
+    let t2 = 0;
+    const onFocusIn = () => update();
     const onFocusOut = () => {
-      window.setTimeout(() => {
-        if (!isEditable(document.activeElement)) {
-          document.documentElement.classList.remove('keyboard-open');
-        }
-      }, 60);
+      window.clearTimeout(t1);
+      window.clearTimeout(t2);
+      t1 = window.setTimeout(update, 80);
+      t2 = window.setTimeout(update, 300);
     };
 
     document.addEventListener('focusin', onFocusIn);
     document.addEventListener('focusout', onFocusOut);
+    if (vv) {
+      vv.addEventListener('resize', update);
+      vv.addEventListener('scroll', update);
+    }
+
     return () => {
       document.removeEventListener('focusin', onFocusIn);
       document.removeEventListener('focusout', onFocusOut);
+      if (vv) {
+        vv.removeEventListener('resize', update);
+        vv.removeEventListener('scroll', update);
+      }
+      window.clearTimeout(t1);
+      window.clearTimeout(t2);
       document.documentElement.classList.remove('keyboard-open');
     };
   }, []);
