@@ -239,23 +239,56 @@ export function TextField({
   error,
   hint,
   type,
+  value,
+  onChange,
   ...rest
 }: InputHTMLAttributes<HTMLInputElement> & { label: string; error?: string; hint?: string }) {
-  const isLtrInput =
-    type === 'date' || type === 'time' || type === 'datetime-local' || type === 'tel';
+  const isDate = type === 'date';
+  const isTime = type === 'time';
+  const isLtrInput = isDate || isTime || type === 'datetime-local' || type === 'tel';
+
+  if (isDate || isTime) {
+    const placeholder = isDate ? 'ي/ش/س' : 'س:د';
+    const hasValue = Boolean(value);
+    return (
+      <div>
+        <Label hint={hint}>{label}</Label>
+        <div
+          className={cn(
+            fieldClass,
+            'relative flex items-center justify-between',
+            error && 'border-[color:var(--error)]',
+          )}
+        >
+          <span className={hasValue ? 'text-[color:var(--text)]' : 'text-[color:var(--faint)]'}>
+            {value || placeholder}
+          </span>
+          <Glyph name={isDate ? 'calendar' : 'clock'} size={18} className="text-[color:var(--muted)]" />
+          <input
+            {...rest}
+            type={type}
+            value={value}
+            onChange={onChange}
+            className="absolute inset-0 cursor-pointer opacity-0"
+            aria-label={label}
+          />
+        </div>
+        {error && <p className="mt-1.5 text-[0.72rem] text-[color:var(--error)]">{error}</p>}
+      </div>
+    );
+  }
+
   return (
     <div>
       <Label hint={hint}>{label}</Label>
       <input
         {...rest}
         type={type}
+        value={value}
+        onChange={onChange}
         dir={isLtrInput ? 'ltr' : undefined}
         aria-invalid={Boolean(error)}
-        className={cn(
-          fieldClass,
-          isLtrInput && 'jw-ltr-input',
-          error && 'border-[color:var(--error)]',
-        )}
+        className={cn(fieldClass, isLtrInput && 'text-end', error && 'border-[color:var(--error)]')}
       />
       {error && <p className="mt-1.5 text-[0.72rem] text-[color:var(--error)]">{error}</p>}
     </div>
