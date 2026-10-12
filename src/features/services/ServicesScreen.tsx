@@ -1,15 +1,30 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { searchServices } from '../../data/services';
 import { useI18n } from '../../core/i18n';
 import { useNav } from '../../core/navigation';
 import { Glyph, MaterialIcon3D } from '../../components/icons';
 import { Reveal, ScreenHeader } from '../../components/kit';
+import { uiEvents } from '../../core/uiEvents';
 
 export function ServicesScreen() {
   const { t, bi, lang } = useI18n();
   const { push } = useNav();
   const [query, setQuery] = useState('');
   const results = useMemo(() => searchServices(query), [query]);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  // فتح الكيبورد تلقائيًا عند القدوم من زر البحث في الرئيسية
+  useEffect(() => {
+    if (!uiEvents.focusServicesSearch) return;
+    uiEvents.focusServicesSearch = false;
+
+    const t1 = window.setTimeout(() => {
+      inputRef.current?.focus();
+      inputRef.current?.click();
+    }, 200);
+
+    return () => window.clearTimeout(t1);
+  }, []);
 
   return (
     <div className="pb-6">
@@ -19,6 +34,7 @@ export function ServicesScreen() {
         <div className="flex items-center gap-3 rounded-[var(--radius-sm)] border border-[color:var(--line)] bg-[color:var(--elevated)] px-4 py-3.5">
           <Glyph name="search" size={18} className="text-[color:var(--faint)]" />
           <input
+            ref={inputRef}
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder={t('hero.search')}
