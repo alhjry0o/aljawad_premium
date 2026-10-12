@@ -2,6 +2,8 @@ import { appAssets } from '../../data/company';
 import { services } from '../../data/services';
 import { useCompany } from '../../core/companyStore';
 import { useProjects } from '../../core/projectsStore';
+import { useI18n } from '../../core/i18n';
+import { useNav } from '../../core/navigation';
 import { useTheme } from '../../core/theme';
 import { externalActions } from '../../core/actions';
 import { BrandMark, Glyph, MaterialIcon3D } from '../../components/icons';
