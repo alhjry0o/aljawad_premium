@@ -282,7 +282,7 @@ function WhyAljawad() {
                     />
                     <circle cx="85" cy="24" r="2.4" fill="#0a1f24" stroke="#2bd38c" strokeWidth="1.6" />
                     <circle cx="175" cy="9" r="2.4" fill="#0a1f24" stroke="#7fc5ff" strokeWidth="1.6" />
-                   </svg>
+                  </svg>
                 </div>
               </div>
 
@@ -316,98 +316,6 @@ function WhyAljawad() {
                     <div className="mt-0.5 text-[0.55rem] uppercase tracking-wider text-white/35">
                       {lang === 'ar' ? 'خبرة تراكمية' : 'Cumulative'}
                     </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </Reveal>
-        
-            {/* decorative grid + glows */}
-            <div className="jw-grid absolute inset-0 opacity-[0.09]" />
-            <div
-              className="pointer-events-none absolute -top-24 -end-24 h-64 w-64 rounded-full opacity-40 blur-3xl"
-              style={{ background: 'radial-gradient(circle, #2bd38c, transparent 70%)' }}
-            />
-            <div
-              className="pointer-events-none absolute -bottom-24 -start-24 h-64 w-64 rounded-full opacity-30 blur-3xl"
-              style={{ background: 'radial-gradient(circle, #3b82f6, transparent 70%)' }}
-            />
-
-            <div className="relative">
-              {/* header */}
-              <div className="flex items-start justify-between">
-                <div>
-                  <div className="text-[0.62rem] uppercase tracking-[0.3em] text-[#5fe0a5]">
-                    {bi(statsLabels.kicker)}
-                  </div>
-                  <h3 className="mt-1.5 text-[1.15rem] font-extrabold tracking-tight text-white">
-                    {bi(statsLabels.title)}
-                  </h3>
-                </div>
-                <div className="grid h-9 w-9 place-items-center rounded-full border border-white/15 bg-white/5">
-                  <span className="h-2 w-2 rounded-full bg-[#2bd38c] shadow-[0_0_12px_#2bd38c]" />
-                </div>
-              </div>
-
-              {/* main stat */}
-              <div className="mt-7">
-                <div className="text-[3.4rem] font-black leading-none tracking-tighter text-white">
-                  <Counter to={appConfig.projectsCount} locale={locale} />
-                  <span className="text-[#2bd38c]">+</span>
-                </div>
-                <div className="mt-2 text-[0.78rem] text-white/55">
-                  {bi(statsLabels.projectsLabel)}
-                </div>
-              </div>
-
-              {/* sparkline */}
-              <div className="mt-6 h-16 w-full">
-                <svg viewBox="0 0 300 60" className="h-full w-full" preserveAspectRatio="none">
-                  <defs>
-                    <linearGradient id="jw-spark-fill" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="#2bd38c" stopOpacity="0.45" />
-                      <stop offset="100%" stopColor="#2bd38c" stopOpacity="0" />
-                    </linearGradient>
-                    <linearGradient id="jw-spark-line" x1="0" y1="0" x2="1" y2="0">
-                      <stop offset="0%" stopColor="#2bd38c" />
-                      <stop offset="100%" stopColor="#7fc5ff" />
-                    </linearGradient>
-                  </defs>
-                  <path
-                    d="M0,46 C40,44 70,46 110,32 C150,18 190,28 230,14 C260,5 285,8 300,4 L300,60 L0,60 Z"
-                    fill="url(#jw-spark-fill)"
-                  />
-                  <path
-                    d="M0,46 C40,44 70,46 110,32 C150,18 190,28 230,14 C260,5 285,8 300,4"
-                    fill="none"
-                    stroke="url(#jw-spark-line)"
-                    strokeWidth="1.8"
-                    strokeLinecap="round"
-                  />
-                  <circle cx="110" cy="32" r="3" fill="#0a1f24" stroke="#2bd38c" strokeWidth="2" />
-                  <circle cx="230" cy="14" r="3" fill="#0a1f24" stroke="#7fc5ff" strokeWidth="2" />
-                </svg>
-              </div>
-
-              {/* secondary stats */}
-              <div className="mt-4 grid grid-cols-2 gap-3">
-                <div className="rounded-[var(--radius-sm)] border border-white/8 bg-white/[0.03] p-4 backdrop-blur">
-                  <div className="text-[1.55rem] font-extrabold leading-none tracking-tight text-[#5fe0a5]">
-                    <Counter to={98} locale={locale} />
-                    <span className="text-[1.05rem]">%</span>
-                  </div>
-                  <div className="mt-2 text-[0.68rem] leading-snug text-white/55">
-                    {bi(statsLabels.satisfaction)}
-                  </div>
-                </div>
-                <div className="rounded-[var(--radius-sm)] border border-white/8 bg-white/[0.03] p-4 backdrop-blur">
-                  <div className="text-[1.55rem] font-extrabold leading-none tracking-tight text-[#7fc5ff]">
-                    <Counter to={12} locale={locale} />
-                    <span className="text-[1.05rem]">+</span>
-                  </div>
-                  <div className="mt-2 text-[0.68rem] leading-snug text-white/55">
-                    {bi(statsLabels.experience)}
                   </div>
                 </div>
               </div>
