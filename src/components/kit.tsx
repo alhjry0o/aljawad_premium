@@ -251,7 +251,11 @@ export function TextField({
         type={type}
         dir={isLtrInput ? 'ltr' : undefined}
         aria-invalid={Boolean(error)}
-        className={cn(fieldClass, isLtrInput && 'text-end', error && 'border-[color:var(--error)]')}
+        className={cn(
+          fieldClass,
+          isLtrInput && 'jw-ltr-input',
+          error && 'border-[color:var(--error)]',
+        )}
       />
       {error && <p className="mt-1.5 text-[0.72rem] text-[color:var(--error)]">{error}</p>}
     </div>
