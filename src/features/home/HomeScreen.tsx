@@ -121,7 +121,10 @@ function Hero() {
       <div className="jw-grid absolute inset-0 opacity-[0.07]" />
 
       <div className="relative flex min-h-[94svh] flex-col px-5 pb-32 pt-[calc(env(safe-area-inset-top)+1.5rem)]">
-        <div className="flex items-center justify-between">
+        <div
+          className="flex items-center justify-between"
+          style={{ opacity: reducedMotion ? 1 : Math.max(0, 1 - p / 480) }}
+        >
           <div className="flex items-center gap-2.5">
             <BrandMark size={34} />
             <div className="leading-tight">
@@ -133,7 +136,10 @@ function Hero() {
           </div>
         </div>
 
-        <div className="mt-auto pt-16">
+        <div
+          className="mt-auto pt-16"
+          style={{ opacity: reducedMotion ? 1 : Math.max(0, 1 - p / 480) }}
+        >
           <div className="jw-rise mb-5 flex items-center gap-3 text-[0.66rem] uppercase tracking-[0.28em] text-[#5fe0a5]">
             <span className="h-px w-8 bg-[#5fe0a5]/50" />
             {t('hero.eyebrow')}
