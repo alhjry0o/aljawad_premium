@@ -178,18 +178,36 @@ function useAndroidBackButton() {
 
 function useKeyboardWatcher() {
   useEffect(() => {
-    const vv = window.visualViewport;
-    if (!vv) return;
-    const handler = () => {
-      const isOpen = vv.height < window.innerHeight * 0.75;
-      document.documentElement.classList.toggle('keyboard-open', isOpen);
+    const isEditable = (el: EventTarget | null): boolean => {
+      const node = el as HTMLElement | null;
+      if (!node) return false;
+      const tag = node.tagName;
+      return (
+        tag === 'INPUT' ||
+        tag === 'TEXTAREA' ||
+        tag === 'SELECT' ||
+        node.isContentEditable === true
+      );
     };
-    vv.addEventListener('resize', handler);
-    vv.addEventListener('scroll', handler);
-    handler();
+
+    const onFocusIn = (e: FocusEvent) => {
+      if (isEditable(e.target)) {
+        document.documentElement.classList.add('keyboard-open');
+      }
+    };
+    const onFocusOut = () => {
+      window.setTimeout(() => {
+        if (!isEditable(document.activeElement)) {
+          document.documentElement.classList.remove('keyboard-open');
+        }
+      }, 60);
+    };
+
+    document.addEventListener('focusin', onFocusIn);
+    document.addEventListener('focusout', onFocusOut);
     return () => {
-      vv.removeEventListener('resize', handler);
-      vv.removeEventListener('scroll', handler);
+      document.removeEventListener('focusin', onFocusIn);
+      document.removeEventListener('focusout', onFocusOut);
       document.documentElement.classList.remove('keyboard-open');
     };
   }, []);
