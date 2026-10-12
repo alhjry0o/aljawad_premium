@@ -25,6 +25,7 @@ export type GlyphName =
   | 'shield'
   | 'camera'
   | 'calendar'
+  | 'clock'
   | 'settings'
   | 'info'
   | 'user';
@@ -222,6 +223,12 @@ const GLYPHS: Record<GlyphName, ReactElement> = {
     <>
       <path d="M4 8h3.5L9 6h6l1.5 2H20v11H4z" />
       <path d="M12 16.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z" />
+    </>
+  ),
+  clock: (
+    <>
+      <path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Z" />
+      <path d="M12 7v5l3 2" />
     </>
   ),
   calendar: (
