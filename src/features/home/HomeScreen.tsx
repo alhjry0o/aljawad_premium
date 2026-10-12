@@ -1,6 +1,5 @@
-import { useMemo, useState } from 'react';
 import { appAssets } from '../../data/company';
-import { useCompany } from '../../core/companyStore';
+import { services } from '../../data/services';
 import { searchServices, services } from '../../data/services';
 import { useProjects } from '../../core/projectsStore';
 import { useI18n } from '../../core/i18n';
@@ -10,79 +9,26 @@ import { externalActions } from '../../core/actions';
 import { BrandMark, Glyph, MaterialIcon3D } from '../../components/icons';
 import { Button, DemoBadge, Reveal, SectionHead, useScrollY } from '../../components/kit';
 import { ServiceCarousel } from '../services/ServiceCarousel';
-import { cn } from '../../utils/cn';
+import { uiEvents } from '../../core/uiEvents';
 
-function HeroSearch() {
-  const { t, bi, lang } = useI18n();
+function HeroSearchButton() {
+  const { t } = useI18n();
   const { push } = useNav();
-  const [query, setQuery] = useState('');
-  const results = useMemo(() => (query.trim() ? searchServices(query).slice(0, 5) : []), [query]);
-  const open = query.trim().length > 0;
+
+  const onClick = () => {
+    uiEvents.focusServicesSearch = true;
+    push({ name: 'services' });
+  };
 
   return (
-    <div className="relative">
-      <div
-        className={cn(
-          'flex items-center gap-3 rounded-[var(--radius-sm)] border border-white/15 bg-black/45 px-4 py-3.5 backdrop-blur-xl transition-colors',
-          open && 'border-[#2bd38c]/60',
-        )}
-      >
-        <Glyph name="search" size={18} className="shrink-0 text-white/60" />
-        <input
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder={t('hero.search')}
-          aria-label={t('hero.search')}
-          dir={lang === 'ar' ? 'rtl' : 'ltr'}
-          className="w-full bg-transparent text-[0.92rem] text-white placeholder:text-white/45 outline-none"
-        />
-        {open && (
-          <button
-            type="button"
-            onClick={() => setQuery('')}
-            aria-label={t('search.clear')}
-            className="shrink-0 text-white/50 hover:text-white"
-          >
-            <Glyph name="close" size={16} />
-          </button>
-        )}
-      </div>
-
-      {open && (
-         <div className="jw-rise absolute inset-x-0 top-[calc(100%+0.5rem)] z-50 overflow-hidden rounded-[var(--radius-md)] border border-white/12 bg-[#060b0a]/95 backdrop-blur-2xl shadow-[0_24px_60px_-20px_rgba(0,0,0,0.9)]">
-          {results.length === 0 ? (
-            <div className="px-5 py-7 text-center">
-              <p className="text-[0.9rem] font-semibold text-white">{t('search.empty')}</p>
-              <p className="mt-1 text-[0.75rem] text-white/50">{t('search.emptyHint')}</p>
-            </div>
-          ) : (
-            <ul className="no-scrollbar max-h-[55vh] overflow-y-auto">
-              {results.map((s) => (
-                <li key={s.id}>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setQuery('');
-                      push({ name: 'service', id: s.id });
-                    }}
-                    className="flex w-full items-center gap-3 border-b border-white/6 px-4 py-3 text-start transition-colors last:border-0 hover:bg-white/5"
-                  >
-                    <MaterialIcon3D name={s.id} accent={s.accent} size={38} />
-                    <span className="min-w-0 flex-1">
-                      <span className="block truncate text-[0.88rem] font-semibold text-white">
-                        {bi(s.title)}
-                      </span>
-                      <span className="block truncate text-[0.72rem] text-white/50">{bi(s.statement)}</span>
-                    </span>
-                    <span className="font-mono text-[0.65rem] text-white/35">{s.number}</span>
-                  </button>
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
-      )}
-    </div>
+    <button
+      type="button"
+      onClick={onClick}
+      className="flex w-full items-center gap-3 rounded-[var(--radius-sm)] border border-white/15 bg-black/45 px-4 py-3.5 text-start backdrop-blur-xl transition-colors active:border-[#2bd38c]/60"
+    >
+      <Glyph name="search" size={18} className="shrink-0 text-white/60" />
+      <span className="flex-1 text-[0.92rem] text-white/45">{t('hero.search')}</span>
+    </button>
   );
 }
 
