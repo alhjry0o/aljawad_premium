@@ -211,7 +211,118 @@ function WhyAljawad() {
       <div className="relative">
         {/* ================ Stats Showcase Card ================ */}
         <Reveal className="px-5">
-          <div className="relative overflow-hidden rounded-[var(--radius-lg)] border border-[color:var(--line-strong)] bg-gradient-to-br from-[#0a1a2e] via-[#0a1f24] to-[#04140f] p-6 shadow-[0_30px_80px_-30px_rgba(0,0,0,0.9)]">
+          <div className="relative overflow-hidden rounded-[var(--radius-lg)] border border-[color:var(--line-strong)] bg-gradient-to-br from-[#0a1a2e] via-[#0a1f24] to-[#04140f] p-5 shadow-[0_24px_60px_-28px_rgba(0,0,0,0.95)]">
+            {/* decorative */}
+            <div className="jw-grid absolute inset-0 opacity-[0.07]" />
+            <div
+              className="pointer-events-none absolute -top-20 -end-20 h-48 w-48 rounded-full opacity-35 blur-3xl"
+              style={{ background: 'radial-gradient(circle, #2bd38c, transparent 70%)' }}
+            />
+            <div
+              className="pointer-events-none absolute -bottom-20 -start-20 h-48 w-48 rounded-full opacity-25 blur-3xl"
+              style={{ background: 'radial-gradient(circle, #3b82f6, transparent 70%)' }}
+            />
+
+            <div className="relative">
+              {/* header */}
+              <div className="flex items-center justify-between">
+                <div>
+                  <div className="text-[0.58rem] uppercase tracking-[0.28em] text-[#5fe0a5]">
+                    {bi(statsLabels.kicker)}
+                  </div>
+                  <h3 className="mt-1 text-[1rem] font-extrabold tracking-tight text-white">
+                    {bi(statsLabels.title)}
+                  </h3>
+                </div>
+                <div className="flex items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.04] px-2.5 py-1">
+                  <span className="h-1.5 w-1.5 rounded-full bg-[#2bd38c] shadow-[0_0_8px_#2bd38c]" />
+                  <span className="text-[0.58rem] font-semibold tracking-wider text-white/60">
+                    LIVE
+                  </span>
+                </div>
+              </div>
+
+              {/* main stat + sparkline side by side */}
+              <div className="mt-5 flex items-end justify-between gap-4">
+                <div className="shrink-0">
+                  <div className="flex items-baseline gap-0.5">
+                    <span className="text-[2.4rem] font-black leading-none tracking-tighter text-white">
+                      <Counter to={appConfig.projectsCount} locale={locale} />
+                    </span>
+                    <span className="text-[1.6rem] font-black leading-none text-[#2bd38c]">+</span>
+                  </div>
+                  <div className="mt-1.5 text-[0.68rem] font-medium text-white/50">
+                    {bi(statsLabels.projectsLabel)}
+                  </div>
+                </div>
+
+                {/* compact sparkline */}
+                <div className="h-12 flex-1 min-w-0">
+                  <svg viewBox="0 0 200 48" className="h-full w-full" preserveAspectRatio="none">
+                    <defs>
+                      <linearGradient id="jw-spark-fill-2" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stopColor="#2bd38c" stopOpacity="0.35" />
+                        <stop offset="100%" stopColor="#2bd38c" stopOpacity="0" />
+                      </linearGradient>
+                      <linearGradient id="jw-spark-line-2" x1="0" y1="0" x2="1" y2="0">
+                        <stop offset="0%" stopColor="#2bd38c" />
+                        <stop offset="100%" stopColor="#7fc5ff" />
+                      </linearGradient>
+                    </defs>
+                    <path
+                      d="M0,38 C30,36 55,34 85,24 C115,14 145,20 175,9 L200,4 L200,48 L0,48 Z"
+                      fill="url(#jw-spark-fill-2)"
+                    />
+                    <path
+                      d="M0,38 C30,36 55,34 85,24 C115,14 145,20 175,9 L200,4"
+                      fill="none"
+                      stroke="url(#jw-spark-line-2)"
+                      strokeWidth="1.6"
+                      strokeLinecap="round"
+                    />
+                    <circle cx="85" cy="24" r="2.4" fill="#0a1f24" stroke="#2bd38c" strokeWidth="1.6" />
+                    <circle cx="175" cy="9" r="2.4" fill="#0a1f24" stroke="#7fc5ff" strokeWidth="1.6" />
+                   </svg>
+                </div>
+              </div>
+
+              {/* divider */}
+              <div className="my-4 h-px w-full bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+
+              {/* two secondary stats with icons */}
+              <div className="grid grid-cols-2 gap-2.5">
+                <div className="flex items-center gap-3 rounded-[var(--radius-sm)] border border-white/8 bg-white/[0.03] p-3">
+                  <div className="grid h-9 w-9 shrink-0 place-items-center rounded-full border border-[#5fe0a5]/25 bg-[#5fe0a5]/10">
+                    <span className="text-[0.7rem] font-black text-[#5fe0a5]">98%</span>
+                  </div>
+                  <div className="min-w-0">
+                    <div className="text-[0.66rem] font-semibold leading-tight text-white/70">
+                      {bi(statsLabels.satisfaction)}
+                    </div>
+                    <div className="mt-0.5 text-[0.55rem] uppercase tracking-wider text-white/35">
+                      {lang === 'ar' ? 'معدل مرتفع' : 'High rate'}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-3 rounded-[var(--radius-sm)] border border-white/8 bg-white/[0.03] p-3">
+                  <div className="grid h-9 w-9 shrink-0 place-items-center rounded-full border border-[#7fc5ff]/25 bg-[#7fc5ff]/10">
+                    <span className="text-[0.7rem] font-black text-[#7fc5ff]">12+</span>
+                  </div>
+                  <div className="min-w-0">
+                    <div className="text-[0.66rem] font-semibold leading-tight text-white/70">
+                      {bi(statsLabels.experience)}
+                    </div>
+                    <div className="mt-0.5 text-[0.55rem] uppercase tracking-wider text-white/35">
+                      {lang === 'ar' ? 'خبرة تراكمية' : 'Cumulative'}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </Reveal>
+        
             {/* decorative grid + glows */}
             <div className="jw-grid absolute inset-0 opacity-[0.09]" />
             <div
