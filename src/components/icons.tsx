@@ -28,6 +28,8 @@ export type GlyphName =
   | 'clock'
   | 'settings'
   | 'info'
+  | 'building'
+  | 'checklist'
   | 'user';
 
 /** 24×24 line glyphs — optically balanced, 1.5 stroke. */
@@ -256,6 +258,31 @@ const GLYPHS: Record<GlyphName, ReactElement> = {
       <path d="M12 8h.01" />
     </>
   ),
+  building: (
+    <>
+      <path d="M4 21v-15c0 -1 1 -2 2 -2h5c1 0 2 1 2 2v15" />
+      <path d="M16 8h2c1 0 2 1 2 2v11" />
+      <path d="M3 21h18" />
+      <path d="M10 12v0" />
+      <path d="M10 16v0" />
+      <path d="M10 8v0" />
+      <path d="M7 12v0" />
+      <path d="M7 16v0" />
+      <path d="M7 8v0" />
+      <path d="M17 12v0" />
+      <path d="M17 16v0" />
+    </>
+  ),
+  checklist: (
+    <>
+      <path d="M3.5 5.5l1.5 1.5l2.5 -2.5" />
+      <path d="M3.5 11.5l1.5 1.5l2.5 -2.5" />
+      <path d="M3.5 17.5l1.5 1.5l2.5 -2.5" />
+      <path d="M11 6l9 0" />
+      <path d="M11 12l9 0" />
+      <path d="M11 18l9 0" />
+    </>
+  ),
 };
 
 export const Glyph = memo(function Glyph({
@@ -348,20 +375,16 @@ export const MaterialIcon3D = memo(function MaterialIcon3D({
         </linearGradient>
       </defs>
 
-      {/* grounded shadow */}
       <ellipse cx="50" cy="90" rx="30" ry="5" fill={`url(#floor-${uid})`} />
 
-      {/* extruded base edge (depth) */}
       <rect x="14" y="20" width="72" height="66" rx="22" fill="#000" opacity="0.65" />
       <rect x="13" y="15" width="74" height="68" rx="23" fill={`url(#edge-${uid})`} />
       <rect x="15" y="17" width="70" height="64" rx="21" fill={`url(#body-${uid})`} />
       <rect x="15" y="17" width="70" height="64" rx="21" fill={`url(#glow-${uid})`} />
 
-      {/* specular sweep */}
       <path d="M22 17h22L26 81h-4a7 7 0 0 1-7-7V24a7 7 0 0 1 7-7Z" fill="#ffffff" opacity="0.045" />
       <path d="M15 34c14-9 42-14 70-11v-6a21 21 0 0 0-4-4H20a7 7 0 0 0-5 6Z" fill="#ffffff" opacity="0.05" />
 
-      {/* recessed glyph */}
       <g transform="translate(28 30) scale(1.85)" fill="none" strokeLinecap="round" strokeLinejoin="round">
         <g stroke="#000" strokeOpacity="0.6" strokeWidth="1.7" transform="translate(0.35 0.5)">
           {GLYPHS[name]}
