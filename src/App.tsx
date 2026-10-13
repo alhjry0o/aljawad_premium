@@ -28,6 +28,7 @@ import {
   SettingsScreen,
 } from './features/more/MoreScreens';
 import { cn } from './utils/cn';
+import { OnboardingScreen, ONBOARDING_KEY } from './features/onboarding/OnboardingScreen';
 
 /* ----------------------------------------------------- Bottom navigation */
 
@@ -329,6 +330,35 @@ function Shell() {
   );
 }
 
+function Root() {
+  const [showOnboarding, setShowOnboarding] = useState(() => {
+    try {
+      return !localStorage.getItem(ONBOARDING_KEY);
+    } catch {
+      return false;
+    }
+  });
+
+  const complete = () => {
+    try {
+      localStorage.setItem(ONBOARDING_KEY, '1');
+    } catch {
+      /* ignore */
+    }
+    setShowOnboarding(false);
+  };
+
+  if (showOnboarding) {
+    return <OnboardingScreen onComplete={complete} />;
+  }
+
+  return (
+    <NavigationProvider>
+      <Shell />
+    </NavigationProvider>
+  );
+}
+
 export default function App() {
   return (
     <ThemeProvider>
@@ -336,9 +366,7 @@ export default function App() {
         <CompanyProvider>
           <RequestsProvider>
             <ProjectsProvider>
-              <NavigationProvider>
-                <Shell />
-              </NavigationProvider>
+              <Root />
             </ProjectsProvider>
           </RequestsProvider>
         </CompanyProvider>
