@@ -6,7 +6,7 @@ import { cn } from '../../utils/cn';
 const ONBOARDING_KEY = 'aljawad.onboarding.v1';
 
 interface Slide {
-  icon: 'brand' | 'equipment' | 'receipt' | 'check';
+  icon: 'brand' | 'building' | 'checklist' | 'check';
   accent: 'green' | 'navy' | 'blue' | 'teal';
   title: { ar: string; en: string };
   body: { ar: string; en: string };
@@ -16,14 +16,14 @@ const SLIDES: Slide[] = [
   {
     icon: 'brand',
     accent: 'green',
-    title: { ar: 'أهلاً بك في الجواد', en: 'Welcome to Aljawad' },
+    title: { ar: 'أهلاً بك في منصة الجواد', en: 'Welcome to Aljawad Platform' },
     body: {
       ar: 'شريكك الموثوق لحلول النظافة والصيانة المتكاملة في المملكة',
       en: 'Your trusted partner for integrated cleaning and maintenance solutions in the Kingdom',
     },
   },
   {
-    icon: 'equipment',
+    icon: 'building',
     accent: 'navy',
     title: { ar: 'خدمات متكاملة', en: 'Integrated services' },
     body: {
@@ -32,7 +32,7 @@ const SLIDES: Slide[] = [
     },
   },
   {
-    icon: 'receipt',
+    icon: 'checklist',
     accent: 'blue',
     title: { ar: 'اطلب بسهولة', en: 'Order with ease' },
     body: {
