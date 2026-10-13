@@ -16,7 +16,7 @@ const SLIDES: Slide[] = [
   {
     icon: 'brand',
     accent: 'green',
-    title: { ar: 'أهلاً بك في منصة الجواد', en: 'Welcome to Aljawad Platform ' },
+    title: { ar: 'أهلاً بك في منصة الجواد', en: 'Welcome to Aljawad Platform' },
     body: {
       ar: 'شريكك الموثوق لحلول النظافة والصيانة المتكاملة في المملكة',
       en: 'Your trusted partner for integrated cleaning and maintenance solutions in the Kingdom',
@@ -77,11 +77,9 @@ function HandsToolsIcon({ size = 140, className = '' }: { size?: number; classNa
         </linearGradient>
       </defs>
 
-      {/* circle badge */}
       <circle cx="60" cy="38" r="24" fill="url(#ht-circle)" />
       <circle cx="60" cy="38" r="24" fill="none" stroke="#ffffff" strokeOpacity="0.12" strokeWidth="0.8" />
 
-      {/* wrench (left, tilted) */}
       <g transform="translate(60 38) rotate(-35)">
         <rect x="-1.4" y="-13" width="2.8" height="14" rx="1" fill="url(#ht-tool)" />
         <path
@@ -91,17 +89,14 @@ function HandsToolsIcon({ size = 140, className = '' }: { size?: number; classNa
         <circle cx="0" cy="1.5" r="2.2" fill="none" stroke="#ffffff" strokeWidth="0.6" />
       </g>
 
-      {/* screwdriver (right, tilted) */}
       <g transform="translate(60 38) rotate(35)">
         <rect x="-1.2" y="-13" width="2.4" height="12" rx="0.8" fill="url(#ht-tool)" />
         <path d="M-1.6,-13 h3.2 v-3 l-1.6,-2 l-1.6,2 z" fill="url(#ht-tool)" />
         <rect x="-0.6" y="-1" width="1.2" height="4" fill="#ffffff" opacity="0.85" />
       </g>
 
-      {/* cross point */}
       <circle cx="60" cy="38" r="1.6" fill="#ffffff" opacity="0.9" />
 
-      {/* left hand (cupping) */}
       <path
         d="M18 62
            C16 74 20 92 30 100
@@ -131,7 +126,6 @@ function HandsToolsIcon({ size = 140, className = '' }: { size?: number; classNa
         strokeLinejoin="round"
       />
 
-      {/* right hand (cupping, mirrored) */}
       <path
         d="M102 62
            C104 74 100 92 90 100
@@ -161,7 +155,6 @@ function HandsToolsIcon({ size = 140, className = '' }: { size?: number; classNa
         strokeLinejoin="round"
       />
 
-      {/* center pedestal between hands */}
       <path
         d="M46 100 L74 100"
         stroke="url(#ht-hands)"
@@ -191,7 +184,6 @@ function WorkOrderIcon({ size = 150, className = '' }: { size?: number; classNam
         </linearGradient>
       </defs>
 
-      {/* Document body */}
       <path
         d="M32 26 H88 L106 44 V108 H32 Z"
         stroke="url(#wo-grad)"
@@ -200,7 +192,6 @@ function WorkOrderIcon({ size = 150, className = '' }: { size?: number; classNam
         strokeLinecap="round"
       />
 
-      {/* Folded corner */}
       <path
         d="M88 26 V44 H106"
         stroke="url(#wo-grad)"
@@ -209,7 +200,6 @@ function WorkOrderIcon({ size = 150, className = '' }: { size?: number; classNam
         strokeLinecap="round"
       />
 
-      {/* Wrench + Gear */}
       <g transform="translate(62 60)">
         <circle r="10" stroke="url(#wo-grad)" strokeWidth="2.4" />
         <circle r="3.5" stroke="url(#wo-grad)" strokeWidth="2.4" />
@@ -232,7 +222,6 @@ function WorkOrderIcon({ size = 150, className = '' }: { size?: number; classNam
         </g>
       </g>
 
-      {/* Checklist */}
       <g>
         <rect x="42" y="84" width="4" height="4" rx="0.5" fill="url(#wo-grad)" />
         <line x1="50" y1="86" x2="74" y2="86" stroke="url(#wo-grad)" strokeWidth="2.4" strokeLinecap="round" />
@@ -244,7 +233,6 @@ function WorkOrderIcon({ size = 150, className = '' }: { size?: number; classNam
         <line x1="50" y1="106" x2="66" y2="106" stroke="url(#wo-grad)" strokeWidth="2.4" strokeLinecap="round" />
       </g>
 
-      {/* Person silhouette */}
       <g fill="url(#wo-grad)">
         <circle cx="103" cy="82" r="8" />
         <path d="M89 112 c0 -7.7 6.3 -14 14 -14 s14 6.3 14 14 z" />
@@ -269,7 +257,6 @@ export function OnboardingScreen({ onComplete }: { onComplete: () => void }) {
       dir={dir}
       className="relative mx-auto flex min-h-[100svh] w-full max-w-[520px] flex-col overflow-hidden bg-[color:var(--bg)] text-[color:var(--text)]"
     >
-      {/* decorative grid + glows */}
       <div className="jw-grid absolute inset-0 opacity-[0.08]" />
       <div
         className="pointer-events-none absolute -top-32 start-1/4 h-72 w-72 rounded-full opacity-40 blur-3xl"
@@ -280,7 +267,6 @@ export function OnboardingScreen({ onComplete }: { onComplete: () => void }) {
         style={{ background: 'radial-gradient(circle, #0d1f3f, transparent 70%)' }}
       />
 
-      {/* skip */}
       <div className="relative z-10 flex justify-end px-5 pt-[calc(env(safe-area-inset-top)+1rem)]">
         {!isLast && (
           <button
@@ -293,41 +279,41 @@ export function OnboardingScreen({ onComplete }: { onComplete: () => void }) {
         )}
       </div>
 
-      {/* content */}
       <div className="relative z-10 flex flex-1 flex-col items-center justify-center px-7 text-center">
         <div key={`icon-${index}`} className="jw-rise">
-         {slide.icon === 'brand' ? (
-          <div className="relative">
-           <div
-            className="pointer-events-none absolute inset-0 -z-10 mx-auto h-full w-full rounded-full opacity-60 blur-3xl"
-            style={{ background: 'radial-gradient(circle, #2bd38c, transparent 70%)' }}
-          />
-          <BrandMark size={140} className="jw-float drop-shadow-[0_20px_40px_rgba(43,211,140,0.35)]" />
+          {slide.icon === 'brand' ? (
+            <div className="relative">
+              <div
+                className="pointer-events-none absolute inset-0 -z-10 mx-auto h-full w-full rounded-full opacity-60 blur-3xl"
+                style={{ background: 'radial-gradient(circle, #2bd38c, transparent 70%)' }}
+              />
+              <BrandMark size={140} className="jw-float drop-shadow-[0_20px_40px_rgba(43,211,140,0.35)]" />
+            </div>
+          ) : slide.icon === 'hands-tools' ? (
+            <div className="relative">
+              <div
+                className="pointer-events-none absolute inset-0 -z-10 mx-auto h-full w-full rounded-full opacity-50 blur-3xl"
+                style={{ background: 'radial-gradient(circle, #2bd38c, transparent 70%)' }}
+              />
+              <HandsToolsIcon size={160} className="jw-float drop-shadow-[0_20px_40px_rgba(43,211,140,0.3)]" />
+            </div>
+          ) : slide.icon === 'work-order' ? (
+            <div className="relative">
+              <div
+                className="pointer-events-none absolute inset-0 -z-10 mx-auto h-full w-full rounded-full opacity-50 blur-3xl"
+                style={{ background: 'radial-gradient(circle, #2bd38c, transparent 70%)' }}
+              />
+              <WorkOrderIcon size={150} className="jw-float drop-shadow-[0_20px_40px_rgba(43,211,140,0.3)]" />
+            </div>
+          ) : (
+            <MaterialIcon3D
+              name={slide.icon}
+              accent={slide.accent}
+              size={140}
+              className="jw-float"
+            />
+          )}
         </div>
-      ) : slide.icon === 'hands-tools' ? (
-        <div className="relative">
-          <div
-            className="pointer-events-none absolute inset-0 -z-10 mx-auto h-full w-full rounded-full opacity-50 blur-3xl"
-            style={{ background: 'radial-gradient(circle, #2bd38c, transparent 70%)' }}
-          />
-          <HandsToolsIcon size={160} className="jw-float drop-shadow-[0_20px_40px_rgba(43,211,140,0.3)]" />
-        </div>
-      ) : slide.icon === 'work-order' ? (
-        <div className="relative">
-          <div
-            className="pointer-events-none absolute inset-0 -z-10 mx-auto h-full w-full rounded-full opacity-50 blur-3xl"
-            style={{ background: 'radial-gradient(circle, #2bd38c, transparent 70%)' }}
-          />
-          <WorkOrderIcon size={150} className="jw-float drop-shadow-[0_20px_40px_rgba(43,211,140,0.3)]" />
-        </div>
-      ) : (
-        <MaterialIcon3D
-         name={slide.icon}
-         accent={slide.accent}
-         size={140}
-         className="jw-float"
-        />
-      )}
 
         <h1
           key={`t-${index}`}
@@ -346,9 +332,7 @@ export function OnboardingScreen({ onComplete }: { onComplete: () => void }) {
         </p>
       </div>
 
-      {/* bottom */}
       <div className="relative z-10 px-6 pb-[calc(env(safe-area-inset-bottom)+1.5rem)] pt-6">
-        {/* dots */}
         <div className="mb-6 flex justify-center gap-2">
           {SLIDES.map((_, i) => (
             <button
@@ -364,7 +348,6 @@ export function OnboardingScreen({ onComplete }: { onComplete: () => void }) {
           ))}
         </div>
 
-        {/* primary */}
         <button
           type="button"
           onClick={goNext}
@@ -378,7 +361,6 @@ export function OnboardingScreen({ onComplete }: { onComplete: () => void }) {
           <Glyph name="arrow" size={18} className="relative rtl:-scale-x-100" />
         </button>
 
-        {/* back */}
         {index > 0 && (
           <button
             type="button"
