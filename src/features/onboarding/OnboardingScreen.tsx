@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { useI18n } from '../../core/i18n';
-import { MaterialIcon3D, Glyph } from '../../components/icons';
+import { BrandMark, MaterialIcon3D, Glyph } from '../../components/icons';
 import { cn } from '../../utils/cn';
 
 const ONBOARDING_KEY = 'aljawad.onboarding.v1';
 
 interface Slide {
-  icon: 'spark' | 'layers' | 'receipt' | 'check';
+  icon: 'brand' | 'layers' | 'receipt' | 'check';
   accent: 'green' | 'navy' | 'blue' | 'teal';
   title: { ar: string; en: string };
   body: { ar: string; en: string };
@@ -14,7 +14,7 @@ interface Slide {
 
 const SLIDES: Slide[] = [
   {
-    icon: 'spark',
+    icon: 'brand',
     accent: 'green',
     title: { ar: 'أهلاً بك في الجواد', en: 'Welcome to Aljawad' },
     body: {
@@ -94,13 +94,23 @@ export function OnboardingScreen({ onComplete }: { onComplete: () => void }) {
       {/* content */}
       <div className="relative z-10 flex flex-1 flex-col items-center justify-center px-7 text-center">
         <div key={`icon-${index}`} className="jw-rise">
-          <MaterialIcon3D
-            name={slide.icon}
-            accent={slide.accent}
-            size={140}
-            className="jw-float"
-          />
-        </div>
+         {slide.icon === 'brand' ? (
+          <div className="relative">
+           <div
+            className="pointer-events-none absolute inset-0 -z-10 mx-auto h-full w-full rounded-full opacity-60 blur-3xl"
+            style={{ background: 'radial-gradient(circle, #2bd38c, transparent 70%)' }}
+           />
+           <BrandMark size={140} className="jw-float drop-shadow-[0_20px_40px_rgba(43,211,140,0.35)]" />
+          </div>
+        ) : (
+         <MaterialIcon3D
+          name={slide.icon}
+          accent={slide.accent}
+          size={140}
+          className="jw-float"
+         />
+       )}
+      </div>
 
         <h1
           key={`t-${index}`}
