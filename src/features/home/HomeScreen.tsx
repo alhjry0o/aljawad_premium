@@ -192,9 +192,34 @@ function WhyAljawad() {
     kicker: { ar: 'نظرة على أرقامنا', en: 'By the numbers' },
     title: { ar: 'مسيرتنا بالأرقام', en: 'Our journey in numbers' },
     projectsLabel: { ar: 'مشروع منفذ بنجاح', en: 'Projects delivered' },
-    satisfaction: { ar: 'رضا العملاء', en: 'Client satisfaction' },
-    experience: { ar: 'سنوات من الخبرة', en: 'Years of expertise' },
   };
+
+  const miniStats = [
+    {
+      icon: 'construction' as const,
+      color: '#2bd38c',
+      value: 130,
+      label: { ar: 'بناء وتشييد عقاري', en: 'Building & construction' },
+    },
+    {
+      icon: 'facade' as const,
+      color: '#7fc5ff',
+      value: 1107,
+      label: { ar: 'تنظيف واجهات', en: 'Facade cleaning' },
+    },
+    {
+      icon: 'mep' as const,
+      color: '#5fe0a5',
+      value: 2011,
+      label: { ar: 'صيانة كهرباء وتكييف', en: 'MEP maintenance' },
+    },
+    {
+      icon: 'spark' as const,
+      color: '#f5c451',
+      value: 11,
+      label: { ar: 'عاماً من الخبرة', en: 'Years of expertise' },
+    },
+  ];
 
   const points = [
     { n: '01', title: t('why.1.title'), body: t('why.1.body'), icon: 'manpower' as const },
@@ -211,6 +236,7 @@ function WhyAljawad() {
         {/* ================ Stats Showcase Card ================ */}
         <Reveal className="px-5">
           <div className="relative overflow-hidden rounded-[var(--radius-lg)] border border-[color:var(--line-strong)] bg-gradient-to-br from-[#0a1a2e] via-[#0a1f24] to-[#04140f] p-5 shadow-[0_24px_60px_-28px_rgba(0,0,0,0.95)]">
+            {/* decorative */}
             <div className="jw-grid absolute inset-0 opacity-[0.07]" />
             <div
               className="pointer-events-none absolute -top-20 -end-20 h-48 w-48 rounded-full opacity-35 blur-3xl"
@@ -240,7 +266,7 @@ function WhyAljawad() {
                 </div>
               </div>
 
-              {/* main stat + sparkline side by side */}
+              {/* hero stat + sparkline */}
               <div className="mt-5 flex items-end justify-between gap-4">
                 <div className="shrink-0">
                   <div
@@ -259,7 +285,6 @@ function WhyAljawad() {
                   </div>
                 </div>
 
-                {/* compact sparkline */}
                 <div className="h-12 flex-1 min-w-0">
                   <svg viewBox="0 0 200 48" className="h-full w-full" preserveAspectRatio="none">
                     <defs>
@@ -292,45 +317,53 @@ function WhyAljawad() {
               {/* divider */}
               <div className="my-4 h-px w-full bg-gradient-to-r from-transparent via-white/10 to-transparent" />
 
-              {/* two secondary stats with icons */}
+              {/* 2x2 grid of detailed stats */}
               <div className="grid grid-cols-2 gap-2.5">
-                <div className="flex items-center gap-3 rounded-[var(--radius-sm)] border border-white/8 bg-white/[0.03] p-3">
-                  <div className="grid h-9 w-9 shrink-0 place-items-center rounded-full border border-[#5fe0a5]/25 bg-[#5fe0a5]/10">
-                    <span
-                      className="text-[0.7rem] font-black text-[#5fe0a5]"
-                      style={{ direction: 'ltr', unicodeBidi: 'isolate' }}
-                    >
-                      98%
-                    </span>
-                  </div>
-                  <div className="min-w-0">
-                    <div className="text-[0.66rem] font-semibold leading-tight text-white/70">
-                      {bi(statsLabels.satisfaction)}
+                {miniStats.map((s, i) => (
+                  <div
+                    key={i}
+                    className="group relative overflow-hidden rounded-[var(--radius-sm)] border border-white/8 bg-white/[0.03] p-3 transition-colors hover:bg-white/[0.055]"
+                  >
+                    <div className="flex items-start gap-2.5">
+                      <div
+                        className="grid h-8 w-8 shrink-0 place-items-center rounded-full border"
+                        style={{
+                          borderColor: `${s.color}40`,
+                          background: `${s.color}14`,
+                        }}
+                      >
+                        <Glyph name={s.icon} size={16} className="shrink-0" />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <div
+                          className="flex items-baseline gap-0.5"
+                          style={{ direction: 'ltr', unicodeBidi: 'isolate' }}
+                        >
+                          <span
+                            className="text-[1.15rem] font-black leading-none tracking-tight"
+                            style={{ color: s.color }}
+                          >
+                            <Counter to={s.value} locale="en-US" />
+                          </span>
+                          <span
+                            className="text-[0.95rem] font-black leading-none"
+                            style={{ color: s.color }}
+                          >
+                            +
+                          </span>
+                        </div>
+                        <div className="mt-1 text-[0.6rem] font-medium leading-tight text-white/55">
+                          {bi(s.label)}
+                        </div>
+                      </div>
                     </div>
-                    <div className="mt-0.5 text-[0.55rem] uppercase tracking-wider text-white/35">
-                      {bi({ ar: 'معدل مرتفع', en: 'High rate' })}
-                    </div>
+                    {/* subtle glow */}
+                    <div
+                      className="pointer-events-none absolute -bottom-8 -end-8 h-16 w-16 rounded-full opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+                      style={{ background: `radial-gradient(circle, ${s.color}40, transparent 70%)` }}
+                    />
                   </div>
-                </div>
-
-                <div className="flex items-center gap-3 rounded-[var(--radius-sm)] border border-white/8 bg-white/[0.03] p-3">
-                  <div className="grid h-9 w-9 shrink-0 place-items-center rounded-full border border-[#7fc5ff]/25 bg-[#7fc5ff]/10">
-                    <span
-                      className="text-[0.7rem] font-black text-[#7fc5ff]"
-                      style={{ direction: 'ltr', unicodeBidi: 'isolate' }}
-                    >
-                      12+
-                    </span>
-                  </div>
-                  <div className="min-w-0">
-                    <div className="text-[0.66rem] font-semibold leading-tight text-white/70">
-                      {bi(statsLabels.experience)}
-                    </div>
-                    <div className="mt-0.5 text-[0.55rem] uppercase tracking-wider text-white/35">
-                      {bi({ ar: 'خبرة تراكمية', en: 'Cumulative' })}
-                    </div>
-                  </div>
-                </div>
+                ))}
               </div>
             </div>
           </div>
