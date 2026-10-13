@@ -185,13 +185,12 @@ function BrandStatement() {
 }
 
 function WhyAljawad() {
-  const { t, bi, lang } = useI18n();
+  const { t, bi } = useI18n();
   const { config: appConfig } = useCompany();
-  const locale = lang === 'ar' ? 'ar-EG' : 'en-US';
 
   const statsLabels = {
     kicker: { ar: 'نظرة على أرقامنا', en: 'By the numbers' },
-    title: { ar: 'الجواد في أرقام', en: 'Aljawad in numbers' },
+    title: { ar: 'مسيرتنا بالأرقام', en: 'Our journey in numbers' },
     projectsLabel: { ar: 'مشروع منفذ بنجاح', en: 'Projects delivered' },
     satisfaction: { ar: 'رضا العملاء', en: 'Client satisfaction' },
     experience: { ar: 'سنوات من الخبرة', en: 'Years of expertise' },
@@ -212,7 +211,6 @@ function WhyAljawad() {
         {/* ================ Stats Showcase Card ================ */}
         <Reveal className="px-5">
           <div className="relative overflow-hidden rounded-[var(--radius-lg)] border border-[color:var(--line-strong)] bg-gradient-to-br from-[#0a1a2e] via-[#0a1f24] to-[#04140f] p-5 shadow-[0_24px_60px_-28px_rgba(0,0,0,0.95)]">
-            {/* decorative */}
             <div className="jw-grid absolute inset-0 opacity-[0.07]" />
             <div
               className="pointer-events-none absolute -top-20 -end-20 h-48 w-48 rounded-full opacity-35 blur-3xl"
@@ -245,11 +243,16 @@ function WhyAljawad() {
               {/* main stat + sparkline side by side */}
               <div className="mt-5 flex items-end justify-between gap-4">
                 <div className="shrink-0">
-                  <div className="flex items-baseline gap-0.5">
-                    <span className="text-[2.4rem] font-black leading-none tracking-tighter text-white">
-                      <Counter to={appConfig.projectsCount} locale={locale} />
+                  <div
+                    className="flex items-baseline gap-0.5"
+                    style={{ direction: 'ltr', unicodeBidi: 'isolate' }}
+                  >
+                    <span className="bg-gradient-to-br from-[#2bd38c] via-[#5fe0a5] to-[#7fc5ff] bg-clip-text text-[2.4rem] font-black leading-none tracking-tighter text-transparent">
+                      <Counter to={appConfig.projectsCount} locale="en-US" />
                     </span>
-                    <span className="text-[1.6rem] font-black leading-none text-[#2bd38c]">+</span>
+                    <span className="bg-gradient-to-br from-[#2bd38c] to-[#7fc5ff] bg-clip-text text-[1.6rem] font-black leading-none text-transparent">
+                      +
+                    </span>
                   </div>
                   <div className="mt-1.5 text-[0.68rem] font-medium text-white/50">
                     {bi(statsLabels.projectsLabel)}
@@ -293,28 +296,38 @@ function WhyAljawad() {
               <div className="grid grid-cols-2 gap-2.5">
                 <div className="flex items-center gap-3 rounded-[var(--radius-sm)] border border-white/8 bg-white/[0.03] p-3">
                   <div className="grid h-9 w-9 shrink-0 place-items-center rounded-full border border-[#5fe0a5]/25 bg-[#5fe0a5]/10">
-                    <span className="text-[0.7rem] font-black text-[#5fe0a5]">98%</span>
+                    <span
+                      className="text-[0.7rem] font-black text-[#5fe0a5]"
+                      style={{ direction: 'ltr', unicodeBidi: 'isolate' }}
+                    >
+                      98%
+                    </span>
                   </div>
                   <div className="min-w-0">
                     <div className="text-[0.66rem] font-semibold leading-tight text-white/70">
                       {bi(statsLabels.satisfaction)}
                     </div>
                     <div className="mt-0.5 text-[0.55rem] uppercase tracking-wider text-white/35">
-                      {lang === 'ar' ? 'معدل مرتفع' : 'High rate'}
+                      {bi({ ar: 'معدل مرتفع', en: 'High rate' })}
                     </div>
                   </div>
                 </div>
 
                 <div className="flex items-center gap-3 rounded-[var(--radius-sm)] border border-white/8 bg-white/[0.03] p-3">
                   <div className="grid h-9 w-9 shrink-0 place-items-center rounded-full border border-[#7fc5ff]/25 bg-[#7fc5ff]/10">
-                    <span className="text-[0.7rem] font-black text-[#7fc5ff]">12+</span>
+                    <span
+                      className="text-[0.7rem] font-black text-[#7fc5ff]"
+                      style={{ direction: 'ltr', unicodeBidi: 'isolate' }}
+                    >
+                      12+
+                    </span>
                   </div>
                   <div className="min-w-0">
                     <div className="text-[0.66rem] font-semibold leading-tight text-white/70">
                       {bi(statsLabels.experience)}
                     </div>
                     <div className="mt-0.5 text-[0.55rem] uppercase tracking-wider text-white/35">
-                      {lang === 'ar' ? 'خبرة تراكمية' : 'Cumulative'}
+                      {bi({ ar: 'خبرة تراكمية', en: 'Cumulative' })}
                     </div>
                   </div>
                 </div>
