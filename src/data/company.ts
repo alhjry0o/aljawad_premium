@@ -26,6 +26,10 @@ export interface AppConfiguration {
   companyName: Bilingual;
   version: string;
   projectsCount: number;
+  constructionCount: number;
+  facadeCount: number;
+  mepCount: number;
+  experienceYears: number;
   contact: ContactInfo;
   developer: {
     name: Bilingual;
@@ -42,6 +46,10 @@ export const appConfig: AppConfiguration = {
   version: '1.0.0 (Demo)',
   // Single source of truth — change once, reflected everywhere.
   projectsCount: 1450,
+  constructionCount: 130,
+  facadeCount: 1107,
+  mepCount: 2011,
+  experienceYears: 11,
   contact: {
     phone: '920013406',
     mobile1: '0535091378',
