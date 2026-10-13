@@ -198,25 +198,25 @@ function WhyAljawad() {
     {
       icon: 'construction' as const,
       color: '#2bd38c',
-      value: 130,
+      value: appConfig.constructionCount,
       label: { ar: 'بناء وتشييد عقاري', en: 'Building & construction' },
     },
     {
       icon: 'facade' as const,
       color: '#7fc5ff',
-      value: 1107,
+      value: appConfig.facadeCount,
       label: { ar: 'تنظيف واجهات', en: 'Facade cleaning' },
     },
     {
       icon: 'mep' as const,
       color: '#5fe0a5',
-      value: 2011,
+      value: appConfig.mepCount,
       label: { ar: 'صيانة كهرباء وتكييف', en: 'MEP maintenance' },
     },
     {
       icon: 'spark' as const,
       color: '#f5c451',
-      value: 11,
+      value: appConfig.experienceYears,
       label: { ar: 'عاماً من الخبرة', en: 'Years of expertise' },
     },
   ];
