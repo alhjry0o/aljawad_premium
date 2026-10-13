@@ -51,11 +51,11 @@ export const appConfig: AppConfiguration = {
   mepCount: 2011,
   experienceYears: 11,
   contact: {
-    phone: '920013406',
-    mobile1: '0535091378',
-    mobile2: '0561116199',
-    whatsapp: '05542471982',
-    email: 'info@aljawadservices.com',
+    phone: '0509474308',
+    mobile1: '966-0535091378',
+    mobile2: '966-920013406',
+    whatsapp: '+966509474308',
+    email: 'cont@aljawadint.co',
     website: 'aljawadservices.com',
     address: {
       ar: 'الرياض، العليا، أمام الرياض جاليري',
