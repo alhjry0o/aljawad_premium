@@ -7,7 +7,7 @@ const ONBOARDING_KEY = 'aljawad.onboarding.v1';
 
 interface Slide {
   icon: 'brand' | 'building' | 'checklist' | 'check';
-  accent: 'green' | 'navy' | 'blue' | 'teal';
+  accent: 'green' | 'teal';
   title: { ar: string; en: string };
   body: { ar: string; en: string };
 }
@@ -16,7 +16,7 @@ const SLIDES: Slide[] = [
   {
     icon: 'brand',
     accent: 'green',
-    title: { ar: 'أهلاً بك في منصة الجواد', en: 'Welcome to Aljawad Platform' },
+    title: { ar: 'أهلاً بك في الجواد', en: 'Welcome to Aljawad' },
     body: {
       ar: 'شريكك الموثوق لحلول النظافة والصيانة المتكاملة في المملكة',
       en: 'Your trusted partner for integrated cleaning and maintenance solutions in the Kingdom',
@@ -24,7 +24,7 @@ const SLIDES: Slide[] = [
   },
   {
     icon: 'building',
-    accent: 'navy',
+    accent: 'green',
     title: { ar: 'خدمات متكاملة', en: 'Integrated services' },
     body: {
       ar: '11 خدمة احترافية — من النظافة العميقة إلى العزل والصيانة',
@@ -33,7 +33,7 @@ const SLIDES: Slide[] = [
   },
   {
     icon: 'checklist',
-    accent: 'blue',
+    accent: 'green',
     title: { ar: 'اطلب بسهولة', en: 'Order with ease' },
     body: {
       ar: 'أنشئ طلبك في خطوات قليلة — خدمة، عرض سعر، أو معاينة',
@@ -105,6 +105,8 @@ export function OnboardingScreen({ onComplete }: { onComplete: () => void }) {
               accent={slide.accent}
               size={140}
               className="jw-float"
+              solid
+              strokeScale={1.55}
             />
           )}
         </div>
