@@ -23,6 +23,7 @@ import {
   AboutScreen,
   ContactScreen,
   DeveloperScreen,
+  FaqScreen,
   LegalScreen,
   MoreScreen,
   SettingsScreen,
@@ -292,6 +293,7 @@ function Outlet() {
       case 'settings': return <SettingsScreen />;
       case 'privacy': return <LegalScreen kind="privacy" />;
       case 'terms': return <LegalScreen kind="terms" />;
+      case 'faq': return <FaqScreen />;
       case 'developer': return <DeveloperScreen />;
       default: return <HomeScreen />;
     }
