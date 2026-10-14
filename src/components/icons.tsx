@@ -30,6 +30,7 @@ export type GlyphName =
   | 'info'
   | 'building'
   | 'checklist'
+  | 'share'
   | 'user';
 
 /** 24×24 line glyphs — optically balanced, 1.5 stroke. */
@@ -281,6 +282,15 @@ const GLYPHS: Record<GlyphName, ReactElement> = {
       <path d="M11 6l9 0" />
       <path d="M11 12l9 0" />
       <path d="M11 18l9 0" />
+    </>
+  ),
+  share: (
+    <>
+      <path d="M6 12a2.5 2.5 0 1 0 0 -5 2.5 2.5 0 0 0 0 5Z" />
+      <path d="M18 8a2.5 2.5 0 1 0 0 -5 2.5 2.5 0 0 0 0 5Z" />
+      <path d="M18 21a2.5 2.5 0 1 0 0 -5 2.5 2.5 0 0 0 0 5Z" />
+      <path d="m8.2 10.8 7.6 -4.6" />
+      <path d="m8.2 13.2 7.6 4.6" />
     </>
   ),
 };
