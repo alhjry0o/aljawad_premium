@@ -39,4 +39,51 @@ export const externalActions = {
       return false;
     }
   },
+  /**
+   * مشاركة محتوى عبر واجهة المشاركة الأصلية.
+   * - على الأجهزة التي تدعم Web Share API → يفتح قائمة التطبيقات.
+   * - إذا فشل → يفتح واتساب كبديل.
+   * - إذا فشل الكل → ينسخ المحتوى للحافظة.
+   */
+  share: async ({
+    title,
+    text,
+    url,
+    fallbackWhatsapp,
+  }: {
+    title?: string;
+    text: string;
+    url?: string;
+    fallbackWhatsapp?: string;
+  }): Promise<'shared' | 'whatsapp' | 'copied' | 'failed'> => {
+    // 1) Web Share API (الأفضل)
+    try {
+      if (typeof navigator !== 'undefined' && 'share' in navigator) {
+        await (navigator as Navigator & { share: (data: ShareData) => Promise<void> }).share({
+          title,
+          text,
+          url,
+        });
+        return 'shared';
+      }
+    } catch {
+      /* المستخدم أغلق قائمة المشاركة أو فشل — نتابع للبديل */
+    }
+
+    // 2) بديل: واتساب
+    if (fallbackWhatsapp) {
+      const fullText = url ? `${text}\n${url}` : text;
+      open(`https://wa.me/${toInternational(fallbackWhatsapp)}?text=${encodeURIComponent(fullText)}`);
+      return 'whatsapp';
+    }
+
+    // 3) بديل أخير: نسخ للحافظة
+    try {
+      const fullText = url ? `${text}\n${url}` : text;
+      await navigator.clipboard.writeText(fullText);
+      return 'copied';
+    } catch {
+      return 'failed';
+    }
+  },
 };
