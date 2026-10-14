@@ -30,6 +30,8 @@ export interface AppConfiguration {
   facadeCount: number;
   mepCount: number;
   experienceYears: number;
+  shareUrl: string;
+  shareMessage: string;
   contact: ContactInfo;
   developer: {
     name: Bilingual;
@@ -50,6 +52,8 @@ export const appConfig: AppConfiguration = {
   facadeCount: 1107,
   mepCount: 2011,
   experienceYears: 11,
+  shareUrl: "https://play.google.com/store/apps/details?id=com.aljawadservices.app",
+  shareMessage: "جرّب تطبيق الجواد — خدمات النظافة والصيانة المتكاملة",
   contact: {
     phone: '0509474308',
     mobile1: '966-0535091378',
