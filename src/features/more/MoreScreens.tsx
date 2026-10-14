@@ -48,6 +48,46 @@ function HubRow({
   );
 }
 
+function ShareAppRow() {
+  const { t, bi } = useI18n();
+  const { config: appConfig } = useCompany();
+  const [toast, setToast] = useState<string | null>(null);
+
+  const handleShare = async () => {
+    const result = await externalActions.share({
+      title: bi(appConfig.appName),
+      text: appConfig.shareMessage,
+      url: appConfig.shareUrl,
+      fallbackWhatsapp: appConfig.contact.whatsapp,
+    });
+
+    if (result === 'copied') {
+      setToast(bi({ ar: 'تم نسخ الرابط', en: 'Link copied' }));
+      window.setTimeout(() => setToast(null), 2200);
+    } else if (result === 'failed') {
+      setToast(bi({ ar: 'تعذّرت المشاركة', en: 'Sharing failed' }));
+      window.setTimeout(() => setToast(null), 2200);
+    }
+  };
+
+  return (
+    <>
+      <button
+        type="button"
+        onClick={handleShare}
+        className="group flex w-full items-center gap-4 border-b border-[color:var(--line)] px-5 py-4 text-start transition-colors last:border-0 hover:bg-[color:var(--surface)]"
+      >
+        <Glyph name="arrow" size={19} className="text-[color:var(--primary)]" />
+        <span className="flex-1 text-[0.9rem] font-semibold">
+          {t('more.share')}
+        </span>
+        <Glyph name="globe" size={16} className="text-[color:var(--faint)] rtl:-scale-x-100" />
+      </button>
+      {toast && <Toast message={toast} />}
+    </>
+  );
+}
+
 export function MoreScreen() {
   const { t, bi } = useI18n();
   const { push } = useNav();
@@ -93,6 +133,7 @@ export function MoreScreen() {
           label={bi({ ar: 'الأسئلة الشائعة', en: 'FAQ' })}
           onClick={go({ name: 'faq' })}
         />
+        <ShareAppRow />
         <HubRow icon="shield" label={t('more.privacy')} onClick={go({ name: 'privacy' })} />
         <HubRow icon="quote" label={t('more.terms')} onClick={go({ name: 'terms' })} />
         <HubRow icon="info" label={t('more.appInfo')} meta={appConfig.version} onClick={go({ name: 'settings' })} />
