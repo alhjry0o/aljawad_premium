@@ -32,6 +32,7 @@ export interface AppConfiguration {
   experienceYears: number;
   shareUrl: string;
   shareMessage: string;
+  playStorePublished: boolean;
   contact: ContactInfo;
   developer: {
     name: Bilingual;
@@ -52,8 +53,9 @@ export const appConfig: AppConfiguration = {
   facadeCount: 1107,
   mepCount: 2011,
   experienceYears: 11,
-  shareUrl: "https://play.google.com/store/apps/details?id=com.aljawadservices.app",
-  shareMessage: "جرّب تطبيق الجواد — خدمات النظافة والصيانة المتكاملة",
+  shareUrl: 'https://play.google.com/store/apps/details?id=com.aljawadservices.app',
+  shareMessage: 'جرّب تطبيق الجواد — خدمات النظافة والصيانة المتكاملة',
+  playStorePublished: false,
   contact: {
     phone: '0509474308',
     mobile1: '966-0535091378',
