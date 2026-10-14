@@ -16,7 +16,7 @@ const SLIDES: Slide[] = [
   {
     icon: 'brand',
     accent: 'green',
-    title: { ar: 'أهلاً بك في الجواد', en: 'Welcome to Aljawad' },
+    title: { ar: 'أهلاً بك في منصة الجواد', en: 'Welcome to Aljawad Platform' },
     body: {
       ar: 'شريكك الموثوق لحلول النظافة والصيانة المتكاملة في المملكة',
       en: 'Your trusted partner for integrated cleaning and maintenance solutions in the Kingdom',
