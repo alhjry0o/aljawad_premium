@@ -77,11 +77,11 @@ function ShareAppRow() {
         onClick={handleShare}
         className="group flex w-full items-center gap-4 border-b border-[color:var(--line)] px-5 py-4 text-start transition-colors last:border-0 hover:bg-[color:var(--surface)]"
       >
-        <Glyph name="arrow" size={19} className="text-[color:var(--primary)]" />
+        <Glyph name="share" size={19} className="text-[color:var(--primary)]" />
         <span className="flex-1 text-[0.9rem] font-semibold">
           {t('more.share')}
         </span>
-        <Glyph name="globe" size={16} className="text-[color:var(--faint)] rtl:-scale-x-100" />
+        <Glyph name="arrow" size={16} className="text-[color:var(--faint)] rtl:-scale-x-100" />
       </button>
       {toast && <Toast message={toast} />}
     </>
