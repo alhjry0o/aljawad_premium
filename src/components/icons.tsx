@@ -326,20 +326,30 @@ const ACCENTS: Record<string, { a: string; b: string; light: string }> = {
  * Material-based 3D icon.
  * A machined, matte-metal tile with beveled edges, controlled specular
  * highlight and a recessed brand glyph. Pure SVG — no heavy assets.
+ *
+ * `solid`: renders the glyph in a single bright color (no gradient).
+ * `strokeScale`: multiplies the inner glyph stroke width (default 1).
  */
 export const MaterialIcon3D = memo(function MaterialIcon3D({
   name,
   accent = 'green',
   size = 72,
   className = '',
+  solid = false,
+  strokeScale = 1,
 }: {
   name: GlyphName;
   accent?: 'green' | 'navy' | 'blue' | 'teal';
   size?: number;
   className?: string;
+  solid?: boolean;
+  strokeScale?: number;
 }) {
   const c = ACCENTS[accent] ?? ACCENTS.green;
-  const uid = `${name}-${accent}`;
+  const uid = `${name}-${accent}-${solid ? 's' : 'g'}-${strokeScale}`;
+  const glyphStroke = 1.5 * strokeScale;
+  const shadowStroke = 1.7 * strokeScale;
+
   return (
     <svg
       width={size}
@@ -386,10 +396,13 @@ export const MaterialIcon3D = memo(function MaterialIcon3D({
       <path d="M15 34c14-9 42-14 70-11v-6a21 21 0 0 0-4-4H20a7 7 0 0 0-5 6Z" fill="#ffffff" opacity="0.05" />
 
       <g transform="translate(28 30) scale(1.85)" fill="none" strokeLinecap="round" strokeLinejoin="round">
-        <g stroke="#000" strokeOpacity="0.6" strokeWidth="1.7" transform="translate(0.35 0.5)">
+        <g stroke="#000" strokeOpacity="0.6" strokeWidth={shadowStroke} transform="translate(0.35 0.5)">
           {GLYPHS[name]}
         </g>
-        <g stroke={`url(#glyph-${uid})`} strokeWidth="1.5">
+        <g
+          stroke={solid ? c.light : `url(#glyph-${uid})`}
+          strokeWidth={glyphStroke}
+        >
           {GLYPHS[name]}
         </g>
       </g>
