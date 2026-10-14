@@ -195,6 +195,7 @@ const ar = {
   'more.settings': 'الإعدادات',
   'more.privacy': 'الخصوصية',
   'more.terms': 'الشروط والأحكام',
+  'more.share': 'مشاركة التطبيق',
   'more.appInfo': 'معلومات التطبيق',
 
   'settings.title': 'الإعدادات',
@@ -430,6 +431,7 @@ const en: Record<Key, string> = {
   'more.settings': 'Settings',
   'more.privacy': 'Privacy',
   'more.terms': 'Terms & conditions',
+  'more.share': 'Share the app',
   'more.appInfo': 'App information',
 
   'settings.title': 'Settings',
