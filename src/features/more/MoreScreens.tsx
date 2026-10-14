@@ -88,6 +88,11 @@ export function MoreScreen() {
           label={t('more.settings')}
           onClick={go({ name: 'settings' })}
         />
+        <HubRow
+          icon="inspect"
+          label={bi({ ar: 'الأسئلة الشائعة', en: 'FAQ' })}
+          onClick={go({ name: 'faq' })}
+        />
         <HubRow icon="shield" label={t('more.privacy')} onClick={go({ name: 'privacy' })} />
         <HubRow icon="quote" label={t('more.terms')} onClick={go({ name: 'terms' })} />
         <HubRow icon="info" label={t('more.appInfo')} meta={appConfig.version} onClick={go({ name: 'settings' })} />
@@ -417,6 +422,175 @@ export function LegalScreen({ kind }: { kind: 'privacy' | 'terms' }) {
     </div>
   );
 }
+
+/* ------------------------------------------------------------ FAQ */
+
+const FAQS: { q: { ar: string; en: string }; a: { ar: string; en: string } }[] = [
+  {
+    q: { ar: 'كيف أطلب خدمة من الجواد؟', en: 'How do I request a service from Aljawad?' },
+    a: {
+      ar: 'يمكنك طلب الخدمة عبر التطبيق مباشرة (زر "اطلب خدمة")، أو التواصل معنا عبر واتساب أو الاتصال على الرقم الموحد. سنرد عليك خلال وقت قصير لتأكيد التفاصيل.',
+      en: 'You can request a service directly through the app (the "Request Service" button), or reach us via WhatsApp or call our unified number. We will respond shortly to confirm the details.',
+    },
+  },
+  {
+    q: { ar: 'هل المعاينة مجانية؟', en: 'Is the inspection free?' },
+    a: {
+      ar: 'نعم، المعاينة الأولية مجانية لمعظم الخدمات داخل نطاق خدمتنا. يمكنك طلب معاينة من الشاشة الرئيسية أو من صفحة الخدمة.',
+      en: 'Yes, the initial inspection is free for most services within our coverage area. You can request an inspection from the home screen or any service page.',
+    },
+  },
+  {
+    q: { ar: 'ما هي المناطق التي تخدمونها؟', en: 'Which areas do you serve?' },
+    a: {
+      ar: 'نخدم مدينة الرياض وجميع ضواحيها، وأغلب محافظات المملكة. للمشاريع الكبيرة والمنشآت الصناعية، يمكننا التوسع لأي منطقة — تواصل معنا لمناقشة التفاصيل.',
+      en: 'We serve Riyadh and all its suburbs, along with most governorates of the Kingdom. For large projects and industrial facilities, we can expand to any area — contact us to discuss the details.',
+    },
+  },
+  {
+    q: { ar: 'كم تستغرق الاستجابة للطلب؟', en: 'How long does it take to respond to a request?' },
+    a: {
+      ar: 'نستجيب عادة خلال أقل من ساعة في ساعات العمل الرسمية. للحالات الطارئة، يمكنك الاتصال بنا مباشرة على الرقم الموحد.',
+      en: 'We typically respond in less than an hour during official working hours. For urgent cases, you can call us directly on the unified number.',
+    },
+  },
+  {
+    q: { ar: 'هل تستخدمون مواد آمنة؟', en: 'Do you use safe materials?' },
+    a: {
+      ar: 'نعم، نستخدم مواد معتمدة وصديقة للبيئة من موردين موثوقين، ونلتزم بأعلى معايير السلامة والجودة في جميع خدماتنا.',
+      en: 'Yes, we use certified, eco-friendly materials from trusted suppliers, and adhere to the highest safety and quality standards across all our services.',
+    },
+  },
+  {
+    q: { ar: 'كيف يتم الدفع؟', en: 'How is payment made?' },
+    a: {
+      ar: 'نقبل الدفع نقدًا أو عبر التحويل البنكي. للمشاريع الكبيرة والعقود، يمكننا مناقشة خيارات دفع مرنة.',
+      en: 'We accept cash or bank transfer. For large projects and contracts, we can discuss flexible payment options.',
+    },
+  },
+  {
+    q: { ar: 'هل تقدمون ضمانًا على الخدمة؟', en: 'Do you offer a service warranty?' },
+    a: {
+      ar: 'نعم، نقدم ضمان جودة على جميع خدماتنا. إذا لم تكن راضيًا، تواصل معنا خلال 7 أيام وسنعالج الأمر فورًا.',
+      en: 'Yes, we offer a quality warranty on all our services. If you are not satisfied, contact us within 7 days and we will address it immediately.',
+    },
+  },
+  {
+    q: { ar: 'هل يمكنني إلغاء أو تأجيل الموعد؟', en: 'Can I cancel or reschedule an appointment?' },
+    a: {
+      ar: 'نعم، يمكنك الإلغاء أو التأجيل قبل 24 ساعة من الموعد دون أي رسوم. تواصل معنا عبر واتساب أو الهاتف لإجراء التعديل.',
+      en: 'Yes, you can cancel or reschedule up to 24 hours before the appointment at no charge. Contact us via WhatsApp or phone to make the change.',
+    },
+  },
+];
+
+export function FaqScreen() {
+  const { t, bi } = useI18n();
+  const { config: appConfig } = useCompany();
+  const [openId, setOpenId] = useState<number | null>(0);
+
+  return (
+    <div className="pb-14">
+      <ScreenHeader
+        title={bi({ ar: 'الأسئلة الشائعة', en: 'FAQ' })}
+        subtitle={bi({ ar: 'إجابات على أكثر ما يسأل عنه عملاؤنا', en: 'Answers to our most common questions' })}
+      />
+
+      <div className="px-5 pt-6">
+        <p className="text-[0.85rem] leading-relaxed text-[color:var(--muted)]">
+          {bi({
+            ar: 'جمعنا لك أكثر الأسئلة تكرارًا وإجاباتها. إذا لم تجد ما تبحث عنه، تواصل معنا مباشرة في نهاية الصفحة.',
+            en: 'We have gathered the most frequent questions and their answers. If you do not find what you are looking for, contact us directly at the end of the page.',
+          })}
+        </p>
+      </div>
+
+      <ul className="mt-6">
+        {FAQS.map((item, i) => {
+          const open = openId === i;
+          return (
+            <li key={i} className="border-t border-[color:var(--line)] last:border-b">
+              <button
+                type="button"
+                onClick={() => setOpenId(open ? null : i)}
+                aria-expanded={open}
+                className="flex w-full items-center gap-3 px-5 py-4 text-start transition-colors hover:bg-[color:var(--surface)]"
+              >
+                <span
+                  className={cn(
+                    'grid h-7 w-7 shrink-0 place-items-center rounded-full border transition-all duration-300',
+                    open
+                      ? 'border-[color:var(--primary)] bg-[color:var(--primary)]/15 text-[color:var(--primary)]'
+                      : 'border-[color:var(--line-strong)] text-[color:var(--muted)]',
+                  )}
+                >
+                  <Glyph
+                    name="close"
+                    size={14}
+                    className={cn('transition-transform duration-300', !open && 'rotate-45')}
+                  />
+                </span>
+                <span
+                  className={cn(
+                    'flex-1 text-[0.92rem] font-semibold leading-snug tracking-tight transition-colors',
+                    open ? 'text-[color:var(--primary)]' : 'text-[color:var(--text)]',
+                  )}
+                >
+                  {bi(item.q)}
+                </span>
+              </button>
+              <div
+                className="grid overflow-hidden transition-[grid-template-rows] duration-400 ease-[cubic-bezier(.16,1,.3,1)]"
+                style={{ gridTemplateRows: open ? '1fr' : '0fr' }}
+              >
+                <div className="min-h-0">
+                  <div className="px-5 pb-5 ps-[60px]">
+                    <p className="text-[0.85rem] leading-[1.95] text-[color:var(--muted)]">
+                      {bi(item.a)}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </li>
+          );
+        })}
+      </ul>
+
+      <Reveal className="px-5 pt-10">
+        <div className="relative overflow-hidden rounded-[var(--radius-md)] border border-[color:var(--line)] bg-[color:var(--surface)] p-5">
+          <div className="jw-grid absolute inset-0 opacity-30" />
+          <div className="relative">
+            <h3 className="text-[1.05rem] font-bold tracking-tight">
+              {bi({ ar: 'لم تجد إجابتك؟', en: "Didn't find your answer?" })}
+            </h3>
+            <p className="mt-1.5 text-[0.82rem] leading-relaxed text-[color:var(--muted)]">
+              {bi({
+                ar: 'فريقنا جاهز للإجابة على جميع استفساراتك.',
+                en: 'Our team is ready to answer all your questions.',
+              })}
+            </p>
+            <div className="mt-4 flex flex-wrap gap-2">
+              <Button
+                onClick={() => externalActions.whatsapp(appConfig.contact.whatsapp)}
+                icon="whatsapp"
+              >
+                {t('quick.whatsapp')}
+              </Button>
+              <Button
+                variant="ghost"
+                onClick={() => externalActions.call(appConfig.contact.phone)}
+                icon="phone"
+              >
+                {t('quick.call')}
+              </Button>
+            </div>
+          </div>
+        </div>
+      </Reveal>
+    </div>
+  );
+}
+
 
 /* ------------------------------------------------------------ Developer */
 
