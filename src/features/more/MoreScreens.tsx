@@ -88,6 +88,60 @@ function ShareAppRow() {
   );
 }
 
+function RateAppRow() {
+  const { t, bi } = useI18n();
+  const { config: appConfig } = useCompany();
+  const published = appConfig.playStorePublished;
+
+  const handleClick = () => {
+    if (published) {
+      externalActions.openUrl(appConfig.shareUrl);
+    }
+  };
+
+  return (
+    <button
+      type="button"
+      onClick={handleClick}
+      disabled={!published}
+      className={cn(
+        'group flex w-full items-center gap-4 border-b border-[color:var(--line)] px-5 py-4 text-start transition-colors',
+        published ? 'hover:bg-[color:var(--surface)]' : 'cursor-not-allowed',
+      )}
+    >
+      <Glyph
+        name="star"
+        size={19}
+        className={cn(
+          'shrink-0 transition-colors',
+          published ? 'text-[color:var(--primary)]' : 'text-[color:var(--faint)]',
+        )}
+      />
+      <div className="min-w-0 flex-1">
+        <div
+          className={cn(
+            'text-[0.9rem] font-semibold',
+            published ? 'text-[color:var(--text)]' : 'text-[color:var(--muted)]',
+          )}
+        >
+          {t('more.rate')}
+        </div>
+        {!published && (
+          <div className="mt-0.5 text-[0.7rem] leading-snug text-[color:var(--faint)]">
+            {bi({
+              ar: 'متاح عند رفع التطبيق على Google Play',
+              en: 'Available once published on Google Play',
+            })}
+          </div>
+        )}
+      </div>
+      {published && (
+        <Glyph name="arrow" size={16} className="text-[color:var(--faint)] rtl:-scale-x-100" />
+      )}
+    </button>
+  );
+}
+
 export function MoreScreen() {
   const { t, bi } = useI18n();
   const { push } = useNav();
