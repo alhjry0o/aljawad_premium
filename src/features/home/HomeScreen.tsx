@@ -322,46 +322,210 @@ function WhyAljawad() {
                 {miniStats.map((s, i) => (
                   <div
                     key={i}
-                    className="group relative overflow-hidden rounded-[var(--radius-sm)] border border-white/8 bg-white/[0.03] p-3 transition-colors hover:bg-white/[0.055]"
-                  >
-                    <div className="flex items-start gap-2.5">
-                      <div
-                        className="grid h-8 w-8 shrink-0 place-items-center rounded-full border"
-                        style={{
-                          borderColor: `${s.color}40`,
-                          background: `${s.color}14`,
-                        }}
+function WhyAljawad() {
+  const { t, bi } = useI18n();
+  const { config: appConfig } = useCompany();
+
+  const statsLabels = {
+    kicker: { ar: 'نظرة على أرقامنا', en: 'By the numbers' },
+    title: { ar: 'مسيرتنا بالأرقام', en: 'Our journey in numbers' },
+    projectsLabel: { ar: 'مشروع منفذ بنجاح', en: 'Projects delivered' },
+  };
+
+  const miniStats = [
+    {
+      icon: 'facade' as const,
+      color: '#2bd38c',
+      value: appConfig.facadeCount,
+      label: { ar: 'تنظيف واجهات', en: 'Facade cleaning' },
+    },
+    {
+      icon: 'construction' as const,
+      color: '#5fe0a5',
+      value: appConfig.constructionCount,
+      label: { ar: 'بناء وتشييد عقاري', en: 'Building & construction' },
+    },
+    {
+      icon: 'spark' as const,
+      color: '#7fc5ff',
+      value: appConfig.experienceYears,
+      label: { ar: 'عاماً من الخبرة', en: 'Years of expertise' },
+    },
+    {
+      icon: 'mep' as const,
+      color: '#a9c9ff',
+      value: appConfig.mepCount,
+      label: { ar: 'صيانة كهرباء وتكييف', en: 'MEP maintenance' },
+    },
+  ];
+
+  const points = [
+    { n: '01', title: t('why.1.title'), body: t('why.1.body'), icon: 'manpower' as const },
+    { n: '02', title: t('why.2.title'), body: t('why.2.body'), icon: 'layers' as const },
+    { n: '03', title: t('why.3.title'), body: t('why.3.body'), icon: 'equipment' as const },
+    { n: '04', title: t('why.4.title'), body: t('why.4.body'), icon: 'construction' as const },
+  ];
+
+  return (
+    <section className="relative overflow-hidden border-y border-[color:var(--line)] bg-[color:var(--surface)] py-16">
+      <div className="jw-grid absolute inset-0 opacity-30" />
+
+      <div className="relative">
+        {/* ============ Dashboard Card ============ */}
+        <Reveal className="px-5">
+          <div className="relative overflow-hidden rounded-[24px] border border-white/10 bg-white/[0.035] p-5 shadow-[0_30px_80px_-30px_rgba(0,0,0,0.95),inset_0_1px_0_0_rgba(255,255,255,0.06)] backdrop-blur-2xl">
+            {/* soft color glows */}
+            <div
+              className="pointer-events-none absolute -top-32 -end-24 h-64 w-64 rounded-full opacity-30 blur-3xl"
+              style={{ background: 'radial-gradient(circle, #2bd38c, transparent 70%)' }}
+            />
+            <div
+              className="pointer-events-none absolute -bottom-32 -start-24 h-64 w-64 rounded-full opacity-25 blur-3xl"
+              style={{ background: 'radial-gradient(circle, #0d1f3f, transparent 70%)' }}
+            />
+
+            <div className="relative">
+              {/* Header — title + LIVE */}
+              <div className="flex items-center justify-between">
+                <div>
+                  <div className="text-[0.58rem] font-semibold uppercase tracking-[0.28em] text-[#5fe0a5]">
+                    {bi(statsLabels.kicker)}
+                  </div>
+                  <h3 className="mt-1 text-[1.05rem] font-extrabold tracking-tight text-white">
+                    {bi(statsLabels.title)}
+                  </h3>
+                </div>
+
+                <div className="flex items-center gap-2 rounded-full border border-[#2bd38c]/30 bg-[#2bd38c]/10 px-2.5 py-1">
+                  <span className="relative flex h-1.5 w-1.5">
+                    <span className="absolute inset-0 animate-ping rounded-full bg-[#2bd38c] opacity-70" />
+                    <span className="relative h-1.5 w-1.5 rounded-full bg-[#2bd38c]" />
+                  </span>
+                  <span className="text-[0.58rem] font-bold tracking-[0.15em] text-[#5fe0a5]">
+                    LIVE
+                  </span>
+                </div>
+              </div>
+
+              {/* Hero number */}
+              <div
+                className="mt-6"
+                style={{ direction: 'ltr', unicodeBidi: 'isolate' }}
+              >
+                <div className="flex items-baseline gap-1">
+                  <span className="bg-gradient-to-br from-[#2bd38c] via-[#5fe0a5] to-[#7fc5ff] bg-clip-text text-[3rem] font-black leading-none tracking-tighter text-transparent">
+                    <Counter to={appConfig.projectsCount} locale="en-US" />
+                  </span>
+                  <span className="bg-gradient-to-br from-[#2bd38c] to-[#7fc5ff] bg-clip-text text-[1.8rem] font-black leading-none text-transparent">
+                    +
+                  </span>
+                </div>
+                <div className="mt-2 text-[0.72rem] font-medium text-white/55">
+                  {bi(statsLabels.projectsLabel)}
+                </div>
+              </div>
+
+              {/* Neon chart */}
+              <div className="relative mt-4 h-24 w-full">
+                <svg
+                  viewBox="0 0 300 90"
+                  className="h-full w-full"
+                  preserveAspectRatio="none"
+                >
+                  <defs>
+                    <linearGradient id="jw-chart-area" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="#2bd38c" stopOpacity="0.42" />
+                      <stop offset="55%" stopColor="#2bd38c" stopOpacity="0.1" />
+                      <stop offset="100%" stopColor="#2bd38c" stopOpacity="0" />
+                    </linearGradient>
+                    <linearGradient id="jw-chart-line" x1="0" y1="0" x2="1" y2="0">
+                      <stop offset="0%" stopColor="#2bd38c" />
+                      <stop offset="100%" stopColor="#7fc5ff" />
+                    </linearGradient>
+                    <filter
+                      id="jw-chart-glow"
+                      x="-30%"
+                      y="-30%"
+                      width="160%"
+                      height="160%"
+                    >
+                      <feGaussianBlur stdDeviation="3.5" result="blur" />
+                      <feMerge>
+                        <feMergeNode in="blur" />
+                        <feMergeNode in="SourceGraphic" />
+                      </feMerge>
+                    </filter>
+                  </defs>
+
+                  {/* soft neon glow behind line */}
+                  <path
+                    d="M0,70 C40,66 70,66 110,48 C150,30 190,42 230,24 C260,12 285,14 300,10"
+                    fill="none"
+                    stroke="#2bd38c"
+                    strokeWidth="6"
+                    strokeLinecap="round"
+                    opacity="0.18"
+                    style={{ filter: 'blur(6px)' }}
+                  />
+
+                  {/* gradient area */}
+                  <path
+                    d="M0,70 C40,66 70,66 110,48 C150,30 190,42 230,24 C260,12 285,14 300,10 L300,90 L0,90 Z"
+                    fill="url(#jw-chart-area)"
+                  />
+
+                  {/* neon line */}
+                  <path
+                    d="M0,70 C40,66 70,66 110,48 C150,30 190,42 230,24 C260,12 285,14 300,10"
+                    fill="none"
+                    stroke="url(#jw-chart-line)"
+                    strokeWidth="2.4"
+                    strokeLinecap="round"
+                    filter="url(#jw-chart-glow)"
+                  />
+
+                  {/* data points */}
+                  <circle cx="110" cy="48" r="3" fill="#0a1f24" stroke="#2bd38c" strokeWidth="2" />
+                  <circle cx="230" cy="24" r="3" fill="#0a1f24" stroke="#7fc5ff" strokeWidth="2" />
+                </svg>
+              </div>
+
+              {/* divider */}
+              <div className="my-5 h-px w-full bg-gradient-to-r from-transparent via-white/8 to-transparent" />
+
+              {/* 2x2 grid — clean, no hard dividers */}
+              <div className="grid grid-cols-2 gap-x-6 gap-y-5">
+                {miniStats.map((s, i) => (
+                  <div key={i} className="flex flex-col">
+                    <div className="flex items-center gap-2">
+                      <span
+                        className="grid h-4 w-4 place-items-center"
+                        style={{ color: s.color, filter: `drop-shadow(0 0 6px ${s.color}90)` }}
                       >
-                        <Glyph name={s.icon} size={16} className="shrink-0" />
-                      </div>
-                      <div className="min-w-0 flex-1">
-                        <div
-                          className="flex items-baseline gap-0.5"
-                          style={{ direction: 'ltr', unicodeBidi: 'isolate' }}
-                        >
-                          <span
-                            className="text-[1.15rem] font-black leading-none tracking-tight"
-                            style={{ color: s.color }}
-                          >
-                            <Counter to={s.value} locale="en-US" />
-                          </span>
-                          <span
-                            className="text-[0.95rem] font-black leading-none"
-                            style={{ color: s.color }}
-                          >
-                            +
-                          </span>
-                        </div>
-                        <div className="mt-1 text-[0.6rem] font-medium leading-tight text-white/55">
-                          {bi(s.label)}
-                        </div>
-                      </div>
+                        <Glyph name={s.icon} size={16} strokeWidth={1.8} />
+                      </span>
+                      <span className="text-[0.62rem] font-medium leading-tight text-white/60">
+                        {bi(s.label)}
+                      </span>
                     </div>
-                    {/* subtle glow */}
+
                     <div
-                      className="pointer-events-none absolute -bottom-8 -end-8 h-16 w-16 rounded-full opacity-0 transition-opacity duration-500 group-hover:opacity-100"
-                      style={{ background: `radial-gradient(circle, ${s.color}40, transparent 70%)` }}
-                    />
+                      className="mt-2 flex items-baseline gap-0.5"
+                      style={{ direction: 'ltr', unicodeBidi: 'isolate' }}
+                    >
+                      <span
+                        className="text-[1.5rem] font-black leading-none tracking-tight"
+                        style={{ color: s.color, textShadow: `0 0 14px ${s.color}50` }}
+                      >
+                        <Counter to={s.value} locale="en-US" />
+                      </span>
+                      <span
+                        className="text-[1.05rem] font-black leading-none"
+                        style={{ color: s.color }}
+                      >
+                        +
+                      </span>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -369,12 +533,14 @@ function WhyAljawad() {
           </div>
         </Reveal>
 
-        {/* ================ Title ================ */}
+        {/* ============ Title ============ */}
         <Reveal className="mt-14 px-5">
-          <h2 className="text-[2rem] font-extrabold leading-tight tracking-tight">{t('why.title')}</h2>
+          <h2 className="text-[2rem] font-extrabold leading-tight tracking-tight">
+            {t('why.title')}
+          </h2>
         </Reveal>
 
-        {/* ================ Points ================ */}
+        {/* ============ Points ============ */}
         <ul className="mt-8">
           {points.map((p, i) => (
             <Reveal as="li" key={p.n} delay={i * 80}>
@@ -382,7 +548,9 @@ function WhyAljawad() {
                 <span className="font-mono text-[0.7rem] text-[color:var(--primary)]">{p.n}</span>
                 <div className="flex-1">
                   <h3 className="text-[1.02rem] font-bold tracking-tight">{p.title}</h3>
-                  <p className="mt-1.5 text-[0.82rem] leading-relaxed text-[color:var(--muted)]">{p.body}</p>
+                  <p className="mt-1.5 text-[0.82rem] leading-relaxed text-[color:var(--muted)]">
+                    {p.body}
+                  </p>
                 </div>
                 <Glyph name={p.icon} size={22} className="mt-1 text-[color:var(--faint)]" />
               </div>
