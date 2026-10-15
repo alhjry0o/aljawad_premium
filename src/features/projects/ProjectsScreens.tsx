@@ -4,6 +4,8 @@ import { getService, services } from '../../data/services';
 import { useI18n } from '../../core/i18n';
 import { useNav } from '../../core/navigation';
 import { useTheme } from '../../core/theme';
+import { useCompany } from '../../core/companyStore';
+import { externalActions } from '../../core/actions';
 import { Glyph, MaterialIcon3D } from '../../components/icons';
 import { Button, Chip, DemoBadge, Reveal, ScreenHeader, useScrollY } from '../../components/kit';
 
@@ -85,7 +87,16 @@ export function ProjectDetailScreen({ id }: { id: string }) {
   const { t, bi, list } = useI18n();
   const { push, back } = useNav();
   const { reducedMotion } = useTheme();
+  const { config: appConfig } = useCompany();
   const y = useScrollY();
+
+  const handleShare = () => {
+    if (!project) return;
+    const message =
+      `${bi(project.title)}\n${bi(project.summary)}\n\n` +
+      `🔗 https://${appConfig.contact.website}`;
+    externalActions.shareToWhatsapp(message);
+  };
 
   if (!project) {
     return <div className="px-5 py-24 text-center text-[color:var(--muted)]">{t('error.generic')}</div>;
@@ -112,6 +123,14 @@ export function ProjectDetailScreen({ id }: { id: string }) {
         >
           <Glyph name="arrow" size={18} className="ltr:-scale-x-100" />
         </button>
+        <button
+          type="button"
+          onClick={handleShare}
+          aria-label={t('common.share')}
+          className="absolute top-[calc(env(safe-area-inset-top)+1rem)] end-5 z-10 grid h-10 w-10 place-items-center rounded-[var(--radius-sm)] border border-white/15 bg-black/40 text-white backdrop-blur"
+        >
+          <Glyph name="whatsapp" size={18} />
+      </button>
         <div className="absolute inset-x-0 bottom-0 p-6">
           <DemoBadge label={project.code} />
           <h1 className="mt-4 text-[2.1rem] font-extrabold leading-[1.12] tracking-tight text-white">
