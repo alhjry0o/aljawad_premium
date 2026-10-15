@@ -34,6 +34,8 @@ export const externalActions = {
   maps: (query: string) =>
     open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`),
   website: (url: string) => open(`https://${url}`),
+  shareToWhatsapp: (text: string) =>
+  open(`https://wa.me/?text=${encodeURIComponent(text)}`),
   openUrl: (url: string) => open(url),
   copy: async (value: string): Promise<boolean> => {
     try {
