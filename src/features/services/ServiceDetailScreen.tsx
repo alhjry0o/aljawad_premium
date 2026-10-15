@@ -3,6 +3,8 @@ import { projects } from '../../data/projects';
 import { useI18n } from '../../core/i18n';
 import { useNav } from '../../core/navigation';
 import { useTheme } from '../../core/theme';
+import { useCompany } from '../../core/companyStore';
+import { externalActions } from '../../core/actions';
 import { Glyph, MaterialIcon3D } from '../../components/icons';
 import { Button, DemoBadge, Reveal, useScrollY } from '../../components/kit';
 
@@ -11,7 +13,16 @@ export function ServiceDetailScreen({ id }: { id: ServiceIconKey }) {
   const { t, bi, list } = useI18n();
   const { push, back } = useNav();
   const { reducedMotion } = useTheme();
+  const { config: appConfig } = useCompany();
   const y = useScrollY();
+
+  const handleShare = () => {
+    if (!service) return;
+    const message =
+      `${bi(service.title)}\n${bi(service.statement)}\n\n` +
+      `🔗 https://${appConfig.contact.website}`;
+    externalActions.shareToWhatsapp(message);
+  };
 
   if (!service) {
     return (
@@ -44,8 +55,15 @@ export function ServiceDetailScreen({ id }: { id: ServiceIconKey }) {
         >
           <Glyph name="arrow" size={18} className="ltr:-scale-x-100" />
         </button>
-      </div>
-
+        <button
+         type="button"
+         onClick={handleShare}
+         aria-label={t('common.share')}
+         className="absolute top-[calc(env(safe-area-inset-top)+1rem)] end-5 z-10 grid h-10 w-10 place-items-center rounded-[var(--radius-sm)] border border-white/15 bg-black/40 text-white backdrop-blur"
+       >
+         <Glyph name="whatsapp" size={18} />
+       </button>
+     </div>
         <div className="absolute inset-x-0 bottom-0 p-6">
           <MaterialIcon3D name={service.id} accent={service.accent} size={86} className="jw-float" />
           <span className="mt-4 block font-mono text-[0.72rem] tracking-[0.32em] text-white/50">
