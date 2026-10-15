@@ -58,37 +58,37 @@ function BottomNav() {
   return (
     <nav
       aria-label={t('nav.home')}
-      className="hide-on-keyboard pointer-events-none fixed inset-x-0 bottom-0 z-40 px-6 pb-[max(env(safe-area-inset-bottom),0.85rem)]"
+      className="hide-on-keyboard pointer-events-none fixed inset-x-0 bottom-0 z-40 flex justify-center pb-[max(env(safe-area-inset-bottom),0.85rem)]"
     >
-      <div className="pointer-events-auto relative mx-auto max-w-[400px]">
+      <div className="pointer-events-auto relative mx-auto max-w-[92vw]">
         {/* هالة خارجية ناعمة */}
         <div
           aria-hidden
-          className="pointer-events-none absolute -inset-3 rounded-[32px] opacity-60 blur-3xl"
+          className="pointer-events-none absolute -inset-3 rounded-full opacity-60 blur-3xl"
           style={{
             background: 'radial-gradient(60% 90% at 50% 60%, var(--glow), transparent 75%)',
           }}
         />
 
-        {/* الشريط الزجاجي */}
-        <div className="relative overflow-hidden rounded-[26px] border border-white/10 bg-[color:var(--elevated)]/65 shadow-[0_24px_60px_-24px_rgba(0,0,0,0.9),inset_0_1px_0_0_rgba(255,255,255,0.08),inset_0_0_0_1px_rgba(255,255,255,0.03)] backdrop-blur-2xl">
-          {/* خط لامع علوي (لمعة زجاجية) */}
+        {/* الشريط الزجاجي — كبسولة عائمة */}
+        <div className="relative overflow-hidden rounded-full border border-white/10 bg-[color:var(--elevated)]/65 shadow-[0_24px_60px_-24px_rgba(0,0,0,0.9),inset_0_1px_0_0_rgba(255,255,255,0.08)] backdrop-blur-2xl">
+          {/* خط لامع علوي */}
           <span
             aria-hidden
-            className="pointer-events-none absolute inset-x-6 top-0 h-px bg-gradient-to-r from-transparent via-white/25 to-transparent"
+            className="pointer-events-none absolute inset-x-10 top-0 h-px bg-gradient-to-r from-transparent via-white/25 to-transparent"
           />
 
-          {/* توهج أرضي متحرك تحت التبويب النشط */}
+          {/* توهج أرضي متحرك */}
           <span
             aria-hidden
-            className="pointer-events-none absolute bottom-0 h-12 w-16 rounded-full opacity-70 blur-2xl transition-[inset-inline-start] duration-500 ease-[cubic-bezier(.16,1,.3,1)]"
+            className="pointer-events-none absolute bottom-0 h-10 w-14 rounded-full opacity-70 blur-2xl transition-[inset-inline-start] duration-500 ease-[cubic-bezier(.16,1,.3,1)]"
             style={{
               background: 'radial-gradient(circle at 50% 100%, var(--primary), transparent 70%)',
-              insetInlineStart: `calc(${tabCenterPercent}% - 32px)`,
+              insetInlineStart: `calc(${tabCenterPercent}% - 28px)`,
             }}
           />
 
-          <ul className="relative grid grid-cols-5 px-1.5 py-2">
+          <ul className="relative flex items-center gap-0.5 px-2 py-1.5">
             {TABS.map((item) => {
               const active = item.key === tab;
               return (
@@ -97,24 +97,18 @@ function BottomNav() {
                     type="button"
                     onClick={() => goTab(item.key)}
                     aria-current={active ? 'page' : undefined}
-                    className="group relative flex w-full flex-col items-center gap-1 rounded-[18px] px-1 py-2.5 transition-transform duration-300 active:scale-[0.92]"
+                    className={cn(
+                      'group relative flex flex-col items-center justify-center gap-0.5 rounded-full px-3 py-2 transition-all duration-300 active:scale-[0.92]',
+                      active
+                        ? 'bg-[color:var(--primary)]/15 text-[color:var(--primary)] shadow-[inset_0_1px_0_0_rgba(255,255,255,0.12),inset_0_0_0_1px_rgba(43,211,140,0.28)]'
+                        : 'text-[color:var(--faint)]',
+                    )}
                   >
-                    {/* بلاطة الأيقونة ثلاثية الأبعاد */}
+                    <Glyph name={item.icon} size={18} strokeWidth={active ? 1.9 : 1.5} />
                     <span
                       className={cn(
-                        'relative grid h-8 w-8 place-items-center rounded-[12px] transition-all duration-400',
-                        active
-                          ? 'bg-[color:var(--primary)]/18 text-[color:var(--primary)] shadow-[0_6px_16px_-6px_var(--glow),inset_0_1px_0_0_rgba(255,255,255,0.14),inset_0_0_0_1px_rgba(43,211,140,0.32)]'
-                          : 'text-[color:var(--faint)] group-hover:text-[color:var(--muted)]',
-                      )}
-                    >
-                      <Glyph name={item.icon} size={19} strokeWidth={active ? 1.9 : 1.5} />
-                    </span>
-
-                    <span
-                      className={cn(
-                        'text-[0.6rem] font-semibold tracking-tight transition-colors',
-                        active ? 'text-[color:var(--text)]' : 'text-[color:var(--faint)]',
+                        'text-[0.58rem] font-semibold tracking-tight transition-colors',
+                        active ? 'text-[color:var(--primary)]' : 'text-[color:var(--faint)]',
                       )}
                     >
                       {t(item.labelKey)}
