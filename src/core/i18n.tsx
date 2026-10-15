@@ -227,6 +227,7 @@ const ar = {
   'dev.contact': 'للتواصل',
 
   'common.back': 'رجوع',
+  'common.share': 'مشاركة',
   'common.demo': 'نسخة تجريبية',
   'common.more': 'المزيد',
   'common.save': 'حفظ',
@@ -464,6 +465,7 @@ const en: Record<Key, string> = {
   'dev.contact': 'Contact',
 
   'common.back': 'Back',
+  'common.share': 'Share',
   'common.demo': 'Demo build',
   'common.more': 'More',
   'common.save': 'Save',
