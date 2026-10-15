@@ -325,6 +325,13 @@ function Shell() {
         style={{ height: 'env(safe-area-inset-top)' }}
       />
 
+      {/* طبقة سفلية شبه شفافة لمنطقة أزرار التنقل في النظام */}
+      <div
+        aria-hidden
+        className="pointer-events-none fixed inset-x-0 bottom-0 z-30 mx-auto w-full max-w-[520px] bg-[color:var(--bg)]/75 backdrop-blur-xl"
+        style={{ height: 'max(env(safe-area-inset-bottom), 0.75rem)' }}
+      />
+
       <Outlet />
       <BottomNav />
       {backToast && <Toast message={backToast} />}
