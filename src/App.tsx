@@ -47,69 +47,84 @@ const TABS: { key: TabKey; icon: GlyphName; labelKey: Parameters<ReturnType<type
 
 function BottomNav() {
   const { tab, goTab, route } = useNav();
-  const { t, dir } = useI18n();
+  const { t } = useI18n();
 
   if (!isMainTabRoute(route.name)) return null;
 
   const index = TABS.findIndex((item) => item.key === tab);
+  const activePercent = (index < 0 ? 0 : index) * (100 / TABS.length);
+  const tabCenterPercent = activePercent + 100 / TABS.length / 2;
 
   return (
     <nav
       aria-label={t('nav.home')}
-      className="hide-on-keyboard pointer-events-none fixed inset-x-0 bottom-0 z-40 px-4 pb-[max(env(safe-area-inset-bottom),0.75rem)]"
+      className="hide-on-keyboard pointer-events-none fixed inset-x-0 bottom-0 z-40 px-6 pb-[max(env(safe-area-inset-bottom),0.85rem)]"
     >
-      <div className="pointer-events-auto relative mx-auto max-w-md overflow-hidden rounded-[var(--radius-lg)] border border-[color:var(--line-strong)] bg-[color:var(--elevated)]/92 backdrop-blur-2xl shadow-[0_24px_60px_-28px_rgba(0,0,0,0.9)]">
-        {/* active indicator */}
-        <span
-          className="absolute top-0 h-[2px] bg-[color:var(--primary)] transition-[inset-inline-start] duration-500 ease-[cubic-bezier(.16,1,.3,1)]"
+      <div className="pointer-events-auto relative mx-auto max-w-[400px]">
+        {/* هالة خارجية ناعمة */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -inset-3 rounded-[32px] opacity-60 blur-3xl"
           style={{
-            width: `${100 / TABS.length}%`,
-            insetInlineStart: `${(index < 0 ? 0 : index) * (100 / TABS.length)}%`,
+            background: 'radial-gradient(60% 90% at 50% 60%, var(--glow), transparent 75%)',
           }}
         />
-        <span
-          className="pointer-events-none absolute -top-6 h-20 w-24 opacity-70 blur-2xl transition-[inset-inline-start] duration-500"
-          style={{
-            background: 'radial-gradient(circle, var(--glow), transparent 70%)',
-            insetInlineStart: `calc(${(index < 0 ? 0 : index) * (100 / TABS.length)}% + ${
-              dir === 'rtl' ? '0%' : '0%'
-            })`,
-          }}
-        />
-        <ul className="relative grid grid-cols-5">
-          {TABS.map((item) => {
-            const active = item.key === tab;
-            return (
-              <li key={item.key}>
-                <button
-                  type="button"
-                  onClick={() => goTab(item.key)}
-                  aria-current={active ? 'page' : undefined}
-                  className="flex w-full flex-col items-center gap-1.5 px-1 py-3.5 transition-colors"
-                >
-                  <span
-                    className={cn(
-                      'relative grid h-9 w-9 place-items-center rounded-[var(--radius-sm)] transition-all duration-400',
-                      active
-                        ? 'bg-gradient-to-br from-[color:var(--primary)]/25 to-[color:var(--navy)]/40 text-[color:var(--primary)] shadow-[inset_0_1px_0_rgba(255,255,255,0.15)]'
-                        : 'text-[color:var(--faint)]',
-                    )}
+
+        {/* الشريط الزجاجي */}
+        <div className="relative overflow-hidden rounded-[26px] border border-white/10 bg-[color:var(--elevated)]/65 shadow-[0_24px_60px_-24px_rgba(0,0,0,0.9),inset_0_1px_0_0_rgba(255,255,255,0.08),inset_0_0_0_1px_rgba(255,255,255,0.03)] backdrop-blur-2xl">
+          {/* خط لامع علوي (لمعة زجاجية) */}
+          <span
+            aria-hidden
+            className="pointer-events-none absolute inset-x-6 top-0 h-px bg-gradient-to-r from-transparent via-white/25 to-transparent"
+          />
+
+          {/* توهج أرضي متحرك تحت التبويب النشط */}
+          <span
+            aria-hidden
+            className="pointer-events-none absolute bottom-0 h-12 w-16 rounded-full opacity-70 blur-2xl transition-[inset-inline-start] duration-500 ease-[cubic-bezier(.16,1,.3,1)]"
+            style={{
+              background: 'radial-gradient(circle at 50% 100%, var(--primary), transparent 70%)',
+              insetInlineStart: `calc(${tabCenterPercent}% - 32px)`,
+            }}
+          />
+
+          <ul className="relative grid grid-cols-5 px-1.5 py-2">
+            {TABS.map((item) => {
+              const active = item.key === tab;
+              return (
+                <li key={item.key}>
+                  <button
+                    type="button"
+                    onClick={() => goTab(item.key)}
+                    aria-current={active ? 'page' : undefined}
+                    className="group relative flex w-full flex-col items-center gap-1 rounded-[18px] px-1 py-2.5 transition-transform duration-300 active:scale-[0.92]"
                   >
-                    <Glyph name={item.icon} size={20} strokeWidth={active ? 1.8 : 1.5} />
-                  </span>
-                  <span
-                    className={cn(
-                      'text-[0.62rem] font-semibold tracking-tight transition-colors',
-                      active ? 'text-[color:var(--text)]' : 'text-[color:var(--faint)]',
-                    )}
-                  >
-                    {t(item.labelKey)}
-                  </span>
-                </button>
-              </li>
-            );
-          })}
-        </ul>
+                    {/* بلاطة الأيقونة ثلاثية الأبعاد */}
+                    <span
+                      className={cn(
+                        'relative grid h-8 w-8 place-items-center rounded-[12px] transition-all duration-400',
+                        active
+                          ? 'bg-[color:var(--primary)]/18 text-[color:var(--primary)] shadow-[0_6px_16px_-6px_var(--glow),inset_0_1px_0_0_rgba(255,255,255,0.14),inset_0_0_0_1px_rgba(43,211,140,0.32)]'
+                          : 'text-[color:var(--faint)] group-hover:text-[color:var(--muted)]',
+                      )}
+                    >
+                      <Glyph name={item.icon} size={19} strokeWidth={active ? 1.9 : 1.5} />
+                    </span>
+
+                    <span
+                      className={cn(
+                        'text-[0.6rem] font-semibold tracking-tight transition-colors',
+                        active ? 'text-[color:var(--text)]' : 'text-[color:var(--faint)]',
+                      )}
+                    >
+                      {t(item.labelKey)}
+                    </span>
+                  </button>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
       </div>
     </nav>
   );
