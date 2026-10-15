@@ -188,6 +188,7 @@ export function MoreScreen() {
           onClick={go({ name: 'faq' })}
         />
         <ShareAppRow />
+        <RateAppRow />
         <HubRow icon="shield" label={t('more.privacy')} onClick={go({ name: 'privacy' })} />
         <HubRow icon="quote" label={t('more.terms')} onClick={go({ name: 'terms' })} />
         <HubRow icon="info" label={t('more.appInfo')} meta={appConfig.version} onClick={go({ name: 'settings' })} />
