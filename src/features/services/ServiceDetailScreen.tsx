@@ -46,24 +46,28 @@ export function ServiceDetailScreen({ id }: { id: ServiceIconKey }) {
           <img src={service.image} alt="" className="h-full w-full object-cover opacity-75" />
         </div>
         <div className="absolute inset-0 bg-gradient-to-t from-[#030605] via-[#030605]/55 to-[#030605]/70" />
+
         <div className="pointer-events-none fixed inset-x-0 top-0 z-30 mx-auto w-full max-w-[520px] px-5 pt-[calc(env(safe-area-inset-top)+1rem)]">
-         <button
-          type="button"
-          onClick={back}
-          aria-label={t('common.back')}
-          className="pointer-events-auto grid h-10 w-10 place-items-center rounded-[var(--radius-sm)] border border-white/15 bg-black/40 text-white backdrop-blur"
-        >
-          <Glyph name="arrow" size={18} className="ltr:-scale-x-100" />
-        </button>
-        <button
-         type="button"
-         onClick={handleShare}
-         aria-label={t('common.share')}
-         className="absolute top-[calc(env(safe-area-inset-top)+1rem)] end-5 z-10 grid h-10 w-10 place-items-center rounded-[var(--radius-sm)] border border-white/15 bg-black/40 text-white backdrop-blur"
-       >
-         <Glyph name="whatsapp" size={18} />
-       </button>
-     </div>
+          <div className="flex items-center justify-between">
+            <button
+              type="button"
+              onClick={back}
+              aria-label={t('common.back')}
+              className="pointer-events-auto grid h-10 w-10 place-items-center rounded-[var(--radius-sm)] border border-white/15 bg-black/40 text-white backdrop-blur"
+            >
+              <Glyph name="arrow" size={18} className="ltr:-scale-x-100" />
+            </button>
+            <button
+              type="button"
+              onClick={handleShare}
+              aria-label={t('common.share')}
+              className="pointer-events-auto grid h-10 w-10 place-items-center rounded-[var(--radius-sm)] border border-white/15 bg-black/40 text-white backdrop-blur"
+            >
+              <Glyph name="whatsapp" size={18} />
+            </button>
+          </div>
+        </div>
+
         <div className="absolute inset-x-0 bottom-0 p-6">
           <MaterialIcon3D name={service.id} accent={service.accent} size={86} className="jw-float" />
           <span className="mt-4 block font-mono text-[0.72rem] tracking-[0.32em] text-white/50">
