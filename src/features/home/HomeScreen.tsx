@@ -270,10 +270,7 @@ function WhyAljawad() {
               </div>
 
               {/* Hero number */}
-              <div
-                className="mt-6"
-                style={{ direction: 'ltr', unicodeBidi: 'isolate' }}
-              >
+              <div className="mt-6" style={{ direction: 'ltr', unicodeBidi: 'isolate' }}>
                 <div className="flex items-baseline gap-1">
                   <span className="bg-gradient-to-br from-[#2bd38c] via-[#5fe0a5] to-[#7fc5ff] bg-clip-text text-[3rem] font-black leading-none tracking-tighter text-transparent">
                     <Counter to={appConfig.projectsCount} locale="en-US" />
@@ -287,31 +284,30 @@ function WhyAljawad() {
                 </div>
               </div>
 
-              {/* Neon chart */}
-              <div className="relative mt-4 h-24 w-full">
+              {/* Neon chart — ends in the middle, fades out */}
+              <div
+                className="relative mt-5 h-16 w-full"
+                style={{
+                  maskImage: 'linear-gradient(to bottom, #000 45%, transparent 100%)',
+                  WebkitMaskImage: 'linear-gradient(to bottom, #000 45%, transparent 100%)',
+                }}
+              >
                 <svg
-                  viewBox="0 0 300 90"
+                  viewBox="0 0 300 80"
                   className="h-full w-full"
                   preserveAspectRatio="none"
                 >
                   <defs>
                     <linearGradient id="jw-chart-area" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="#2bd38c" stopOpacity="0.42" />
-                      <stop offset="55%" stopColor="#2bd38c" stopOpacity="0.1" />
+                      <stop offset="0%" stopColor="#2bd38c" stopOpacity="0.38" />
                       <stop offset="100%" stopColor="#2bd38c" stopOpacity="0" />
                     </linearGradient>
                     <linearGradient id="jw-chart-line" x1="0" y1="0" x2="1" y2="0">
                       <stop offset="0%" stopColor="#2bd38c" />
                       <stop offset="100%" stopColor="#7fc5ff" />
                     </linearGradient>
-                    <filter
-                      id="jw-chart-glow"
-                      x="-30%"
-                      y="-30%"
-                      width="160%"
-                      height="160%"
-                    >
-                      <feGaussianBlur stdDeviation="3.5" result="blur" />
+                    <filter id="jw-chart-glow" x="-30%" y="-30%" width="160%" height="160%">
+                      <feGaussianBlur stdDeviation="3" result="blur" />
                       <feMerge>
                         <feMergeNode in="blur" />
                         <feMergeNode in="SourceGraphic" />
@@ -319,74 +315,80 @@ function WhyAljawad() {
                     </filter>
                   </defs>
 
-                  {/* soft neon glow behind line */}
+                  {/* neon glow behind line */}
                   <path
-                    d="M0,70 C40,66 70,66 110,48 C150,30 190,42 230,24 C260,12 285,14 300,10"
+                    d="M0,60 C40,58 70,58 110,42 C150,26 190,36 230,20 C260,10 285,12 300,8"
                     fill="none"
                     stroke="#2bd38c"
                     strokeWidth="6"
                     strokeLinecap="round"
-                    opacity="0.18"
+                    opacity="0.16"
                     style={{ filter: 'blur(6px)' }}
                   />
 
                   {/* gradient area */}
                   <path
-                    d="M0,70 C40,66 70,66 110,48 C150,30 190,42 230,24 C260,12 285,14 300,10 L300,90 L0,90 Z"
+                    d="M0,60 C40,58 70,58 110,42 C150,26 190,36 230,20 C260,10 285,12 300,8 L300,80 L0,80 Z"
                     fill="url(#jw-chart-area)"
                   />
 
                   {/* neon line */}
                   <path
-                    d="M0,70 C40,66 70,66 110,48 C150,30 190,42 230,24 C260,12 285,14 300,10"
+                    d="M0,60 C40,58 70,58 110,42 C150,26 190,36 230,20 C260,10 285,12 300,8"
                     fill="none"
                     stroke="url(#jw-chart-line)"
-                    strokeWidth="2.4"
+                    strokeWidth="2.2"
                     strokeLinecap="round"
                     filter="url(#jw-chart-glow)"
                   />
 
                   {/* data points */}
-                  <circle cx="110" cy="48" r="3" fill="#0a1f24" stroke="#2bd38c" strokeWidth="2" />
-                  <circle cx="230" cy="24" r="3" fill="#0a1f24" stroke="#7fc5ff" strokeWidth="2" />
+                  <circle cx="110" cy="42" r="2.8" fill="#0a1f24" stroke="#2bd38c" strokeWidth="1.8" />
+                  <circle cx="230" cy="20" r="2.8" fill="#0a1f24" stroke="#7fc5ff" strokeWidth="1.8" />
                 </svg>
               </div>
 
               {/* divider */}
-              <div className="my-5 h-px w-full bg-gradient-to-r from-transparent via-white/8 to-transparent" />
+              <div className="my-6 h-px w-full bg-gradient-to-r from-transparent via-white/8 to-transparent" />
 
-              {/* 2x2 grid — clean, no hard dividers */}
-              <div className="grid grid-cols-2 gap-x-6 gap-y-5">
+              {/* 2x2 grid — spacious, breathing */}
+              <div className="grid grid-cols-2 gap-x-8 gap-y-7">
                 {miniStats.map((s, i) => (
                   <div key={i} className="flex flex-col">
-                    <div className="flex items-center gap-2">
-                      <span
-                        className="grid h-4 w-4 place-items-center"
-                        style={{ color: s.color, filter: `drop-shadow(0 0 6px ${s.color}90)` }}
-                      >
-                        <Glyph name={s.icon} size={16} strokeWidth={1.8} />
-                      </span>
-                      <span className="text-[0.62rem] font-medium leading-tight text-white/60">
-                        {bi(s.label)}
-                      </span>
-                    </div>
-
+                    {/* icon + number on one row */}
                     <div
-                      className="mt-2 flex items-baseline gap-0.5"
+                      className="flex items-center gap-2.5"
                       style={{ direction: 'ltr', unicodeBidi: 'isolate' }}
                     >
                       <span
-                        className="text-[1.5rem] font-black leading-none tracking-tight"
-                        style={{ color: s.color, textShadow: `0 0 14px ${s.color}50` }}
+                        className="grid h-5 w-5 shrink-0 place-items-center"
+                        style={{
+                          color: s.color,
+                          filter: `drop-shadow(0 0 7px ${s.color}80)`,
+                        }}
                       >
-                        <Counter to={s.value} locale="en-US" />
+                        <Glyph name={s.icon} size={18} strokeWidth={1.9} />
                       </span>
-                      <span
-                        className="text-[1.05rem] font-black leading-none"
-                        style={{ color: s.color }}
-                      >
-                        +
-                      </span>
+
+                      <div className="flex items-baseline gap-0.5">
+                        <span
+                          className="text-[1.55rem] font-black leading-none tracking-tight"
+                          style={{ color: s.color, textShadow: `0 0 14px ${s.color}55` }}
+                        >
+                          <Counter to={s.value} locale="en-US" />
+                        </span>
+                        <span
+                          className="text-[1.1rem] font-black leading-none"
+                          style={{ color: s.color }}
+                        >
+                          +
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* label */}
+                    <div className="mt-2 text-[0.7rem] font-medium leading-snug text-white/65">
+                      {bi(s.label)}
                     </div>
                   </div>
                 ))}
@@ -617,4 +619,4 @@ export function HomeScreen() {
       <BrandFooter />
     </div>
   );
-                  }
+}
