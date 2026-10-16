@@ -235,18 +235,29 @@ function WhyAljawad() {
   const handleScroll = () => {
     const el = scrollRef.current;
     if (!el) return;
-    const cardWidth = el.scrollWidth / points.length;
-    const idx = Math.round(el.scrollLeft / cardWidth);
-    if (idx !== activeIdx && idx >= 0 && idx < points.length) {
-      setActiveIdx(idx);
-    }
+    const cards = Array.from(el.querySelectorAll<HTMLElement>('[data-slide]'));
+    if (!cards.length) return;
+    const scrollCenter = el.scrollLeft + el.clientWidth / 2;
+    let bestIdx = 0;
+    let bestDist = Infinity;
+    cards.forEach((c, i) => {
+      const center = c.offsetLeft + c.offsetWidth / 2;
+      const d = Math.abs(center - scrollCenter);
+      if (d < bestDist) {
+        bestDist = d;
+        bestIdx = i;
+      }
+    });
+    if (bestIdx !== activeIdx) setActiveIdx(bestIdx);
   };
 
   const scrollToIdx = (idx: number) => {
     const el = scrollRef.current;
     if (!el) return;
-    const cardWidth = el.scrollWidth / points.length;
-    el.scrollTo({ left: idx * cardWidth, behavior: 'smooth' });
+    const cards = el.querySelectorAll<HTMLElement>('[data-slide]');
+    const card = cards[idx];
+    if (!card) return;
+    el.scrollTo({ left: card.offsetLeft - 20, behavior: 'smooth' });
   };
 
   return (
@@ -416,9 +427,10 @@ function WhyAljawad() {
             return (
               <div
                 key={p.n}
+                data-slide
                 className={cn(
                   'relative shrink-0 overflow-hidden rounded-[20px] border border-white/10 bg-white/[0.035] p-5 shadow-[0_20px_50px_-25px_rgba(0,0,0,0.95),inset_0_1px_0_0_rgba(255,255,255,0.05)] backdrop-blur-2xl transition-all duration-500',
-                  isActive ? 'opacity-100' : 'opacity-60',
+                  isActive ? 'opacity-100' : 'opacity-75',
                 )}
                 style={{
                   width: '82%',
