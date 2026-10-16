@@ -29,7 +29,7 @@ export function ServicesScreen() {
   }, []);
 
   return (
-    <div className="pb-6">
+    <div className="pb-32">
       <ScreenHeader title={t('services.title')} subtitle={t('services.count')} />
 
       {/* ============ Modern Search Capsule ============ */}
