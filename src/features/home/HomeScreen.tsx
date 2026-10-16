@@ -187,6 +187,8 @@ function BrandStatement() {
 function WhyAljawad() {
   const { t, bi } = useI18n();
   const { config: appConfig } = useCompany();
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [activeIdx, setActiveIdx] = useState(0);
 
   const statsLabels = {
     kicker: { ar: 'نظرة على أرقامنا', en: 'By the numbers' },
@@ -228,6 +230,24 @@ function WhyAljawad() {
     { n: '04', title: t('why.4.title'), body: t('why.4.body'), icon: 'construction' as const },
   ];
 
+  // كشف البطاقة النشطة أثناء السحب الأفقي
+  const handleScroll = () => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const cardWidth = el.scrollWidth / points.length;
+    const idx = Math.round(el.scrollLeft / cardWidth);
+    if (idx !== activeIdx && idx >= 0 && idx < points.length) {
+      setActiveIdx(idx);
+    }
+  };
+
+  const scrollToIdx = (idx: number) => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const cardWidth = el.scrollWidth / points.length;
+    el.scrollTo({ left: idx * cardWidth, behavior: 'smooth' });
+  };
+
   return (
     <section className="relative overflow-hidden border-y border-[color:var(--line)] bg-[color:var(--surface)] py-16">
       <div className="jw-grid absolute inset-0 opacity-30" />
@@ -236,7 +256,6 @@ function WhyAljawad() {
         {/* ============ Dashboard Card ============ */}
         <Reveal className="px-5">
           <div className="relative overflow-hidden rounded-[24px] border border-white/10 bg-white/[0.035] p-5 shadow-[0_30px_80px_-30px_rgba(0,0,0,0.95),inset_0_1px_0_0_rgba(255,255,255,0.06)] backdrop-blur-2xl">
-            {/* soft color glows */}
             <div
               className="pointer-events-none absolute -top-32 -end-24 h-64 w-64 rounded-full opacity-30 blur-3xl"
               style={{ background: 'radial-gradient(circle, #2bd38c, transparent 70%)' }}
@@ -247,7 +266,6 @@ function WhyAljawad() {
             />
 
             <div className="relative">
-              {/* Header — title + LIVE */}
               <div className="flex items-center justify-between">
                 <div>
                   <div className="text-[0.58rem] font-semibold uppercase tracking-[0.28em] text-[#5fe0a5]">
@@ -269,7 +287,6 @@ function WhyAljawad() {
                 </div>
               </div>
 
-              {/* Hero number */}
               <div className="mt-6" style={{ direction: 'ltr', unicodeBidi: 'isolate' }}>
                 <div className="flex items-baseline gap-1">
                   <span className="bg-gradient-to-br from-[#2bd38c] via-[#5fe0a5] to-[#7fc5ff] bg-clip-text text-[3rem] font-black leading-none tracking-tighter text-transparent">
@@ -284,7 +301,6 @@ function WhyAljawad() {
                 </div>
               </div>
 
-              {/* Neon chart — ends in the middle, fades out */}
               <div
                 className="relative mt-5 h-16 w-full"
                 style={{
@@ -292,11 +308,7 @@ function WhyAljawad() {
                   WebkitMaskImage: 'linear-gradient(to bottom, #000 45%, transparent 100%)',
                 }}
               >
-                <svg
-                  viewBox="0 0 300 80"
-                  className="h-full w-full"
-                  preserveAspectRatio="none"
-                >
+                <svg viewBox="0 0 300 80" className="h-full w-full" preserveAspectRatio="none">
                   <defs>
                     <linearGradient id="jw-chart-area" x1="0" y1="0" x2="0" y2="1">
                       <stop offset="0%" stopColor="#2bd38c" stopOpacity="0.38" />
@@ -315,7 +327,6 @@ function WhyAljawad() {
                     </filter>
                   </defs>
 
-                  {/* neon glow behind line */}
                   <path
                     d="M0,60 C40,58 70,58 110,42 C150,26 190,36 230,20 C260,10 285,12 300,8"
                     fill="none"
@@ -325,14 +336,10 @@ function WhyAljawad() {
                     opacity="0.16"
                     style={{ filter: 'blur(6px)' }}
                   />
-
-                  {/* gradient area */}
                   <path
                     d="M0,60 C40,58 70,58 110,42 C150,26 190,36 230,20 C260,10 285,12 300,8 L300,80 L0,80 Z"
                     fill="url(#jw-chart-area)"
                   />
-
-                  {/* neon line */}
                   <path
                     d="M0,60 C40,58 70,58 110,42 C150,26 190,36 230,20 C260,10 285,12 300,8"
                     fill="none"
@@ -341,21 +348,16 @@ function WhyAljawad() {
                     strokeLinecap="round"
                     filter="url(#jw-chart-glow)"
                   />
-
-                  {/* data points */}
                   <circle cx="110" cy="42" r="2.8" fill="#0a1f24" stroke="#2bd38c" strokeWidth="1.8" />
                   <circle cx="230" cy="20" r="2.8" fill="#0a1f24" stroke="#7fc5ff" strokeWidth="1.8" />
                 </svg>
               </div>
 
-              {/* divider */}
               <div className="my-6 h-px w-full bg-gradient-to-r from-transparent via-white/8 to-transparent" />
 
-              {/* 2x2 grid — spacious, breathing */}
               <div className="grid grid-cols-2 gap-x-8 gap-y-7">
                 {miniStats.map((s, i) => (
                   <div key={i} className="flex flex-col">
-                    {/* icon + number on one row */}
                     <div
                       className="flex items-center gap-2.5"
                       style={{ direction: 'ltr', unicodeBidi: 'isolate' }}
@@ -369,7 +371,6 @@ function WhyAljawad() {
                       >
                         <Glyph name={s.icon} size={18} strokeWidth={1.9} />
                       </span>
-
                       <div className="flex items-baseline gap-0.5">
                         <span
                           className="text-[1.55rem] font-black leading-none tracking-tight"
@@ -385,8 +386,6 @@ function WhyAljawad() {
                         </span>
                       </div>
                     </div>
-
-                    {/* label */}
                     <div className="mt-2 text-[0.7rem] font-medium leading-snug text-white/65">
                       {bi(s.label)}
                     </div>
@@ -404,27 +403,100 @@ function WhyAljawad() {
           </h2>
         </Reveal>
 
-        {/* ============ Points ============ */}
-        <ul className="mt-8">
-          {points.map((p, i) => (
-            <Reveal as="li" key={p.n} delay={i * 80}>
-              <div className="flex items-start gap-4 border-t border-[color:var(--line)] px-5 py-6">
-                <span className="font-mono text-[0.7rem] text-[color:var(--primary)]">{p.n}</span>
-                <div className="flex-1">
-                  <h3 className="text-[1.02rem] font-bold tracking-tight">{p.title}</h3>
-                  <p className="mt-1.5 text-[0.82rem] leading-relaxed text-[color:var(--muted)]">
-                    {p.body}
-                  </p>
+        {/* ============ Horizontal Glassmorphic Slider ============ */}
+        <div
+          ref={scrollRef}
+          onScroll={handleScroll}
+          className="no-scrollbar mt-8 flex gap-4 overflow-x-auto px-5 pb-2"
+          style={{ scrollSnapType: 'x mandatory' }}
+        >
+          {points.map((p, i) => {
+            const isActive = i === activeIdx;
+            return (
+              <div
+                key={p.n}
+                className={cn(
+                  'relative shrink-0 overflow-hidden rounded-[20px] border border-white/10 bg-white/[0.035] p-5 shadow-[0_20px_50px_-25px_rgba(0,0,0,0.95),inset_0_1px_0_0_rgba(255,255,255,0.05)] backdrop-blur-2xl transition-all duration-500',
+                  isActive ? 'opacity-100' : 'opacity-60',
+                )}
+                style={{
+                  width: '82%',
+                  scrollSnapAlign: 'center',
+                }}
+              >
+                {/* glow */}
+                <div
+                  className="pointer-events-none absolute -top-16 -end-16 h-40 w-40 rounded-full opacity-25 blur-3xl transition-opacity duration-500"
+                  style={{
+                    background: 'radial-gradient(circle, #2bd38c, transparent 70%)',
+                    opacity: isActive ? 0.35 : 0.15,
+                  }}
+                />
+
+                <div className="relative">
+                  {/* number badge */}
+                  <div className="mb-5 flex items-center justify-between">
+                    <span
+                      className="font-mono text-[0.72rem] font-bold tracking-[0.3em] text-[#5fe0a5]"
+                      style={{ textShadow: '0 0 10px rgba(43, 211, 140, 0.5)' }}
+                    >
+                      {p.n}
+                    </span>
+                    <span className="h-px flex-1 bg-gradient-to-r from-[#2bd38c]/40 to-transparent ms-3" />
+                  </div>
+
+                  {/* icon + title */}
+                  <div className="flex items-center gap-3">
+                    <span
+                      className="grid h-10 w-10 shrink-0 place-items-center rounded-[14px] border border-white/10 bg-white/[0.04] text-[#5fe0a5]"
+                      style={{
+                        boxShadow: 'inset 0 1px 0 0 rgba(255,255,255,0.08), 0 0 20px -8px #2bd38c',
+                      }}
+                    >
+                      <Glyph name={p.icon} size={20} strokeWidth={1.8} />
+                    </span>
+                    <h3 className="text-[1.1rem] font-extrabold leading-tight tracking-tight text-white">
+                      {p.title}
+                    </h3>
+                  </div>
+
+                  {/* body */}
+                  <p className="mt-4 text-[0.85rem] leading-[1.9] text-white/60">{p.body}</p>
                 </div>
-                <Glyph name={p.icon} size={22} className="mt-1 text-[color:var(--faint)]" />
               </div>
-            </Reveal>
-          ))}
-        </ul>
+            );
+          })}
+          {/* spacer for last card padding */}
+          <div className="shrink-0" style={{ width: '10%' }} />
+        </div>
+
+        {/* ============ Pagination Dots ============ */}
+        <div className="mt-6 flex items-center justify-center gap-2">
+          {points.map((_, i) => {
+            const isActive = i === activeIdx;
+            return (
+              <button
+                key={i}
+                type="button"
+                onClick={() => scrollToIdx(i)}
+                aria-label={`Go to slide ${i + 1}`}
+                className="transition-all duration-400"
+                style={{
+                  width: isActive ? '24px' : '6px',
+                  height: '6px',
+                  borderRadius: '999px',
+                  background: isActive ? '#2bd38c' : 'rgba(255,255,255,0.18)',
+                  boxShadow: isActive ? '0 0 12px #2bd38c80' : 'none',
+                }}
+              />
+            );
+          })}
+        </div>
       </div>
     </section>
   );
 }
+
 function FeaturedProjects() {
   const { t, bi } = useI18n();
   const { push } = useNav();
