@@ -642,40 +642,113 @@ export function BrandFooter() {
   const { push } = useNav();
   const { config: appConfig } = useCompany();
   const c = appConfig.contact;
+
   return (
-    <footer className="border-t border-[color:var(--line)] bg-[color:var(--bgdeep)] px-5 pb-10 pt-12">
-      <div className="flex items-center gap-3">
-        <BrandMark size={32} />
-        <div>
-          <div className="text-[0.95rem] font-bold tracking-tight">{bi(appConfig.companyName)}</div>
-          <div className="text-[0.68rem] uppercase tracking-[0.2em] text-[color:var(--faint)]">
-            {c.website}
+    <footer className="relative overflow-hidden px-5 pb-32 pt-14">
+      {/* soft glows */}
+      <div
+        className="pointer-events-none absolute -top-20 start-1/3 h-48 w-48 rounded-full opacity-25 blur-3xl"
+        style={{ background: 'radial-gradient(circle, var(--glow), transparent 70%)' }}
+      />
+      <div
+        className="pointer-events-none absolute -bottom-20 end-1/4 h-40 w-40 rounded-full opacity-20 blur-3xl"
+        style={{ background: 'radial-gradient(circle, #0d1f3f, transparent 70%)' }}
+      />
+
+      {/* top hairline */}
+      <div className="absolute inset-x-5 top-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+
+      <div className="relative">
+        {/* brand header */}
+        <div className="flex items-center gap-3.5">
+          <div className="relative shrink-0">
+            <div
+              className="pointer-events-none absolute inset-0 -z-10 rounded-full opacity-60 blur-2xl"
+              style={{ background: 'radial-gradient(circle, #2bd38c, transparent 70%)' }}
+            />
+            <BrandMark size={42} className="drop-shadow-[0_10px_24px_rgba(43,211,140,0.3)]" />
+          </div>
+          <div className="min-w-0">
+            <div className="text-[0.95rem] font-extrabold tracking-tight">
+              {bi(appConfig.companyName)}
+            </div>
+            <div className="mt-0.5 text-[0.66rem] uppercase tracking-[0.22em] text-[color:var(--faint)]">
+              {c.website}
+            </div>
           </div>
         </div>
-      </div>
-      <div className="mt-6 space-y-1.5 text-[0.8rem] text-[color:var(--muted)]">
-        <p>{bi(c.address)}</p>
-        <p dir="ltr" className="text-start">
-          {c.phone} · {c.mobile1} · {c.mobile2}
+
+        {/* contact info card */}
+        <div className="mt-6 overflow-hidden rounded-[16px] border border-white/10 bg-white/[0.035] p-4 backdrop-blur-2xl shadow-[0_18px_40px_-24px_rgba(0,0,0,0.9),inset_0_1px_0_0_rgba(255,255,255,0.05)]">
+          <div className="flex items-start gap-3">
+            <span className="grid h-8 w-8 shrink-0 place-items-center rounded-[9px] border border-[color:var(--primary)]/25 bg-[color:var(--primary)]/8 text-[color:var(--primary)]">
+              <Glyph name="pin" size={15} strokeWidth={1.9} />
+            </span>
+            <p className="pt-1 text-[0.82rem] leading-relaxed text-[color:var(--text)]">
+              {bi(c.address)}
+            </p>
+          </div>
+
+          <div className="mt-3 flex items-start gap-3">
+            <span className="grid h-8 w-8 shrink-0 place-items-center rounded-[9px] border border-[color:var(--primary)]/25 bg-[color:var(--primary)]/8 text-[color:var(--primary)]">
+              <Glyph name="phone" size={15} strokeWidth={1.9} />
+            </span>
+            <p
+              dir="ltr"
+              className="pt-1 text-[0.82rem] leading-relaxed text-start text-[color:var(--text)]"
+            >
+              {c.phone} · {c.mobile1} · {c.mobile2}
+            </p>
+          </div>
+
+          <div className="mt-3 flex items-start gap-3">
+            <span className="grid h-8 w-8 shrink-0 place-items-center rounded-[9px] border border-[color:var(--primary)]/25 bg-[color:var(--primary)]/8 text-[color:var(--primary)]">
+              <Glyph name="mail" size={15} strokeWidth={1.9} />
+            </span>
+            <p
+              dir="ltr"
+              className="pt-1 text-[0.82rem] leading-relaxed text-start text-[color:var(--text)]"
+            >
+              {c.email}
+            </p>
+          </div>
+        </div>
+
+        {/* action capsules */}
+        <div className="mt-6 flex flex-wrap gap-2.5">
+          <button
+            type="button"
+            onClick={() => externalActions.call(c.phone)}
+            className="group inline-flex items-center gap-2 rounded-full border border-[color:var(--primary)]/30 bg-[color:var(--primary)]/10 px-5 py-2.5 text-[0.82rem] font-semibold text-[color:var(--primary)] backdrop-blur-xl transition-all duration-300 active:scale-[0.97]"
+          >
+            <Glyph name="phone" size={15} strokeWidth={1.9} />
+            {t('quick.call')}
+          </button>
+
+          <button
+            type="button"
+            onClick={() => externalActions.whatsapp(c.whatsapp)}
+            className="group inline-flex items-center gap-2 rounded-full border border-[#25D366]/30 bg-[#25D366]/10 px-5 py-2.5 text-[0.82rem] font-semibold text-[#4bdb7f] backdrop-blur-xl transition-all duration-300 active:scale-[0.97]"
+          >
+            <Glyph name="whatsapp" size={15} strokeWidth={1.9} />
+            {t('quick.whatsapp')}
+          </button>
+
+          <button
+            type="button"
+            onClick={() => push({ name: 'contact' })}
+            className="group inline-flex items-center gap-2 rounded-full border border-white/12 bg-white/[0.04] px-5 py-2.5 text-[0.82rem] font-semibold text-white/80 backdrop-blur-xl transition-all duration-300 active:scale-[0.97]"
+          >
+            <Glyph name="mail" size={15} strokeWidth={1.9} />
+            {t('contact.title')}
+          </button>
+        </div>
+
+        {/* credit */}
+        <p className="mt-8 text-center text-[0.68rem] tracking-wide text-[color:var(--faint)]">
+          {t('dev.credit')} — {bi(appConfig.developer.name)}
         </p>
-        <p dir="ltr" className="text-start">
-          {c.email}
-        </p>
       </div>
-      <div className="mt-6 flex flex-wrap gap-2">
-        <Button variant="ghost" onClick={() => externalActions.call(c.phone)} icon="phone">
-          {t('quick.call')}
-        </Button>
-        <Button variant="ghost" onClick={() => externalActions.whatsapp(c.whatsapp)} icon="whatsapp">
-          {t('quick.whatsapp')}
-        </Button>
-        <Button variant="ghost" onClick={() => push({ name: 'contact' })}>
-          {t('contact.title')}
-        </Button>
-      </div>
-      <p className="mt-8 text-[0.68rem] text-[color:var(--faint)]">
-        {t('dev.credit')} — {bi(appConfig.developer.name)}
-      </p>
     </footer>
   );
 }
