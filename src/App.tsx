@@ -58,37 +58,40 @@ function BottomNav() {
   return (
     <nav
       aria-label={t('nav.home')}
-      className="hide-on-keyboard pointer-events-none fixed inset-x-0 bottom-0 z-40 flex justify-center pb-[max(env(safe-area-inset-bottom),0.85rem)]"
+      className="hide-on-keyboard pointer-events-none fixed inset-x-0 bottom-0 z-40 flex justify-center pb-[max(env(safe-area-inset-bottom),1.1rem)]"
     >
       <div className="pointer-events-auto relative mx-auto max-w-[92vw]">
-        {/* هالة خارجية ناعمة */}
+        
+        {/* 1. هالة النيون الخلفية العميقة - تم تكثيفها لإعطاء فخامة للثيم */}
         <div
           aria-hidden
-          className="pointer-events-none absolute -inset-3 rounded-full opacity-60 blur-3xl"
+          className="pointer-events-none absolute -inset-4 rounded-full opacity-50 blur-3xl transition-all duration-500"
           style={{
-            background: 'radial-gradient(60% 90% at 50% 60%, var(--glow), transparent 75%)',
+            background: 'radial-gradient(80% 100% at 50% 70%, var(--glow), transparent 70%)',
           }}
         />
 
-        {/* الشريط الزجاجي — كبسولة عائمة */}
-        <div className="relative overflow-hidden rounded-full border border-white/10 bg-[color:var(--elevated)]/65 shadow-[0_24px_60px_-24px_rgba(0,0,0,0.9),inset_0_1px_0_0_rgba(255,255,255,0.08)] backdrop-blur-2xl">
-          {/* خط لامع علوي */}
+        {/* 2. الشريط الزجاجي الاحترافي (Frosted Glass Container) */}
+        {/* تم تحسين الشفافية وإضافة ظلال Neumorphic لإعطاء عمق ملموس للشريط */}
+        <div className="relative overflow-hidden rounded-full border border-white/15 bg-[color:var(--elevated)]/45 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.85),inset_0_1px_2px_rgba(255,255,255,0.15),inset_0_-1px_1px_rgba(0,0,0,0.4)] backdrop-blur-3xl">
+          
+          {/* خط لمعان زجاجي علوي حاد */}
           <span
             aria-hidden
-            className="pointer-events-none absolute inset-x-10 top-0 h-px bg-gradient-to-r from-transparent via-white/25 to-transparent"
+            className="pointer-events-none absolute inset-x-8 top-0 h-[1.5px] bg-gradient-to-r from-transparent via-white/30 to-transparent"
           />
 
-          {/* توهج أرضي متحرك */}
+          {/* توهج النيون الأرضي المتحرك أسفل الأيقونة النشطة */}
           <span
             aria-hidden
-            className="pointer-events-none absolute bottom-0 h-10 w-14 rounded-full opacity-70 blur-2xl transition-[inset-inline-start] duration-500 ease-[cubic-bezier(.16,1,.3,1)]"
+            className="pointer-events-none absolute bottom-0 h-8 w-16 rounded-full opacity-80 blur-xl transition-[inset-inline-start] duration-500 ease-[cubic-bezier(.16,1,.3,1)]"
             style={{
-              background: 'radial-gradient(circle at 50% 100%, var(--primary), transparent 70%)',
-              insetInlineStart: `calc(${tabCenterPercent}% - 28px)`,
+              background: 'radial-gradient(circle at 50% 100%, var(--primary), transparent 75%)',
+              insetInlineStart: `calc(${tabCenterPercent}% - 32px)`,
             }}
           />
 
-          <ul className="relative flex items-center gap-0.5 px-2 py-1.5">
+          <ul className="relative flex items-center gap-1.5 px-3 py-2">
             {TABS.map((item) => {
               const active = item.key === tab;
               return (
@@ -98,21 +101,44 @@ function BottomNav() {
                     onClick={() => goTab(item.key)}
                     aria-current={active ? 'page' : undefined}
                     className={cn(
-                      'group relative flex flex-col items-center justify-center gap-0.5 rounded-full px-3 py-2 transition-all duration-300 active:scale-[0.92]',
+                      'group relative flex flex-col items-center justify-center gap-1 rounded-full px-4 py-2.5 transition-all duration-300 active:scale-[0.90]',
+                      // 3. تأثير الزر النشط المجسم (3D Glass Active Button)
                       active
-                        ? 'bg-[color:var(--primary)]/15 text-[color:var(--primary)] shadow-[inset_0_1px_0_0_rgba(255,255,255,0.12),inset_0_0_0_1px_rgba(43,211,140,0.28)]'
-                        : 'text-[color:var(--faint)]',
+                        ? 'bg-gradient-to-b from-white/10 to-transparent text-[color:var(--primary)] shadow-[0_8px_16px_-4px_rgba(0,0,0,0.5),inset_0_1px_1px_rgba(255,255,255,0.2),inset_0_0_0_1px_rgba(255,255,255,0.05)] font-bold'
+                        : 'text-[color:var(--faint)] hover:text-white/80',
                     )}
                   >
-                    <Glyph name={item.icon} size={18} strokeWidth={active ? 1.9 : 1.5} />
+                    {/* 4. محاكي الأيقونة ثلاثية الأبعاد (3D Icon Simulator Container) */}
+                    {/* تم دمج ظلال ناعمة ومتعددة الطبقات للأيقونة النشطة لتبدو بارزة ومجسمة وتطفو حقيقة داخل الزجاج */}
+                    <div 
+                      className={cn(
+                        "transition-all duration-300 transform",
+                        active ? "scale-110 -translate-y-0.5 drop-shadow-[0_4px_6px_rgba(0,0,0,0.6)]" : "drop-shadow-[0_1px_2px_rgba(0,0,0,0.3)]"
+                      )}
+                    >
+                      <Glyph 
+                        name={item.icon} 
+                        size={active ? 20 : 18} 
+                        strokeWidth={active ? 2.2 : 1.5} 
+                        // تأثير نيون خفيف داخل خطوط الأيقونة النشطة نفسها
+                        style={active ? { filter: 'drop-shadow(0 0 5px var(--primary))' } : undefined}
+                      />
+                    </div>
+
+                    {/* النص التوضيحي الصغير أسفل الأيقونة */}
                     <span
                       className={cn(
-                        'text-[0.58rem] font-semibold tracking-tight transition-colors',
-                        active ? 'text-[color:var(--primary)]' : 'text-[color:var(--faint)]',
+                        'text-[0.6rem] tracking-wide transition-all duration-300 font-medium',
+                        active ? 'text-[color:var(--primary)] drop-shadow-[0_2px_4px_rgba(0,0,0,0.4)] text-[0.62rem]' : 'text-[color:var(--faint)]',
                       )}
                     >
                       {t(item.labelKey)}
                     </span>
+
+                    {/* مؤشر نقطي مضيء متوهج أسفل النص للأيقونة النشطة */}
+                    {active && (
+                      <span className="absolute bottom-1 h-1 w-1 rounded-full bg-[color:var(--primary)] shadow-[0_0_8px_var(--primary)] animate-pulse" />
+                    )}
                   </button>
                 </li>
               );
@@ -123,6 +149,7 @@ function BottomNav() {
     </nav>
   );
 }
+
 
 /* ----------------------------------------------------- Android back button */
 
