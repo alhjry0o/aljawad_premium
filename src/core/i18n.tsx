@@ -197,6 +197,7 @@ const ar = {
   'more.terms': 'الشروط والأحكام',
   'more.share': 'مشاركة التطبيق',
   'more.rate': 'تقييم التطبيق',
+  'more.languages': 'اللغات',
   'more.appInfo': 'معلومات التطبيق',
 
   'settings.title': 'الإعدادات',
@@ -435,6 +436,7 @@ const en: Record<Key, string> = {
   'more.terms': 'Terms & conditions',
   'more.share': 'Share the app',
   'more.rate': 'Rate the app',
+  'more.languages': 'Languages',
   'more.appInfo': 'App information',
 
   'settings.title': 'Settings',
