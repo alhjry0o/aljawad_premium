@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { createPortal } from 'react-dom';
 import { appAssets } from '../../data/company';
 import { useCompany } from '../../core/companyStore';
 import { services } from '../../data/services';
@@ -60,7 +61,7 @@ function LanguageSheet({ open, onClose }: { open: boolean; onClose: () => void }
 
   if (!open) return null;
 
-  return (
+  return createPortal(
     <div
       className="fixed inset-0 z-[60] flex items-end justify-center"
       onClick={onClose}
@@ -130,7 +131,8 @@ function LanguageSheet({ open, onClose }: { open: boolean; onClose: () => void }
           })}
         </ul>
       </div>
-    </div>
+    </div>, 
+    document.body,
   );
 }
 
