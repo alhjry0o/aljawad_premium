@@ -250,3 +250,30 @@ textarea,
 .jw-ltr-input::-webkit-datetime-edit-text {
   direction: ltr;
 }
+
+/* ====================================================
+   إخفاء شريط التمرير عالميًا (الوضع الجمالي)
+   ==================================================== */
+
+/* Chrome / Safari / Edge / WebView */
+html,
+body,
+* {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar,
+*::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  background: transparent;
+  display: none;
+}
+
+*::-webkit-scrollbar-track,
+*::-webkit-scrollbar-thumb,
+*::-webkit-scrollbar-corner {
+  background: transparent;
+}
