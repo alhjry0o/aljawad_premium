@@ -48,6 +48,113 @@ function HubRow({
   );
 }
 
+/* ------------------------------------------------------------ Language Sheet */
+
+const LANGUAGES = [
+  { code: 'ar' as const, name: 'العربية', native: 'Arabic' },
+  { code: 'en' as const, name: 'English', native: 'English' },
+];
+
+function LanguageSheet({ open, onClose }: { open: boolean; onClose: () => void }) {
+  const { lang, setLang, bi } = useI18n();
+
+  if (!open) return null;
+
+  return (
+    <div
+      className="fixed inset-0 z-[60] flex items-end justify-center"
+      onClick={onClose}
+    >
+      {/* backdrop */}
+      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
+
+      {/* sheet */}
+      <div
+        className="relative mx-auto w-full max-w-[520px] overflow-hidden rounded-t-[28px] border-t border-white/10 bg-[color:var(--elevated)] pb-[max(env(safe-area-inset-bottom),1rem)] shadow-[0_-20px_60px_-20px_rgba(0,0,0,0.95)]"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* grabber */}
+        <div className="mx-auto mb-2 mt-3 h-1 w-10 rounded-full bg-white/15" />
+
+        {/* header */}
+        <div className="px-5 pb-3 pt-2">
+          <h3 className="text-[0.95rem] font-bold tracking-tight text-[color:var(--primary)]">
+            {bi({ ar: 'اللغة', en: 'Language' })}
+          </h3>
+        </div>
+
+        {/* list */}
+        <ul>
+          {LANGUAGES.map((l, idx) => {
+            const active = lang === l.code;
+            return (
+              <li key={l.code}>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setLang(l.code);
+                    window.setTimeout(onClose, 120);
+                  }}
+                  className="flex w-full items-center gap-4 px-5 py-4 text-start transition-colors active:bg-white/5"
+                >
+                  <div className="min-w-0 flex-1">
+                    <div
+                      className={cn(
+                        'text-[1rem] font-semibold transition-colors',
+                        active ? 'text-[color:var(--text)]' : 'text-white/75',
+                      )}
+                    >
+                      {l.name}
+                    </div>
+                    <div className="mt-0.5 text-[0.75rem] text-white/40">{l.native}</div>
+                  </div>
+
+                  {/* radio */}
+                  <span
+                    className={cn(
+                      'grid h-5 w-5 shrink-0 place-items-center rounded-full border-2 transition-all',
+                      active
+                        ? 'border-[color:var(--accent)] bg-[color:var(--accent)]'
+                        : 'border-white/25',
+                    )}
+                  >
+                    {active && <span className="h-2 w-2 rounded-full bg-white" />}
+                  </span>
+                </button>
+
+                {idx < LANGUAGES.length - 1 && (
+                  <div className="mx-5 h-px bg-white/8" />
+                )}
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+    </div>
+  );
+}
+
+function LanguageRow() {
+  const { t } = useI18n();
+  const [open, setOpen] = useState(false);
+
+  return (
+    <>
+      <button
+        type="button"
+        onClick={() => setOpen(true)}
+        className="group flex w-full items-center gap-4 border-b border-[color:var(--line)] px-5 py-4 text-start transition-colors last:border-0 hover:bg-[color:var(--surface)]"
+      >
+        <Glyph name="globe" size={19} className="text-[color:var(--primary)]" />
+        <span className="flex-1 text-[0.9rem] font-semibold">{t('more.languages')}</span>
+        <Glyph name="arrow" size={16} className="text-[color:var(--faint)] rtl:-scale-x-100" />
+      </button>
+
+      <LanguageSheet open={open} onClose={() => setOpen(false)} />
+    </>
+  );
+}
+
 function ShareAppRow() {
   const { t, bi } = useI18n();
   const { config: appConfig } = useCompany();
@@ -182,6 +289,7 @@ export function MoreScreen() {
           label={t('more.settings')}
           onClick={go({ name: 'settings' })}
         />
+        <LanguageRow />
         <HubRow
           icon="inspect"
           label={bi({ ar: 'الأسئلة الشائعة', en: 'FAQ' })}
@@ -386,7 +494,7 @@ export function ContactScreen() {
 /* ------------------------------------------------------------ Settings */
 
 export function SettingsScreen() {
-  const { t, lang, setLang } = useI18n();
+  const { t } = useI18n();
   const { mode, setMode, reducedMotion, setReducedMotion } = useTheme();
   const { clear } = useRequests();
   const { config: appConfig } = useCompany();
@@ -422,29 +530,7 @@ export function SettingsScreen() {
             </button>
           ))}
         </div>
-      </Section>
-
-      <Section title={t('settings.language')}>
-        <div className="grid grid-cols-2 gap-2 p-3">
-          {(['ar', 'en'] as const).map((l) => (
-            <button
-              key={l}
-              type="button"
-              onClick={() => setLang(l)}
-              aria-pressed={lang === l}
-              className={cn(
-                'rounded-[var(--radius-sm)] border px-3 py-3.5 text-[0.85rem] font-semibold transition-all',
-                lang === l
-                  ? 'border-[color:var(--primary)] bg-[color:var(--primary)]/10'
-                  : 'border-[color:var(--line)] text-[color:var(--muted)]',
-              )}
-            >
-              {l === 'ar' ? 'العربية' : 'English'}
-            </button>
-          ))}
-        </div>
-      </Section>
-
+      </Section> 
       <Section title={t('settings.motion')}>
         <label className="flex items-center justify-between gap-4 px-5 py-4">
           <span>
