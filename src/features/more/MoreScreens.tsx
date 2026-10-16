@@ -39,12 +39,16 @@ function HubRow({
     <button
       type="button"
       onClick={onClick}
-      className="group flex w-full items-center gap-4 border-b border-[color:var(--line)] px-5 py-4 text-start transition-colors last:border-0 hover:bg-[color:var(--surface)]"
+      className="group flex w-full items-center gap-3.5 px-4 py-3.5 text-start transition-colors hover:bg-white/[0.03] active:bg-white/[0.05]"
     >
-      <Glyph name={icon} size={19} className="text-[color:var(--primary)]" />
+      <span
+        className="grid h-9 w-9 shrink-0 place-items-center rounded-[10px] border border-[color:var(--primary)]/25 bg-[color:var(--primary)]/8 text-[color:var(--primary)] shadow-[0_0_18px_-8px_var(--glow)]"
+      >
+        <Glyph name={icon} size={17} strokeWidth={1.9} />
+      </span>
       <span className="flex-1 text-[0.9rem] font-semibold">{label}</span>
-      {meta && <span className="text-[0.74rem] text-[color:var(--faint)]">{meta}</span>}
-      <Glyph name="arrow" size={16} className="text-[color:var(--faint)] rtl:-scale-x-100" />
+      {meta && <span className="text-[0.72rem] text-[color:var(--faint)]">{meta}</span>}
+      <Glyph name="arrow" size={14} className="shrink-0 text-white/25 rtl:-scale-x-100" />
     </button>
   );
 }
@@ -62,29 +66,21 @@ function LanguageSheet({ open, onClose }: { open: boolean; onClose: () => void }
   if (!open) return null;
 
   return createPortal(
-    <div
-      className="fixed inset-0 z-[60] flex items-end justify-center"
-      onClick={onClose}
-    >
-      {/* backdrop */}
+    <div className="fixed inset-0 z-[60] flex items-end justify-center" onClick={onClose}>
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
 
-      {/* sheet */}
       <div
-        className="relative mx-auto w-full max-w-[520px] overflow-hidden rounded-t-[28px] border-t border-white/10 bg-[color:var(--elevated)] pb-[max(env(safe-area-inset-bottom),1rem)] shadow-[0_-20px_60px_-20px_rgba(0,0,0,0.95)]"
+        className="relative mx-auto w-full max-w-[520px] overflow-hidden rounded-t-[28px] border-t border-white/10 bg-[color:var(--elevated)]/95 backdrop-blur-2xl pb-[max(env(safe-area-inset-bottom),1rem)] shadow-[0_-20px_60px_-20px_rgba(0,0,0,0.95)]"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* grabber */}
         <div className="mx-auto mb-2 mt-3 h-1 w-10 rounded-full bg-white/15" />
 
-        {/* header */}
         <div className="px-5 pb-3 pt-2">
           <h3 className="text-[0.95rem] font-bold tracking-tight text-[color:var(--primary)]">
             {bi({ ar: 'اللغة', en: 'Language' })}
           </h3>
         </div>
 
-        {/* list */}
         <ul>
           {LANGUAGES.map((l, idx) => {
             const active = lang === l.code;
@@ -110,7 +106,6 @@ function LanguageSheet({ open, onClose }: { open: boolean; onClose: () => void }
                     <div className="mt-0.5 text-[0.75rem] text-white/40">{l.native}</div>
                   </div>
 
-                  {/* radio */}
                   <span
                     className={cn(
                       'grid h-5 w-5 shrink-0 place-items-center rounded-full border-2 transition-all',
@@ -123,15 +118,13 @@ function LanguageSheet({ open, onClose }: { open: boolean; onClose: () => void }
                   </span>
                 </button>
 
-                {idx < LANGUAGES.length - 1 && (
-                  <div className="mx-5 h-px bg-white/8" />
-                )}
+                {idx < LANGUAGES.length - 1 && <div className="mx-5 h-px bg-white/8" />}
               </li>
             );
           })}
         </ul>
       </div>
-    </div>, 
+    </div>,
     document.body,
   );
 }
@@ -145,11 +138,13 @@ function LanguageRow() {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="group flex w-full items-center gap-4 border-b border-[color:var(--line)] px-5 py-4 text-start transition-colors last:border-0 hover:bg-[color:var(--surface)]"
+        className="group flex w-full items-center gap-3.5 px-4 py-3.5 text-start transition-colors hover:bg-white/[0.03] active:bg-white/[0.05]"
       >
-        <Glyph name="globe" size={19} className="text-[color:var(--primary)]" />
+        <span className="grid h-9 w-9 shrink-0 place-items-center rounded-[10px] border border-[color:var(--primary)]/25 bg-[color:var(--primary)]/8 text-[color:var(--primary)] shadow-[0_0_18px_-8px_var(--glow)]">
+          <Glyph name="globe" size={17} strokeWidth={1.9} />
+        </span>
         <span className="flex-1 text-[0.9rem] font-semibold">{t('more.languages')}</span>
-        <Glyph name="arrow" size={16} className="text-[color:var(--faint)] rtl:-scale-x-100" />
+        <Glyph name="arrow" size={14} className="shrink-0 text-white/25 rtl:-scale-x-100" />
       </button>
 
       <LanguageSheet open={open} onClose={() => setOpen(false)} />
@@ -184,13 +179,13 @@ function ShareAppRow() {
       <button
         type="button"
         onClick={handleShare}
-        className="group flex w-full items-center gap-4 border-b border-[color:var(--line)] px-5 py-4 text-start transition-colors last:border-0 hover:bg-[color:var(--surface)]"
+        className="group flex w-full items-center gap-3.5 px-4 py-3.5 text-start transition-colors hover:bg-white/[0.03] active:bg-white/[0.05]"
       >
-        <Glyph name="share" size={19} className="text-[color:var(--primary)]" />
-        <span className="flex-1 text-[0.9rem] font-semibold">
-          {t('more.share')}
+        <span className="grid h-9 w-9 shrink-0 place-items-center rounded-[10px] border border-[color:var(--primary)]/25 bg-[color:var(--primary)]/8 text-[color:var(--primary)] shadow-[0_0_18px_-8px_var(--glow)]">
+          <Glyph name="share" size={17} strokeWidth={1.9} />
         </span>
-        <Glyph name="arrow" size={16} className="text-[color:var(--faint)] rtl:-scale-x-100" />
+        <span className="flex-1 text-[0.9rem] font-semibold">{t('more.share')}</span>
+        <Glyph name="arrow" size={14} className="shrink-0 text-white/25 rtl:-scale-x-100" />
       </button>
       {toast && <Toast message={toast} />}
     </>
@@ -214,18 +209,20 @@ function RateAppRow() {
       onClick={handleClick}
       disabled={!published}
       className={cn(
-        'group flex w-full items-center gap-4 border-b border-[color:var(--line)] px-5 py-4 text-start transition-colors',
-        published ? 'hover:bg-[color:var(--surface)]' : 'cursor-not-allowed',
+        'group flex w-full items-center gap-3.5 px-4 py-3.5 text-start transition-colors',
+        published ? 'hover:bg-white/[0.03] active:bg-white/[0.05]' : 'cursor-not-allowed',
       )}
     >
-      <Glyph
-        name="star"
-        size={19}
+      <span
         className={cn(
-          'shrink-0 transition-colors',
-          published ? 'text-[color:var(--primary)]' : 'text-[color:var(--faint)]',
+          'grid h-9 w-9 shrink-0 place-items-center rounded-[10px] border transition-colors',
+          published
+            ? 'border-[color:var(--primary)]/25 bg-[color:var(--primary)]/8 text-[color:var(--primary)] shadow-[0_0_18px_-8px_var(--glow)]'
+            : 'border-white/10 bg-white/[0.03] text-[color:var(--faint)]',
         )}
-      />
+      >
+        <Glyph name="star" size={17} strokeWidth={1.9} />
+      </span>
       <div className="min-w-0 flex-1">
         <div
           className={cn(
@@ -236,7 +233,7 @@ function RateAppRow() {
           {t('more.rate')}
         </div>
         {!published && (
-          <div className="mt-0.5 text-[0.7rem] leading-snug text-[color:var(--faint)]">
+          <div className="mt-0.5 text-[0.68rem] leading-snug text-[color:var(--faint)]">
             {bi({
               ar: 'متاح عند رفع التطبيق على Google Play',
               en: 'Available once published on Google Play',
@@ -245,7 +242,7 @@ function RateAppRow() {
         )}
       </div>
       {published && (
-        <Glyph name="arrow" size={16} className="text-[color:var(--faint)] rtl:-scale-x-100" />
+        <Glyph name="arrow" size={14} className="shrink-0 text-white/25 rtl:-scale-x-100" />
       )}
     </button>
   );
@@ -254,43 +251,57 @@ function RateAppRow() {
 export function MoreScreen() {
   const { t, bi } = useI18n();
   const { push } = useNav();
-  const { theme } = useTheme();
   const { config: appConfig } = useCompany();
 
   const go = (route: Route) => () => push(route);
 
   return (
-    <div className="pb-8">
+    <div className="pb-32">
       <ScreenHeader title={t('more.title')} />
 
+      {/* ============ Header with glow ============ */}
       <Reveal className="relative overflow-hidden px-5 py-10">
         <div
-          className="absolute inset-0 opacity-70"
-          style={{ background: 'radial-gradient(85% 60% at 15% 0%, var(--glow), transparent 65%)' }}
+          className="pointer-events-none absolute -top-24 start-1/4 h-56 w-56 rounded-full opacity-50 blur-3xl"
+          style={{ background: 'radial-gradient(circle, var(--glow), transparent 70%)' }}
         />
+        <div
+          className="pointer-events-none absolute -bottom-24 end-1/3 h-44 w-44 rounded-full opacity-30 blur-3xl"
+          style={{ background: 'radial-gradient(circle, #0d1f3f, transparent 70%)' }}
+        />
+
         <div className="relative flex items-center gap-4">
-          <BrandMark size={52} />
-          <div>
+          <div className="relative shrink-0">
+            <div
+              className="pointer-events-none absolute inset-0 -z-10 rounded-full opacity-70 blur-2xl"
+              style={{ background: 'radial-gradient(circle, #2bd38c, transparent 70%)' }}
+            />
+            <BrandMark size={58} className="drop-shadow-[0_14px_36px_rgba(43,211,140,0.4)]" />
+          </div>
+          <div className="min-w-0">
             <h2 className="text-[1.1rem] font-extrabold leading-tight tracking-tight">
               {bi(appConfig.companyName)}
             </h2>
-            <p className="mt-1 text-[0.74rem] text-[color:var(--muted)]">{appConfig.contact.website}</p>
+            <p className="mt-1 truncate text-[0.74rem] text-[color:var(--muted)]">
+              {appConfig.contact.website}
+            </p>
           </div>
         </div>
       </Reveal>
 
+      {/* ============ Sections ============ */}
       <Section title={t('more.company')}>
         <HubRow icon="layers" label={t('about.title')} onClick={go({ name: 'about' })} />
         <HubRow icon="phone" label={t('contact.title')} onClick={go({ name: 'contact' })} />
-        <HubRow icon="globe" label={t('more.website')} onClick={() => externalActions.website(appConfig.contact.website)} />
+        <HubRow
+          icon="globe"
+          label={t('more.website')}
+          onClick={() => externalActions.website(appConfig.contact.website)}
+        />
       </Section>
 
       <Section title={t('more.app')}>
-        <HubRow
-          icon="settings"
-          label={t('more.settings')}
-          onClick={go({ name: 'settings' })}
-        />
+        <HubRow icon="settings" label={t('more.settings')} onClick={go({ name: 'settings' })} />
         <LanguageRow />
         <HubRow
           icon="inspect"
@@ -301,7 +312,12 @@ export function MoreScreen() {
         <RateAppRow />
         <HubRow icon="shield" label={t('more.privacy')} onClick={go({ name: 'privacy' })} />
         <HubRow icon="quote" label={t('more.terms')} onClick={go({ name: 'terms' })} />
-        <HubRow icon="info" label={t('more.appInfo')} meta={appConfig.version} onClick={go({ name: 'settings' })} />
+        <HubRow
+          icon="info"
+          label={t('more.appInfo')}
+          meta={appConfig.version}
+          onClick={go({ name: 'settings' })}
+        />
       </Section>
 
       <Section title={t('more.developer')}>
@@ -313,13 +329,16 @@ export function MoreScreen() {
   );
 }
 
+/* ============ Section — Glass Container ============ */
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <section className="mt-6">
-      <h3 className="px-5 pb-2 text-[0.66rem] uppercase tracking-[0.28em] text-[color:var(--faint)]">
+    <section className="mt-6 px-5">
+      <h3 className="mb-2.5 px-1 text-[0.64rem] uppercase tracking-[0.28em] text-[color:var(--faint)]">
         {title}
       </h3>
-      <div className="border-y border-[color:var(--line)] bg-[color:var(--elevated)]">{children}</div>
+      <div className="overflow-hidden rounded-[18px] border border-white/10 bg-white/[0.035] shadow-[0_20px_50px_-30px_rgba(0,0,0,0.9),inset_0_1px_0_0_rgba(255,255,255,0.05)] backdrop-blur-2xl">
+        {children}
+      </div>
     </section>
   );
 }
@@ -330,7 +349,7 @@ export function AboutScreen() {
   const { t, bi } = useI18n();
   const { config: appConfig } = useCompany();
   return (
-    <div className="pb-10">
+    <div className="pb-32">
       <ScreenHeader title={t('about.title')} />
       <section className="relative h-[52svh] overflow-hidden bg-[#030605]">
         <img src={appAssets.aboutVisual} alt="" className="h-full w-full object-cover opacity-70" />
@@ -350,13 +369,13 @@ export function AboutScreen() {
         <p className="text-[0.9rem] leading-[2] text-[color:var(--muted)]">{t('about.p2')}</p>
       </Reveal>
 
-      <Reveal className="border-t border-[color:var(--line)] px-5 py-10">
-        <h2 className="mb-6 text-[1.1rem] font-bold tracking-tight">{t('about.scope')}</h2>
+      <Reveal className="px-5 py-4">
+        <h2 className="mb-4 px-1 text-[1.05rem] font-bold tracking-tight">{t('about.scope')}</h2>
         <div className="grid grid-cols-2 gap-3">
           {services.map((s) => (
             <div
               key={s.id}
-              className="flex items-center gap-3 rounded-[var(--radius-sm)] border border-[color:var(--line)] bg-[color:var(--elevated)] p-3"
+              className="flex items-center gap-3 rounded-[16px] border border-white/10 bg-white/[0.035] p-3 backdrop-blur-xl"
             >
               <MaterialIcon3D name={s.id} accent={s.accent} size={40} />
               <span className="text-[0.76rem] font-semibold leading-snug">{bi(s.title)}</span>
@@ -398,7 +417,7 @@ export function ContactScreen() {
   ];
 
   return (
-    <div className="pb-10">
+    <div className="pb-32">
       <ScreenHeader title={t('contact.title')} />
       <section className="relative h-[42svh] overflow-hidden bg-[#030605]">
         <img src={appAssets.contactVisual} alt="" className="h-full w-full object-cover opacity-65" />
@@ -411,42 +430,46 @@ export function ContactScreen() {
         </div>
       </section>
 
-      <div className="border-y border-[color:var(--line)] bg-[color:var(--elevated)]">
-        {methods.map((m) => (
-          <div
-            key={`${m.label}-${m.value}`}
-            className="flex items-center gap-4 border-b border-[color:var(--line)] px-5 py-4 last:border-0"
-          >
-            <Glyph name={m.icon} size={18} className="text-[color:var(--primary)]" />
-            <div className="min-w-0 flex-1">
-              <div className="text-[0.68rem] text-[color:var(--faint)]">{m.label}</div>
-              <div dir="ltr" className="truncate text-start text-[0.88rem] font-semibold">
-                {m.value}
+      <div className="px-5 pt-6">
+        <div className="overflow-hidden rounded-[18px] border border-white/10 bg-white/[0.035] backdrop-blur-2xl shadow-[0_20px_50px_-30px_rgba(0,0,0,0.9),inset_0_1px_0_0_rgba(255,255,255,0.05)]">
+          {methods.map((m) => (
+            <div
+              key={`${m.label}-${m.value}`}
+              className="flex items-center gap-3.5 border-b border-white/8 px-4 py-3.5 last:border-0"
+            >
+              <span className="grid h-9 w-9 shrink-0 place-items-center rounded-[10px] border border-[color:var(--primary)]/25 bg-[color:var(--primary)]/8 text-[color:var(--primary)]">
+                <Glyph name={m.icon} size={16} strokeWidth={1.9} />
+              </span>
+              <div className="min-w-0 flex-1">
+                <div className="text-[0.68rem] text-[color:var(--faint)]">{m.label}</div>
+                <div dir="ltr" className="truncate text-start text-[0.86rem] font-semibold">
+                  {m.value}
+                </div>
               </div>
+              <button
+                type="button"
+                onClick={async () => {
+                  const ok = await externalActions.copy(m.value);
+                  flash(ok ? t('contact.copied') : t('contact.unavailable'));
+                }}
+                className="rounded-full border border-white/10 px-2.5 py-1.5 text-[0.66rem] text-[color:var(--muted)]"
+              >
+                ⧉
+              </button>
+              <button
+                type="button"
+                onClick={m.run}
+                className="rounded-full bg-[color:var(--primary)]/12 px-3 py-1.5 text-[0.7rem] font-semibold text-[color:var(--primary)]"
+              >
+                {m.icon === 'mail' ? t('contact.email') : m.icon === 'whatsapp' ? t('quick.whatsapp') : t('quick.call')}
+              </button>
             </div>
-            <button
-              type="button"
-              onClick={async () => {
-                const ok = await externalActions.copy(m.value);
-                flash(ok ? t('contact.copied') : t('contact.unavailable'));
-              }}
-              className="rounded-[var(--radius-xs)] border border-[color:var(--line)] px-2.5 py-1.5 text-[0.68rem] text-[color:var(--muted)]"
-            >
-              ⧉
-            </button>
-            <button
-              type="button"
-              onClick={m.run}
-              className="rounded-[var(--radius-xs)] bg-[color:var(--primary)]/12 px-3 py-1.5 text-[0.7rem] font-semibold text-[color:var(--primary)]"
-            >
-              {m.icon === 'mail' ? t('contact.email') : m.icon === 'whatsapp' ? t('quick.whatsapp') : t('quick.call')}
-            </button>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
 
       <Reveal className="px-5 py-8">
-        <div className="relative overflow-hidden rounded-[var(--radius-md)] border border-[color:var(--line)] bg-[color:var(--surface)] p-5">
+        <div className="relative overflow-hidden rounded-[18px] border border-white/10 bg-white/[0.035] p-5 backdrop-blur-2xl">
           <div className="jw-grid absolute inset-0 opacity-30" />
           <div className="relative">
             <div className="flex items-start gap-3">
@@ -509,7 +532,7 @@ export function SettingsScreen() {
   ];
 
   return (
-    <div className="pb-12">
+    <div className="pb-32">
       <ScreenHeader title={t('settings.title')} />
 
       <Section title={t('settings.appearance')}>
@@ -521,10 +544,10 @@ export function SettingsScreen() {
               onClick={() => setMode(m.value)}
               aria-pressed={mode === m.value}
               className={cn(
-                'flex flex-col items-center gap-2 rounded-[var(--radius-sm)] border px-2 py-4 transition-all',
+                'flex flex-col items-center gap-2 rounded-[14px] border px-2 py-4 transition-all',
                 mode === m.value
-                  ? 'border-[color:var(--primary)] bg-[color:var(--primary)]/10 text-[color:var(--text)]'
-                  : 'border-[color:var(--line)] text-[color:var(--muted)]',
+                  ? 'border-[color:var(--primary)]/40 bg-[color:var(--primary)]/10 text-[color:var(--primary)] shadow-[inset_0_0_0_1px_rgba(43,211,140,0.15)]'
+                  : 'border-white/8 bg-white/[0.02] text-[color:var(--muted)]',
               )}
             >
               <Glyph name={m.icon} size={19} />
@@ -532,9 +555,10 @@ export function SettingsScreen() {
             </button>
           ))}
         </div>
-      </Section> 
+      </Section>
+
       <Section title={t('settings.motion')}>
-        <label className="flex items-center justify-between gap-4 px-5 py-4">
+        <label className="flex items-center justify-between gap-4 px-4 py-4">
           <span>
             <span className="block text-[0.88rem] font-semibold">{t('settings.motion')}</span>
             <span className="mt-0.5 block text-[0.72rem] text-[color:var(--muted)]">
@@ -548,8 +572,8 @@ export function SettingsScreen() {
             className="h-5 w-5 accent-[color:var(--primary)]"
           />
         </label>
-        <Divider />
-        <div className="px-5 py-4">
+        <div className="mx-4 h-px bg-white/8" />
+        <div className="px-4 py-4">
           <span className="block text-[0.88rem] font-semibold">{t('settings.notifications')}</span>
           <span className="mt-0.5 block text-[0.72rem] text-[color:var(--muted)]">
             {t('settings.notificationsHint')}
@@ -558,7 +582,7 @@ export function SettingsScreen() {
       </Section>
 
       <Section title={t('settings.data')}>
-        <div className="p-4">
+        <div className="p-3">
           <Button
             variant="ghost"
             block
@@ -575,7 +599,7 @@ export function SettingsScreen() {
       </Section>
 
       <Section title={t('more.appInfo')}>
-        <div className="flex items-center justify-between px-5 py-4">
+        <div className="flex items-center justify-between px-4 py-4">
           <span className="text-[0.85rem]">{t('settings.version')}</span>
           <span className="font-mono text-[0.78rem] text-[color:var(--muted)]">{appConfig.version}</span>
         </div>
@@ -593,7 +617,7 @@ export function LegalScreen({ kind }: { kind: 'privacy' | 'terms' }) {
   const title = kind === 'privacy' ? t('legal.privacy.title') : t('legal.terms.title');
   const body = kind === 'privacy' ? t('legal.privacy.body') : t('legal.terms.body');
   return (
-    <div className="pb-14">
+    <div className="pb-32">
       <ScreenHeader title={title} />
       <div className="px-5 py-8">
         <DemoBadge label={t('legal.placeholder')} />
@@ -674,74 +698,78 @@ export function FaqScreen() {
   const [openId, setOpenId] = useState<number | null>(0);
 
   return (
-    <div className="pb-14">
+    <div className="pb-32">
       <ScreenHeader
         title={bi({ ar: 'الأسئلة الشائعة', en: 'FAQ' })}
         subtitle={bi({ ar: 'إجابات على أكثر ما يسأل عنه عملاؤنا', en: 'Answers to our most common questions' })}
       />
 
       <div className="px-5 pt-6">
-        <p className="text-[0.85rem] leading-relaxed text-[color:var(--muted)]">
-          {bi({
-            ar: 'جمعنا لك أكثر الأسئلة تكرارًا وإجاباتها. إذا لم تجد ما تبحث عنه، تواصل معنا مباشرة في نهاية الصفحة.',
-            en: 'We have gathered the most frequent questions and their answers. If you do not find what you are looking for, contact us directly at the end of the page.',
-          })}
-        </p>
+        <div className="rounded-[18px] border border-white/10 bg-white/[0.035] p-4 backdrop-blur-2xl">
+          <p className="text-[0.85rem] leading-relaxed text-[color:var(--muted)]">
+            {bi({
+              ar: 'جمعنا لك أكثر الأسئلة تكرارًا وإجاباتها. إذا لم تجد ما تبحث عنه، تواصل معنا مباشرة في نهاية الصفحة.',
+              en: 'We have gathered the most frequent questions and their answers. If you do not find what you are looking for, contact us directly at the end of the page.',
+            })}
+          </p>
+        </div>
       </div>
 
-      <ul className="mt-6">
-        {FAQS.map((item, i) => {
-          const open = openId === i;
-          return (
-            <li key={i} className="border-t border-[color:var(--line)] last:border-b">
-              <button
-                type="button"
-                onClick={() => setOpenId(open ? null : i)}
-                aria-expanded={open}
-                className="flex w-full items-center gap-3 px-5 py-4 text-start transition-colors hover:bg-[color:var(--surface)]"
-              >
-                <span
-                  className={cn(
-                    'grid h-7 w-7 shrink-0 place-items-center rounded-full border transition-all duration-300',
-                    open
-                      ? 'border-[color:var(--primary)] bg-[color:var(--primary)]/15 text-[color:var(--primary)]'
-                      : 'border-[color:var(--line-strong)] text-[color:var(--muted)]',
-                  )}
+      <div className="px-5 pt-6">
+        <div className="overflow-hidden rounded-[18px] border border-white/10 bg-white/[0.035] backdrop-blur-2xl shadow-[0_20px_50px_-30px_rgba(0,0,0,0.9),inset_0_1px_0_0_rgba(255,255,255,0.05)]">
+          {FAQS.map((item, i) => {
+            const open = openId === i;
+            return (
+              <div key={i} className="border-b border-white/8 last:border-0">
+                <button
+                  type="button"
+                  onClick={() => setOpenId(open ? null : i)}
+                  aria-expanded={open}
+                  className="flex w-full items-center gap-3 px-4 py-4 text-start transition-colors hover:bg-white/[0.03]"
                 >
-                  <Glyph
-                    name="close"
-                    size={14}
-                    className={cn('transition-transform duration-300', !open && 'rotate-45')}
-                  />
-                </span>
-                <span
-                  className={cn(
-                    'flex-1 text-[0.92rem] font-semibold leading-snug tracking-tight transition-colors',
-                    open ? 'text-[color:var(--primary)]' : 'text-[color:var(--text)]',
-                  )}
+                  <span
+                    className={cn(
+                      'grid h-7 w-7 shrink-0 place-items-center rounded-full border transition-all duration-300',
+                      open
+                        ? 'border-[color:var(--primary)]/40 bg-[color:var(--primary)]/15 text-[color:var(--primary)]'
+                        : 'border-white/15 text-[color:var(--muted)]',
+                    )}
+                  >
+                    <Glyph
+                      name="close"
+                      size={14}
+                      className={cn('transition-transform duration-300', !open && 'rotate-45')}
+                    />
+                  </span>
+                  <span
+                    className={cn(
+                      'flex-1 text-[0.9rem] font-semibold leading-snug tracking-tight transition-colors',
+                      open ? 'text-[color:var(--primary)]' : 'text-[color:var(--text)]',
+                    )}
+                  >
+                    {bi(item.q)}
+                  </span>
+                </button>
+                <div
+                  className="grid overflow-hidden transition-[grid-template-rows] duration-400 ease-[cubic-bezier(.16,1,.3,1)]"
+                  style={{ gridTemplateRows: open ? '1fr' : '0fr' }}
                 >
-                  {bi(item.q)}
-                </span>
-              </button>
-              <div
-                className="grid overflow-hidden transition-[grid-template-rows] duration-400 ease-[cubic-bezier(.16,1,.3,1)]"
-                style={{ gridTemplateRows: open ? '1fr' : '0fr' }}
-              >
-                <div className="min-h-0">
-                  <div className="px-5 pb-5 ps-[60px]">
-                    <p className="text-[0.85rem] leading-[1.95] text-[color:var(--muted)]">
-                      {bi(item.a)}
-                    </p>
+                  <div className="min-h-0">
+                    <div className="px-4 pb-5 ps-[52px]">
+                      <p className="text-[0.83rem] leading-[1.95] text-[color:var(--muted)]">
+                        {bi(item.a)}
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>
-            </li>
-          );
-        })}
-      </ul>
+            );
+          })}
+        </div>
+      </div>
 
-      <Reveal className="px-5 pt-10">
-        <div className="relative overflow-hidden rounded-[var(--radius-md)] border border-[color:var(--line)] bg-[color:var(--surface)] p-5">
+      <Reveal className="px-5 pt-8">
+        <div className="relative overflow-hidden rounded-[18px] border border-white/10 bg-white/[0.035] p-5 backdrop-blur-2xl">
           <div className="jw-grid absolute inset-0 opacity-30" />
           <div className="relative">
             <h3 className="text-[1.05rem] font-bold tracking-tight">
@@ -775,7 +803,6 @@ export function FaqScreen() {
   );
 }
 
-
 /* ------------------------------------------------------------ Developer */
 
 export function DeveloperScreen() {
@@ -783,7 +810,7 @@ export function DeveloperScreen() {
   const { config: appConfig } = useCompany();
   const dev = appConfig.developer;
   return (
-    <div className="pb-14">
+    <div className="pb-32">
       <ScreenHeader title={t('dev.title')} />
       <div className="relative overflow-hidden px-5 py-14 text-center">
         <div
