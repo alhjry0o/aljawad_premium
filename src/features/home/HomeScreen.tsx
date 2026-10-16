@@ -11,6 +11,7 @@ import { BrandMark, Glyph, MaterialIcon3D } from '../../components/icons';
 import { Button, Counter, DemoBadge, Reveal, SectionHead, useScrollY } from '../../components/kit';
 import { ServiceCarousel } from '../services/ServiceCarousel';
 import { uiEvents } from '../../core/uiEvents';
+import { cn } from '../../utils/cn';
 
 function HeroSearchButton() {
   const { t } = useI18n();
