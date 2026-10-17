@@ -451,4 +451,4 @@ function ReviewRow({ label, value }: { label: string; value: string }) {
       <span className="max-w-[60%] text-end text-[0.82rem] font-semibold">{value}</span>
     </div>
   );
-    }
+}
