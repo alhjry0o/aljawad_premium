@@ -26,9 +26,9 @@ function HeroSearchButton() {
     <button
       type="button"
       onClick={onClick}
-      className="flex w-full items-center gap-3 rounded-[var(--radius-sm)] border border-white/15 bg-black/45 px-4 py-3.5 text-start backdrop-blur-xl transition-colors active:border-[#2bd38c]/60"
+      className="flex w-full items-center gap-3 rounded-[14px] border border-white/10 bg-white/[0.035] px-4 py-3.5 text-start backdrop-blur-xl transition-all duration-300 active:border-[#2bd38c]/60 active:bg-white/[0.06]"
     >
-      <Glyph name="search" size={18} className="shrink-0 text-white/60" />
+      <Glyph name="search" size={18} className="shrink-0 text-white/50" />
       <span className="flex-1 text-[0.92rem] text-white/45">{t('hero.search')}</span>
     </button>
   );
@@ -42,21 +42,28 @@ function Hero() {
   const y = useScrollY();
   const p = reducedMotion ? 0 : Math.min(y, 520);
 
+  const quickItems = [
+    { icon: 'receipt' as const, label: t('quick.request'), run: () => push({ name: 'flow', kind: 'service' }) },
+    { icon: 'quote' as const, label: t('quick.quote'), run: () => push({ name: 'flow', kind: 'quote' }) },
+    { icon: 'inspect' as const, label: t('quick.inspection'), run: () => push({ name: 'flow', kind: 'inspection' }) },
+    { icon: 'whatsapp' as const, label: t('quick.whatsapp'), run: () => externalActions.whatsapp(appConfig.contact.whatsapp) },
+  ];
+
   return (
     <section className="relative min-h-[94svh] bg-[#030605]">
-     <div className="absolute inset-0 overflow-hidden">
-      <div
-        className="absolute inset-0 will-change-transform"
-        style={{ transform: `translate3d(0, ${p * 0.25}px, 0) scale(${1 + p * 0.0004})` }}
-      >
-       <img
-        src={appAssets.hero}
-        alt=""
-        className="h-full w-full object-cover opacity-70"
-        fetchPriority="high"
-      />
-    </div>
-  </div>
+      <div className="absolute inset-0 overflow-hidden">
+        <div
+          className="absolute inset-0 will-change-transform"
+          style={{ transform: `translate3d(0, ${p * 0.25}px, 0) scale(${1 + p * 0.0004})` }}
+        >
+          <img
+            src={appAssets.hero}
+            alt=""
+            className="h-full w-full object-cover opacity-70"
+            fetchPriority="high"
+          />
+        </div>
+      </div>
       <div className="absolute inset-0 bg-gradient-to-b from-[#030605]/75 via-[#030605]/55 to-[#030605]" />
       <div
         className="absolute inset-0 opacity-70"
@@ -68,12 +75,17 @@ function Hero() {
       />
       <div className="jw-grid absolute inset-0 opacity-[0.07]" />
 
-      <div className="relative flex min-h-[94svh] flex-col px-5 pb-32 pt-[calc(env(safe-area-inset-top)+1.5rem)]">
+      <div className="relative flex min-h-[94svh] flex-col px-5 pb-10 pt-[calc(env(safe-area-inset-top)+1.5rem)]">
+        {/* Header with subtle glow */}
         <div
           className="flex items-center justify-between"
           style={{ opacity: reducedMotion ? 1 : Math.max(0, 1 - p / 480) }}
         >
-          <div className="flex items-center gap-2.5">
+          <div className="relative flex items-center gap-2.5">
+            <div
+              className="pointer-events-none absolute -inset-4 -z-10 rounded-full opacity-30 blur-2xl"
+              style={{ background: 'radial-gradient(circle, #2bd38c, transparent 70%)' }}
+            />
             <BrandMark size={34} />
             <div className="leading-tight">
               <div className="text-[0.95rem] font-extrabold tracking-tight text-white">
@@ -84,6 +96,7 @@ function Hero() {
           </div>
         </div>
 
+        {/* Hero Text Content */}
         <div
           className="mt-auto pt-16"
           style={{ opacity: reducedMotion ? 1 : Math.max(0, 1 - p / 480) }}
@@ -114,54 +127,64 @@ function Hero() {
           </p>
         </div>
 
-        <div className="jw-rise mt-10 space-y-4" style={{ animationDelay: '420ms' }}>
+        {/* Unified Glass Panel: Search + CTA + Quick Actions */}
+        <div className="jw-rise mt-10" style={{ animationDelay: '420ms' }}>
           <HeroSearchButton />
-          <div className="flex items-center gap-3">
-            <Button onClick={() => push({ name: 'flow', kind: 'service' })} icon="arrow">
-              {t('hero.cta.primary')}
-            </Button>
-            <button
-              type="button"
-              onClick={() => push({ name: 'flow', kind: 'quote' })}
-              className="group inline-flex items-center gap-2 px-1 py-3 text-[0.9rem] font-semibold text-white/75 transition-colors hover:text-white"
-            >
-              <span className="border-b border-white/30 pb-0.5 transition-colors group-hover:border-[#2bd38c]">
-                {t('hero.cta.secondary')}
-              </span>
-            </button>
+
+          <div className="relative mt-3 overflow-hidden rounded-[20px] border border-white/10 bg-white/[0.04] p-4 backdrop-blur-2xl shadow-[0_20px_60px_-24px_rgba(0,0,0,0.95),inset_0_1px_0_0_rgba(255,255,255,0.06)]">
+            {/* Inner soft glow */}
+            <div
+              className="pointer-events-none absolute -top-24 start-1/2 h-40 w-40 -translate-x-1/2 rounded-full opacity-20 blur-3xl"
+              style={{ background: 'radial-gradient(circle, var(--glow), transparent 70%)' }}
+            />
+
+            <div className="relative">
+              {/* CTA Row */}
+              <div className="flex items-center gap-3">
+                <Button
+                  onClick={() => push({ name: 'flow', kind: 'service' })}
+                  icon="arrow"
+                  className="flex-1 py-3.5"
+                >
+                  {t('hero.cta.primary')}
+                </Button>
+                <button
+                  type="button"
+                  onClick={() => push({ name: 'flow', kind: 'quote' })}
+                  className="group flex flex-1 items-center justify-center px-1 py-3 text-[0.9rem] font-semibold text-white/75 transition-colors hover:text-white"
+                >
+                  <span className="border-b border-white/30 pb-0.5 transition-colors group-hover:border-[#2bd38c]">
+                    {t('hero.cta.secondary')}
+                  </span>
+                </button>
+              </div>
+
+              {/* Divider */}
+              <div className="my-3 h-px w-full bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+
+              {/* Quick Actions Grid */}
+              <div className="grid grid-cols-4 gap-1">
+                {quickItems.map((item) => (
+                  <button
+                    key={item.label}
+                    type="button"
+                    onClick={item.run}
+                    className="flex flex-col items-center gap-1.5 rounded-[10px] px-1 py-2 transition-colors hover:bg-white/5 active:scale-[0.95]"
+                  >
+                    <Glyph
+                      name={item.icon}
+                      size={20}
+                      className="text-[color:var(--primary)] drop-shadow-[0_0_8px_var(--glow)]"
+                    />
+                    <span className="text-[0.66rem] font-semibold text-white/65">{item.label}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </section>
-  );
-}
-
-function QuickActions() {
-  const { t } = useI18n();
-  const { push } = useNav();
-  const { config: appConfig } = useCompany();
-  const items = [
-    { icon: 'receipt' as const, label: t('quick.request'), run: () => push({ name: 'flow', kind: 'service' }) },
-    { icon: 'quote' as const, label: t('quick.quote'), run: () => push({ name: 'flow', kind: 'quote' }) },
-    { icon: 'inspect' as const, label: t('quick.inspection'), run: () => push({ name: 'flow', kind: 'inspection' }) },
-    { icon: 'whatsapp' as const, label: t('quick.whatsapp'), run: () => externalActions.whatsapp(appConfig.contact.whatsapp) },
-  ];
-  return (
-    <div className="relative z-10 -mt-10 px-5 pb-2">
-      <div className="grid grid-cols-4 gap-2 rounded-[var(--radius-md)] border border-[color:var(--line)] bg-[color:var(--elevated)] p-2 shadow-[0_24px_60px_-34px_rgba(0,0,0,0.9)]">
-        {items.map((item) => (
-          <button
-            key={item.label}
-            type="button"
-            onClick={item.run}
-            className="flex flex-col items-center gap-2 rounded-[var(--radius-sm)] px-1 py-3 transition-colors hover:bg-[color:var(--surface)]"
-          >
-            <Glyph name={item.icon} size={21} className="text-[color:var(--primary)]" />
-            <span className="text-[0.68rem] font-semibold text-[color:var(--muted)]">{item.label}</span>
-          </button>
-        ))}
-      </div>
-    </div>
   );
 }
 
@@ -231,7 +254,6 @@ function WhyAljawad() {
     { n: '04', title: t('why.4.title'), body: t('why.4.body'), icon: 'construction' as const },
   ];
 
-  // كشف البطاقة النشطة أثناء السحب الأفقي
   const handleScroll = () => {
     const el = scrollRef.current;
     if (!el) return;
@@ -437,7 +459,6 @@ function WhyAljawad() {
                   scrollSnapAlign: 'center',
                 }}
               >
-                {/* glow */}
                 <div
                   className="pointer-events-none absolute -top-16 -end-16 h-40 w-40 rounded-full opacity-25 blur-3xl transition-opacity duration-500"
                   style={{
@@ -447,7 +468,6 @@ function WhyAljawad() {
                 />
 
                 <div className="relative">
-                  {/* number badge */}
                   <div className="mb-5 flex items-center justify-between">
                     <span
                       className="font-mono text-[0.72rem] font-bold tracking-[0.3em] text-[#5fe0a5]"
@@ -458,7 +478,6 @@ function WhyAljawad() {
                     <span className="h-px flex-1 bg-gradient-to-r from-[#2bd38c]/40 to-transparent ms-3" />
                   </div>
 
-                  {/* icon + title */}
                   <div className="flex items-center gap-3">
                     <span
                       className="grid h-10 w-10 shrink-0 place-items-center rounded-[14px] border border-white/10 bg-white/[0.04] text-[#5fe0a5]"
@@ -473,13 +492,11 @@ function WhyAljawad() {
                     </h3>
                   </div>
 
-                  {/* body */}
                   <p className="mt-4 text-[0.85rem] leading-[1.9] text-white/60">{p.body}</p>
                 </div>
               </div>
             );
           })}
-          {/* spacer for last card padding */}
           <div className="shrink-0" style={{ width: '10%' }} />
         </div>
 
@@ -645,7 +662,6 @@ export function BrandFooter() {
 
   return (
     <footer className="relative overflow-hidden px-5 pb-32 pt-14">
-      {/* soft glows */}
       <div
         className="pointer-events-none absolute -top-20 start-1/3 h-48 w-48 rounded-full opacity-25 blur-3xl"
         style={{ background: 'radial-gradient(circle, var(--glow), transparent 70%)' }}
@@ -655,11 +671,9 @@ export function BrandFooter() {
         style={{ background: 'radial-gradient(circle, #0d1f3f, transparent 70%)' }}
       />
 
-      {/* top hairline */}
       <div className="absolute inset-x-5 top-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
 
       <div className="relative">
-        {/* brand header */}
         <div className="flex items-center gap-3.5">
           <div className="relative shrink-0">
             <div
@@ -678,7 +692,6 @@ export function BrandFooter() {
           </div>
         </div>
 
-        {/* contact info card */}
         <div className="mt-6 overflow-hidden rounded-[16px] border border-white/10 bg-white/[0.035] p-4 backdrop-blur-2xl shadow-[0_18px_40px_-24px_rgba(0,0,0,0.9),inset_0_1px_0_0_rgba(255,255,255,0.05)]">
           <div className="flex items-start gap-3">
             <span className="grid h-8 w-8 shrink-0 place-items-center rounded-[9px] border border-[color:var(--primary)]/25 bg-[color:var(--primary)]/8 text-[color:var(--primary)]">
@@ -714,7 +727,6 @@ export function BrandFooter() {
           </div>
         </div>
 
-        {/* action capsules */}
         <div className="mt-6 flex flex-wrap gap-2.5">
           <button
             type="button"
@@ -744,7 +756,6 @@ export function BrandFooter() {
           </button>
         </div>
 
-        {/* credit */}
         <p className="mt-8 text-center text-[0.68rem] tracking-wide text-[color:var(--faint)]">
           {t('dev.credit')} — {bi(appConfig.developer.name)}
         </p>
@@ -759,7 +770,6 @@ export function HomeScreen() {
   return (
     <div>
       <Hero />
-      <QuickActions />
       <section className="pt-16">
         <SectionHead
           kicker={t('services.kicker')}
