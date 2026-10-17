@@ -99,11 +99,11 @@ export function Button({
         'disabled:cursor-not-allowed disabled:opacity-45',
         block && 'w-full',
         variant === 'primary' &&
-          'rounded-[var(--radius-sm)] bg-[color:var(--primary)] px-6 py-3.5 text-[color:var(--primary-ink)] shadow-[0_10px_30px_-12px_var(--glow)]',
+          'rounded-[14px] bg-[color:var(--primary)] px-6 py-3.5 text-[color:var(--primary-ink)] shadow-[0_10px_30px_-12px_var(--glow),inset_0_1px_0_0_rgba(255,255,255,0.25)]',
         variant === 'secondary' &&
-          'rounded-[var(--radius-sm)] border border-[color:var(--line-strong)] bg-[color:var(--sheen)] px-6 py-3.5 text-[color:var(--text)] backdrop-blur',
+          'rounded-[14px] border border-white/10 bg-white/[0.035] px-6 py-3.5 text-[color:var(--text)] backdrop-blur-xl',
         variant === 'ghost' &&
-          'rounded-[var(--radius-sm)] border border-[color:var(--line)] px-5 py-3 text-[color:var(--text)]',
+          'rounded-[14px] border border-white/10 bg-white/[0.02] px-5 py-3 text-[color:var(--text)] backdrop-blur-md',
         variant === 'quiet' && 'px-2 py-1.5 text-[color:var(--muted)] hover:text-[color:var(--text)]',
         className,
       )}
@@ -134,10 +134,10 @@ export function Chip({
       onClick={onClick}
       aria-pressed={active}
       className={cn(
-        'shrink-0 rounded-full border px-4 py-2 text-[0.8rem] font-medium transition-all duration-300',
+        'shrink-0 rounded-full border px-4 py-2 text-[0.78rem] backdrop-blur-xl transition-all duration-300',
         active
-          ? 'border-[color:var(--primary)] bg-[color:var(--primary)]/12 text-[color:var(--primary)]'
-          : 'border-[color:var(--line)] text-[color:var(--muted)] hover:border-[color:var(--line-strong)] hover:text-[color:var(--text)]',
+          ? 'border-[#2bd38c]/60 bg-[#2bd38c]/12 font-bold text-[#5fe0a5] shadow-[0_0_0_3px_rgba(43,211,140,0.08),0_0_22px_-6px_var(--glow)]'
+          : 'border-white/10 bg-white/[0.035] font-medium text-white/60 hover:border-white/20 hover:text-white/85',
       )}
     >
       {children}
@@ -231,8 +231,9 @@ export function Label({ children, hint }: { children: ReactNode; hint?: string }
   );
 }
 
+/* التحديث الزجاجي الموحد لحقول الإدخال */
 const fieldClass =
-  'w-full rounded-[var(--radius-sm)] border border-[color:var(--line)] bg-[color:var(--elevated)] px-4 py-3.5 text-[0.9rem] text-[color:var(--text)] placeholder:text-[color:var(--faint)] outline-none transition-colors focus:border-[color:var(--primary)]';
+  'w-full rounded-[14px] border border-white/10 bg-white/[0.035] px-4 py-3.5 text-[0.9rem] text-[color:var(--text)] placeholder:text-[color:var(--faint)] outline-none backdrop-blur-xl transition-all duration-300 focus:border-[color:var(--primary)]/60 focus:bg-white/[0.06] focus:shadow-[0_0_0_3px_rgba(43,211,140,0.1),0_0_20px_-6px_var(--glow)]';
 
 export function TextField({
   label,
@@ -337,14 +338,14 @@ export function OptionGrid({
             onClick={() => onChange(o.value)}
             aria-pressed={active}
             className={cn(
-              'relative overflow-hidden rounded-[var(--radius-sm)] border px-3 py-3.5 text-start text-[0.82rem] font-medium transition-all duration-300',
+              'relative overflow-hidden rounded-[14px] border px-3 py-3.5 text-start text-[0.82rem] font-medium backdrop-blur-xl transition-all duration-300',
               active
-                ? 'border-[color:var(--primary)] bg-[color:var(--primary)]/10 text-[color:var(--text)]'
-                : 'border-[color:var(--line)] bg-[color:var(--elevated)] text-[color:var(--muted)] hover:border-[color:var(--line-strong)]',
+                ? 'border-[color:var(--primary)]/60 bg-[color:var(--primary)]/10 text-white shadow-[inset_0_0_0_1px_rgba(43,211,140,0.15)]'
+                : 'border-white/10 bg-white/[0.035] text-white/60 hover:border-white/20 hover:bg-white/[0.05]',
             )}
           >
             {o.label}
-            {active && <span className="absolute inset-y-0 start-0 w-[3px] bg-[color:var(--primary)]" />}
+            {active && <span className="absolute inset-y-0 start-0 w-[3px] bg-[color:var(--primary)] shadow-[0_0_10px_var(--primary)]" />}
           </button>
         );
       })}
