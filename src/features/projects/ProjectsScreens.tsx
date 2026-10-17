@@ -4,6 +4,8 @@ import { getService, services } from '../../data/services';
 import { useI18n } from '../../core/i18n';
 import { useNav } from '../../core/navigation';
 import { useTheme } from '../../core/theme';
+import { useCompany } from '../../core/companyStore';
+import { externalActions } from '../../core/actions';
 import { Glyph, MaterialIcon3D } from '../../components/icons';
 import { Button, DemoBadge, Reveal, ScreenHeader, useScrollY } from '../../components/kit';
 import { cn } from '../../utils/cn';
@@ -82,7 +84,6 @@ export function ProjectsScreen() {
                 className="group relative block w-full overflow-hidden rounded-[24px] border border-white/10 text-start shadow-[0_30px_80px_-30px_rgba(0,0,0,0.95)] transition-all duration-300 active:scale-[0.99]"
                 style={{ height: tall ? '27rem' : '19rem' }}
               >
-                {/* Full-bleed image */}
                 <img
                   src={project.cover}
                   alt=""
@@ -90,10 +91,8 @@ export function ProjectsScreen() {
                   className="absolute inset-0 h-full w-full object-cover transition-transform duration-[1100ms] group-hover:scale-[1.06]"
                 />
 
-                {/* Very soft top gradient for code readability */}
                 <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-black/45 to-transparent" />
 
-                {/* top row: code chip + service 3D icon */}
                 <div className="absolute inset-x-0 top-0 flex items-start justify-between p-4">
                   <span className="rounded-full border border-white/10 bg-black/35 px-2.5 py-1 font-mono text-[0.6rem] tracking-[0.22em] text-white/75 backdrop-blur">
                     {project.code}
@@ -103,7 +102,6 @@ export function ProjectsScreen() {
                   )}
                 </div>
 
-                {/* Integrated glassmorphic overlay at bottom */}
                 <div className="absolute inset-x-3 bottom-3 overflow-hidden rounded-[18px] border border-white/12 bg-black/35 shadow-[0_20px_50px_-20px_rgba(0,0,0,0.9),inset_0_1px_0_0_rgba(255,255,255,0.08)] backdrop-blur-xl">
                   <div className="p-4">
                     <h3 className="text-[1.15rem] font-extrabold leading-snug tracking-tight text-white">
@@ -113,7 +111,6 @@ export function ProjectsScreen() {
                       {bi(project.summary)}
                     </p>
 
-                    {/* meta row: location + status */}
                     <div className="mt-3 flex items-center gap-3 text-[0.68rem] font-medium">
                       <span className="flex items-center gap-1 text-white/55">
                         <Glyph name="pin" size={12} />
@@ -142,7 +139,16 @@ export function ProjectDetailScreen({ id }: { id: string }) {
   const { t, bi, list } = useI18n();
   const { push, back } = useNav();
   const { reducedMotion } = useTheme();
+  const { config: appConfig } = useCompany();
   const y = useScrollY();
+
+  const handleShare = () => {
+    if (!project) return;
+    const message =
+      `${bi(project.title)}\n${bi(project.summary)}\n\n` +
+      `🔗 https://${appConfig.contact.website}`;
+    externalActions.shareToWhatsapp(message);
+  };
 
   if (!project) {
     return <div className="px-5 py-24 text-center text-[color:var(--muted)]">{t('error.generic')}</div>;
@@ -162,15 +168,26 @@ export function ProjectDetailScreen({ id }: { id: string }) {
         </div>
         <div className="absolute inset-0 bg-gradient-to-t from-[#030605] via-[#030605]/35 to-[#030605]/60" />
 
+        {/* floating back + share buttons */}
         <div className="pointer-events-none fixed inset-x-0 top-0 z-30 mx-auto w-full max-w-[520px] px-5 pt-[calc(env(safe-area-inset-top)+1rem)]">
-          <button
-            type="button"
-            onClick={back}
-            aria-label={t('common.back')}
-            className="pointer-events-auto grid h-10 w-10 place-items-center rounded-[var(--radius-sm)] border border-white/15 bg-black/40 text-white backdrop-blur"
-          >
-            <Glyph name="arrow" size={18} className="ltr:-scale-x-100" />
-          </button>
+          <div className="flex items-center justify-between">
+            <button
+              type="button"
+              onClick={back}
+              aria-label={t('common.back')}
+              className="pointer-events-auto grid h-10 w-10 place-items-center rounded-full border border-white/15 bg-black/40 text-white backdrop-blur-xl"
+            >
+              <Glyph name="arrow" size={18} className="ltr:-scale-x-100" />
+            </button>
+            <button
+              type="button"
+              onClick={handleShare}
+              aria-label={t('common.share')}
+              className="pointer-events-auto grid h-10 w-10 place-items-center rounded-full border border-white/15 bg-black/40 text-white backdrop-blur-xl"
+            >
+              <Glyph name="whatsapp" size={18} />
+            </button>
+          </div>
         </div>
 
         <div className="absolute inset-x-0 bottom-0 p-6">
