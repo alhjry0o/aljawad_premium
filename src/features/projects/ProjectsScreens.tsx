@@ -159,14 +159,15 @@ export function ProjectDetailScreen({ id }: { id: string }) {
 
   return (
     <div className="pb-32">
-      <section className="relative h-[78svh] overflow-hidden bg-[#030605]">
+      {/* ============ Immersive Hero ============ */}
+      <section className="relative h-[62svh] overflow-hidden bg-[#030605]">
         <div
           className="absolute inset-0"
           style={{ transform: `translate3d(0, ${p * 0.3}px, 0) scale(${1 + p * 0.0005})` }}
         >
           <img src={project.cover} alt="" className="h-full w-full object-cover opacity-80" />
         </div>
-        <div className="absolute inset-0 bg-gradient-to-t from-[#030605] via-[#030605]/35 to-[#030605]/60" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#030605] via-[#030605]/35 to-[#030605]/65" />
 
         {/* floating back + share buttons */}
         <div className="pointer-events-none fixed inset-x-0 top-0 z-30 mx-auto w-full max-w-[520px] px-5 pt-[calc(env(safe-area-inset-top)+1rem)]">
@@ -189,74 +190,139 @@ export function ProjectDetailScreen({ id }: { id: string }) {
             </button>
           </div>
         </div>
-
-        <div className="absolute inset-x-0 bottom-0 p-6">
-          <DemoBadge label={project.code} />
-          <h1 className="mt-4 text-[2.1rem] font-extrabold leading-[1.12] tracking-tight text-white">
-            {bi(project.title)}
-          </h1>
-          <p className="mt-3 max-w-[42ch] text-[0.88rem] leading-relaxed text-white/65">
-            {bi(project.summary)}
-          </p>
-        </div>
       </section>
 
-      <Reveal className="flex items-center gap-4 border-b border-[color:var(--line)] px-5 py-5">
-        {service && <MaterialIcon3D name={service.id} accent={service.accent} size={54} />}
-        <div>
-          <div className="text-[0.68rem] uppercase tracking-[0.22em] text-[color:var(--faint)]">
-            {t('projects.service')}
+      {/* ============ Glassmorphic Header Card (overlaps hero) ============ */}
+      <section className="relative z-10 -mt-16 px-5">
+        <Reveal>
+          <div className="relative overflow-hidden rounded-[24px] border border-white/10 bg-white/[0.045] p-5 backdrop-blur-2xl shadow-[0_30px_80px_-30px_rgba(0,0,0,0.95),inset_0_1px_0_0_rgba(255,255,255,0.06)]">
+            <div
+              className="pointer-events-none absolute -top-20 -end-16 h-40 w-40 rounded-full opacity-25 blur-3xl"
+              style={{ background: 'radial-gradient(circle, var(--glow), transparent 70%)' }}
+            />
+
+            <div className="relative">
+              <div className="flex items-start justify-between">
+                <span
+                  className="rounded-full border border-white/10 bg-black/35 px-2.5 py-1 font-mono text-[0.6rem] tracking-[0.22em] text-white/75 backdrop-blur"
+                >
+                  {project.code}
+                </span>
+                {service && <MaterialIcon3D name={service.id} accent={service.accent} size={48} />}
+              </div>
+
+              <h1 className="mt-3 text-[1.65rem] font-extrabold leading-[1.15] tracking-tight text-white">
+                {bi(project.title)}
+              </h1>
+
+              <p className="mt-2.5 text-[0.88rem] leading-relaxed text-white/60">
+                {bi(project.summary)}
+              </p>
+            </div>
           </div>
+        </Reveal>
+      </section>
+
+      {/* ============ Service Link ============ */}
+      {service && (
+        <Reveal className="px-5 pt-6">
           <button
             type="button"
-            onClick={() => service && push({ name: 'service', id: service.id })}
-            className="text-[0.98rem] font-bold tracking-tight text-[color:var(--text)]"
+            onClick={() => push({ name: 'service', id: service.id })}
+            className="flex w-full items-center gap-3 rounded-[16px] border border-white/10 bg-white/[0.035] p-3 text-start backdrop-blur-xl transition-colors hover:bg-white/[0.06]"
           >
-            {service ? bi(service.title) : '—'}
+            <MaterialIcon3D name={service.id} accent={service.accent} size={40} />
+            <div className="min-w-0 flex-1">
+              <div className="text-[0.62rem] uppercase tracking-[0.22em] text-[color:var(--faint)]">
+                {t('projects.service')}
+              </div>
+              <div className="mt-0.5 truncate text-[0.92rem] font-bold text-[color:var(--text)]">
+                {bi(service.title)}
+              </div>
+            </div>
+            <Glyph name="arrow" size={14} className="shrink-0 text-[color:var(--faint)] rtl:-scale-x-100" />
           </button>
+        </Reveal>
+      )}
+
+      {/* ============ Context ============ */}
+      <Reveal className="px-5 pt-8">
+        <div className="rounded-[18px] border border-white/10 bg-white/[0.025] p-4 backdrop-blur-xl">
+          <h2 className="mb-2 text-[1.05rem] font-bold tracking-tight">
+            {t('projects.context')}
+          </h2>
+          <p className="text-[0.88rem] leading-[1.95] text-[color:var(--muted)]">
+            {bi(project.context)}
+          </p>
         </div>
       </Reveal>
 
-      <Reveal className="px-5 py-10">
-        <h2 className="mb-4 text-[1.1rem] font-bold tracking-tight">{t('projects.context')}</h2>
-        <p className="text-[0.9rem] leading-[1.95] text-[color:var(--muted)]">{bi(project.context)}</p>
-      </Reveal>
+      {/* ============ Scope — 2x2 Glass Grid ============ */}
+      <Reveal className="px-5 pt-8">
+        <h2 className="mb-4 text-[1.05rem] font-bold tracking-tight">
+          {t('projects.scope')}
+        </h2>
 
-      <Reveal className="border-t border-[color:var(--line)] px-5 py-10">
-        <h2 className="mb-5 text-[1.1rem] font-bold tracking-tight">{t('projects.scope')}</h2>
-        <ul className="space-y-3">
+        <div className="grid grid-cols-2 gap-2.5">
           {list(project.scope).map((item, i) => (
-            <li key={item} className="flex items-baseline gap-3 border-b border-[color:var(--line)] pb-3">
-              <span className="font-mono text-[0.65rem] text-[color:var(--primary)]">
+            <div
+              key={item}
+              className="flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.035] px-3.5 py-2.5 backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.05)]"
+            >
+              <span
+                className="font-mono text-[0.62rem] font-bold tracking-[0.15em] text-[#5fe0a5]"
+                style={{ textShadow: '0 0 8px rgba(43,211,140,0.6)' }}
+              >
                 {String(i + 1).padStart(2, '0')}
               </span>
-              <span className="text-[0.88rem]">{item}</span>
-            </li>
+              <span className="text-[0.76rem] font-medium leading-tight text-white/80">
+                {item}
+              </span>
+            </div>
           ))}
-        </ul>
+        </div>
       </Reveal>
 
+      {/* ============ Gallery — Horizontal Carousel ============ */}
       {project.gallery.length > 0 && (
-        <section className="py-4">
-          <h2 className="px-5 pb-4 text-[1.1rem] font-bold tracking-tight">{t('projects.gallery')}</h2>
-          {project.gallery.map((src, i) => (
-            <Reveal key={i} className="mb-4 px-5">
-              <div className="h-[22rem] overflow-hidden rounded-[var(--radius-lg)]">
-                <img src={src} alt="" loading="lazy" className="h-full w-full object-cover" />
+        <Reveal className="pt-8">
+          <h2 className="mb-4 px-5 text-[1.05rem] font-bold tracking-tight">
+            {t('projects.gallery')}
+          </h2>
+
+          <div className="no-scrollbar flex snap-x snap-mandatory gap-3 overflow-x-auto px-5 pb-2">
+            {project.gallery.map((src, i) => (
+              <div
+                key={i}
+                className="relative h-64 w-[80%] shrink-0 snap-center overflow-hidden rounded-[16px] border border-white/10 shadow-[0_20px_50px_-20px_rgba(0,0,0,0.95)]"
+              >
+                <img
+                  src={src}
+                  alt=""
+                  loading="lazy"
+                  className="h-full w-full object-cover"
+                />
+                {/* subtle bottom gradient for depth */}
+                <div className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-black/40 to-transparent" />
               </div>
-            </Reveal>
-          ))}
-        </section>
+            ))}
+          </div>
+        </Reveal>
       )}
 
-      <Reveal className="px-5 py-8">
-        <Button
-          block
-          icon="arrow"
+      {/* ============ Premium CTA ============ */}
+      <Reveal className="px-5 pt-10">
+        <button
+          type="button"
           onClick={() => push({ name: 'flow', kind: 'service', serviceId: project.serviceId })}
+          className="group relative flex w-full items-center justify-center gap-2 overflow-hidden rounded-full bg-[color:var(--primary)] px-6 py-4 text-[0.95rem] font-bold tracking-tight text-[color:var(--primary-ink)] shadow-[0_14px_38px_-12px_var(--glow),inset_0_1px_0_0_rgba(255,255,255,0.25)] transition-all duration-300 active:scale-[0.97]"
         >
-          {t('projects.cta')}
-        </Button>
+          <span className="pointer-events-none absolute inset-y-0 -left-1/3 w-1/3 bg-white/25 opacity-0 blur-md transition-opacity duration-500 group-hover:opacity-100 group-hover:[animation:jw-sweep_0.9s_ease-out]" />
+          <span className="relative text-center break-words">
+            {t('projects.cta')}
+          </span>
+          <Glyph name="arrow" size={18} className="relative shrink-0 rtl:-scale-x-100" />
+        </button>
       </Reveal>
     </div>
   );
