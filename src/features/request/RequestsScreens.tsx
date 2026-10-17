@@ -28,10 +28,10 @@ function StatusPill({ status }: { status: RequestStatus }) {
   const tone = STATUS_TONE[status];
   return (
     <span
-      className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[0.66rem] font-semibold"
+      className="inline-flex items-center gap-1.5 rounded-full border border-white/5 px-2.5 py-1 text-[0.66rem] font-semibold backdrop-blur-md"
       style={{ color: tone, background: `color-mix(in srgb, ${tone} 14%, transparent)` }}
     >
-      <span className="h-1.5 w-1.5 rounded-full" style={{ background: tone }} />
+      <span className="h-1.5 w-1.5 rounded-full" style={{ background: tone, boxShadow: `0 0 6px ${tone}` }} />
       {t(statusKey(status))}
     </span>
   );
@@ -40,31 +40,32 @@ function StatusPill({ status }: { status: RequestStatus }) {
 function RequestCard({ request, onOpen }: { request: AppRequest; onOpen: () => void }) {
   const { t, bi } = useI18n();
   const service = getService(request.serviceId);
+  
   return (
     <button
       type="button"
       onClick={onOpen}
-      className="group flex w-full items-center gap-4 border-t border-[color:var(--line)] px-5 py-5 text-start transition-colors hover:bg-[color:var(--surface)]"
+      className="group relative flex w-full items-center gap-4 overflow-hidden rounded-[18px] border border-white/10 bg-white/[0.035] p-4 text-start shadow-[0_20px_50px_-30px_rgba(0,0,0,0.9),inset_0_1px_0_0_rgba(255,255,255,0.05)] backdrop-blur-2xl transition-all duration-300 active:scale-[0.99] hover:bg-white/[0.05]"
     >
-      {service && <MaterialIcon3D name={service.id} accent={service.accent} size={56} />}
+      {service && <MaterialIcon3D name={service.id} accent={service.accent} size={54} />}
       <span className="min-w-0 flex-1">
         <span className="flex items-center gap-2">
-          <span className="font-mono text-[0.68rem] tracking-[0.18em] text-[color:var(--primary)]">
+          <span className="font-mono text-[0.68rem] font-bold tracking-[0.18em] text-[#5fe0a5]">
             {request.reference}
           </span>
-          <span className="text-[0.66rem] text-[color:var(--faint)]">· {t(kindKey(request.kind))}</span>
+          <span className="text-[0.66rem] text-white/40">· {t(kindKey(request.kind))}</span>
         </span>
-        <span className="mt-1 block truncate text-[0.95rem] font-bold tracking-tight">
+        <span className="mt-1 block truncate text-[0.95rem] font-bold tracking-tight text-white/90">
           {service ? bi(service.title) : '—'}
         </span>
         <span className="mt-2 flex items-center gap-2">
           <StatusPill status={request.status} />
-          <span className="text-[0.66rem] text-[color:var(--faint)]">
+          <span className="text-[0.66rem] text-white/30">
             {new Date(request.createdAt).toLocaleDateString()}
           </span>
         </span>
       </span>
-      <Glyph name="arrow" size={17} className="shrink-0 text-[color:var(--faint)] rtl:-scale-x-100" />
+      <Glyph name="arrow" size={17} className="shrink-0 text-white/20 transition-transform duration-300 group-hover:translate-x-1 rtl:-scale-x-100 rtl:group-hover:-translate-x-1" />
     </button>
   );
 }
@@ -102,7 +103,7 @@ export function RequestsScreen() {
   }, [filtered]);
 
   return (
-    <div className="pb-6">
+    <div className="pb-32">
       <ScreenHeader
         title={t('requests.title')}
         subtitle={`${requests.length} ${t('requests.count')}`}
@@ -125,13 +126,13 @@ export function RequestsScreen() {
       ) : (
         <>
           <div className="px-5 pt-5">
-            <div className="flex items-center gap-3 rounded-[var(--radius-sm)] border border-[color:var(--line)] bg-[color:var(--elevated)] px-4 py-3">
+            <div className="flex items-center gap-3 rounded-full border border-white/10 bg-white/[0.035] px-5 py-3.5 backdrop-blur-xl transition-all duration-300 focus-within:border-[color:var(--primary)]/60 focus-within:shadow-[0_0_0_3px_rgba(43,211,140,0.1)]">
               <Glyph name="search" size={17} className="text-[color:var(--faint)]" />
               <input
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder={t('requests.search')}
-                className="w-full bg-transparent text-[0.85rem] outline-none placeholder:text-[color:var(--faint)]"
+                className="w-full bg-transparent text-[0.85rem] text-white outline-none placeholder:text-[color:var(--faint)]"
               />
             </div>
             <div className="no-scrollbar mt-3 flex gap-2 overflow-x-auto pb-1">
@@ -151,22 +152,24 @@ export function RequestsScreen() {
               {t('search.empty')}
             </p>
           ) : (
-            <div className="mt-6">
+            <div className="mt-6 space-y-6">
               {groups.map(([label, items]) => (
-                <section key={label}>
-                  <h2 className="px-5 pb-2 pt-5 text-[0.68rem] uppercase tracking-[0.25em] text-[color:var(--faint)]">
+                <section key={label} className="px-5">
+                  <h2 className="mb-3 px-1 text-[0.68rem] uppercase tracking-[0.25em] text-[color:var(--faint)]">
                     {label}
                   </h2>
-                  {items.map((r) => (
-                    <Reveal key={r.id}>
-                      <RequestCard request={r} onOpen={() => push({ name: 'request', id: r.id })} />
-                    </Reveal>
-                  ))}
+                  <div className="space-y-3">
+                    {items.map((r) => (
+                      <Reveal key={r.id}>
+                        <RequestCard request={r} onOpen={() => push({ name: 'request', id: r.id })} />
+                      </Reveal>
+                    ))}
+                  </div>
                 </section>
               ))}
             </div>
           )}
-          <p className="px-5 py-8 text-[0.7rem] text-[color:var(--faint)]">{t('requests.localNote')}</p>
+          <p className="px-5 py-8 text-center text-[0.7rem] text-[color:var(--faint)]">{t('requests.localNote')}</p>
         </>
       )}
     </div>
@@ -201,14 +204,14 @@ export function RequestDetailScreen({ id }: { id: string }) {
   const reached = TIMELINE_ORDER.indexOf(request.status);
 
   return (
-    <div className="pb-10">
+    <div className="pb-32">
       <ScreenHeader title={request.reference} subtitle={t(kindKey(request.kind))} />
 
       <div className="px-5 pt-6">
         <div className="flex items-center gap-4">
           {service && <MaterialIcon3D name={service.id} accent={service.accent} size={72} />}
           <div>
-            <h2 className="text-[1.25rem] font-extrabold tracking-tight">
+            <h2 className="text-[1.25rem] font-extrabold tracking-tight text-white">
               {service ? bi(service.title) : '—'}
             </h2>
             <div className="mt-2">
@@ -218,21 +221,30 @@ export function RequestDetailScreen({ id }: { id: string }) {
         </div>
       </div>
 
+      {/* Timeline — Neon Line */}
       <section className="mt-8 px-5">
-        <h3 className="mb-4 text-[0.98rem] font-bold">{t('requests.timeline')}</h3>
-        <ol className="relative ps-5">
-          <span className="absolute inset-y-1 start-[3px] w-px bg-[color:var(--line)]" />
+        <h3 className="mb-4 text-[0.98rem] font-bold text-white">{t('requests.timeline')}</h3>
+        <ol className="relative ps-6">
+          <span className="absolute inset-y-1 start-[7px] w-[2px] bg-white/10" />
           {TIMELINE_ORDER.map((s, i) => {
             const done = i <= Math.max(reached, 0);
             return (
-              <li key={s} className="relative pb-5 last:pb-0">
+              <li key={s} className="relative pb-6 last:pb-0">
                 <span
-                  className="absolute -start-5 top-1 h-[7px] w-[7px] rounded-full"
-                  style={{ background: done ? 'var(--primary)' : 'var(--line-strong)' }}
-                />
+                  className={cn(
+                    'absolute -start-6 top-0.5 grid h-4 w-4 place-items-center rounded-full border-2 transition-all duration-500',
+                    done
+                      ? 'border-[#2bd38c] bg-[#0a1f24] shadow-[0_0_12px_rgba(43,211,140,0.6)]'
+                      : 'border-white/15 bg-transparent',
+                  )}
+                >
+                  {done && <span className="h-1.5 w-1.5 rounded-full bg-[#2bd38c]" />}
+                </span>
                 <span
-                  className="text-[0.82rem]"
-                  style={{ color: done ? 'var(--text)' : 'var(--faint)', fontWeight: done ? 600 : 400 }}
+                  className={cn(
+                    'text-[0.85rem] leading-none transition-colors',
+                    done ? 'font-semibold text-white' : 'text-white/40',
+                  )}
                 >
                   {t(statusKey(s))}
                 </span>
@@ -242,17 +254,19 @@ export function RequestDetailScreen({ id }: { id: string }) {
         </ol>
       </section>
 
-      <section className="mt-8 overflow-hidden border-y border-[color:var(--line)]">
-        <Row label={t('step.location')} value={[request.location.city, request.location.district, request.location.address].filter(Boolean).join(' · ')} />
-        {request.propertyType && <Row label={t('step.property')} value={t(request.propertyType as TranslationKey)} />}
-        {request.schedule?.date && (
-          <Row label={t('step.schedule')} value={`${request.schedule.date} ${request.schedule.time ?? ''}`.trim()} />
-        )}
-        {request.notes && <Row label={t('field.notes')} value={request.notes} />}
-        {request.specs &&
-          Object.entries(request.specs).map(([k, v]) => <Row key={k} label={k} value={v} />)}
-        <Row label={t('field.name')} value={request.contact.name} />
-        <Row label={t('field.phone')} value={request.contact.phone} />
+      <section className="mt-8 px-5">
+        <div className="overflow-hidden rounded-[20px] border border-white/10 bg-white/[0.035] backdrop-blur-2xl shadow-[0_20px_50px_-30px_rgba(0,0,0,0.9),inset_0_1px_0_0_rgba(255,255,255,0.05)]">
+          <Row label={t('step.location')} value={[request.location.city, request.location.district, request.location.address].filter(Boolean).join(' · ')} />
+          {request.propertyType && <Row label={t('step.property')} value={t(request.propertyType as TranslationKey)} />}
+          {request.schedule?.date && (
+            <Row label={t('step.schedule')} value={`${request.schedule.date} ${request.schedule.time ?? ''}`.trim()} />
+          )}
+          {request.notes && <Row label={t('field.notes')} value={request.notes} />}
+          {request.specs &&
+            Object.entries(request.specs).map(([k, v]) => <Row key={k} label={k} value={v} />)}
+          <Row label={t('field.name')} value={request.contact.name} />
+          <Row label={t('field.phone')} value={request.contact.phone} />
+        </div>
       </section>
 
       {request.photos.length > 0 && (
@@ -260,14 +274,14 @@ export function RequestDetailScreen({ id }: { id: string }) {
           <h3 className="mb-3 text-[0.9rem] font-bold">{t('step.photos')}</h3>
           <div className="grid grid-cols-3 gap-2.5">
             {request.photos.map((src, i) => (
-              <img key={i} src={src} alt="" className="aspect-square rounded-[var(--radius-sm)] object-cover" />
+              <img key={i} src={src} alt="" className="aspect-square rounded-[12px] border border-white/10 object-cover" />
             ))}
           </div>
         </section>
       )}
 
       <div className="px-5 pt-4">
-        <p className="mb-5 text-[0.72rem] text-[color:var(--faint)]">{t('requests.localNote')}</p>
+        <p className="mb-5 text-center text-[0.72rem] text-[color:var(--faint)]">{t('requests.localNote')}</p>
         <Button
           variant="ghost"
           block
@@ -276,7 +290,7 @@ export function RequestDetailScreen({ id }: { id: string }) {
             back();
             goTab('requests');
           }}
-          className="!text-[color:var(--error)]"
+          className="!text-[color:var(--error)] rounded-[14px] border-white/10"
         >
           {t('requests.delete')}
         </Button>
@@ -287,9 +301,9 @@ export function RequestDetailScreen({ id }: { id: string }) {
 
 function Row({ label, value }: { label: string; value: string }) {
   return (
-    <div className="flex items-start justify-between gap-5 border-b border-[color:var(--line)] px-5 py-4 last:border-0">
+    <div className="flex items-start justify-between gap-5 border-b border-white/5 bg-white/[0.015] px-4 py-3.5 last:border-0">
       <span className="text-[0.75rem] text-[color:var(--muted)]">{label}</span>
-      <span className="max-w-[62%] text-end text-[0.84rem] font-semibold leading-relaxed">{value}</span>
+      <span className="max-w-[62%] text-end text-[0.84rem] font-semibold leading-relaxed text-white/90">{value}</span>
     </div>
   );
 }
@@ -309,16 +323,16 @@ export function SuccessScreen({ id }: { id: string }) {
       />
       <div className="jw-grid absolute inset-0 opacity-20" />
       <div className="relative text-center">
-        <div className="jw-rise mx-auto grid h-24 w-24 place-items-center rounded-full border border-[color:var(--primary)]/40 bg-[color:var(--primary)]/10">
-          <Glyph name="check" size={38} className="text-[color:var(--primary)]" strokeWidth={1.6} />
+        <div className="jw-rise mx-auto grid h-24 w-24 place-items-center rounded-full border border-[color:var(--primary)]/40 bg-[color:var(--primary)]/10 shadow-[0_0_40px_-10px_var(--glow)]">
+          <Glyph name="check" size={38} className="text-[color:var(--primary)] drop-shadow-[0_0_8px_var(--glow)]" strokeWidth={1.6} />
         </div>
-        <h1 className="mt-7 text-[1.6rem] font-extrabold tracking-tight">{t('success.title')}</h1>
+        <h1 className="mt-7 text-[1.6rem] font-extrabold tracking-tight text-white">{t('success.title')}</h1>
         <p className="mx-auto mt-2 max-w-[34ch] text-[0.85rem] leading-relaxed text-[color:var(--muted)]">
           {t('success.body')}
         </p>
 
         {request && (
-          <div className="mt-8 overflow-hidden rounded-[var(--radius-md)] border border-[color:var(--line)] text-start">
+          <div className="mt-8 overflow-hidden rounded-[20px] border border-white/10 bg-white/[0.035] text-start shadow-[0_20px_50px_-20px_rgba(0,0,0,0.9),inset_0_1px_0_0_rgba(255,255,255,0.05)] backdrop-blur-2xl">
             <Row label={t('success.number')} value={request.reference} />
             <Row label={t('step.service')} value={service ? bi(service.title) : '—'} />
             <Row
@@ -331,11 +345,11 @@ export function SuccessScreen({ id }: { id: string }) {
 
         <div className="mt-8 space-y-3">
           {request && (
-            <Button block onClick={() => replace({ name: 'request', id: request.id })}>
+            <Button block onClick={() => replace({ name: 'request', id: request.id })} className="rounded-[14px] py-4">
               {t('success.view')}
             </Button>
           )}
-          <Button variant="ghost" block onClick={() => goTab('requests')}>
+          <Button variant="ghost" block onClick={() => goTab('requests')} className="rounded-[14px] border-white/10 py-3.5">
             {t('success.requests')}
           </Button>
           <Button variant="quiet" block onClick={() => goTab('home')}>
