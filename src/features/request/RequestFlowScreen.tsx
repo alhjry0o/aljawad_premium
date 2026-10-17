@@ -208,21 +208,25 @@ export function RequestFlowScreen({ kind, serviceId }: { kind: RequestKind; serv
     <div className="pb-40">
       <ScreenHeader title={t(titleKey)} subtitle={`${t('flow.step')} ${index + 1} ${t('flow.of')} ${steps.length}`} />
 
-      {/* progress */}
-      <div className="sticky top-[4.1rem] z-20 flex gap-1.5 bg-[color:var(--bg)]/90 px-5 py-3 backdrop-blur">
+      {/* Progress Bar — Neon Glow */}
+      <div className="sticky top-[4.1rem] z-20 flex gap-1.5 border-b border-white/5 bg-[color:var(--bg)]/90 px-5 py-3 backdrop-blur-xl">
         {steps.map((s, i) => (
           <span
             key={s}
             className={cn(
-              'h-[3px] flex-1 rounded-full transition-colors duration-500',
-              i < index ? 'bg-[color:var(--primary)]/55' : i === index ? 'bg-[color:var(--primary)]' : 'bg-[color:var(--line)]',
+              'h-[3px] flex-1 rounded-full transition-all duration-500',
+              i < index
+                ? 'bg-[color:var(--primary)]/55'
+                : i === index
+                ? 'bg-[color:var(--primary)] shadow-[0_0_10px_var(--primary)]'
+                : 'bg-white/10',
             )}
           />
         ))}
       </div>
 
       <div className="px-5 pt-6">
-        <span className="font-mono text-[0.65rem] tracking-[0.3em] text-[color:var(--primary)]">
+        <span className="font-mono text-[0.65rem] font-bold tracking-[0.3em] text-[#5fe0a5]" style={{ textShadow: '0 0 10px rgba(43,211,140,0.5)' }}>
           {String(index + 1).padStart(2, '0')}
         </span>
         <h2 className="mt-1.5 text-[1.4rem] font-extrabold tracking-tight">{t(STEP_TITLE[step])}</h2>
@@ -240,15 +244,17 @@ export function RequestFlowScreen({ kind, serviceId }: { kind: RequestKind; serv
                     type="button"
                     onClick={() => set('serviceId', s.id)}
                     className={cn(
-                      'flex items-center gap-3 rounded-[var(--radius-sm)] border px-3 py-3 text-start transition-all',
+                      'flex items-center gap-3 rounded-[16px] border px-3 py-3 text-start transition-all duration-300',
                       active
-                        ? 'border-[color:var(--primary)] bg-[color:var(--primary)]/10'
-                        : 'border-[color:var(--line)] bg-[color:var(--elevated)]',
+                        ? 'border-[color:var(--primary)]/60 bg-[color:var(--primary)]/10 shadow-[inset_0_0_0_1px_rgba(43,211,140,0.15)]'
+                        : 'border-white/10 bg-white/[0.035] backdrop-blur-xl hover:bg-white/[0.05]',
                     )}
                   >
                     <MaterialIcon3D name={s.id} accent={s.accent} size={46} />
-                    <span className="flex-1 text-[0.9rem] font-semibold">{bi(s.title)}</span>
-                    <span className="font-mono text-[0.62rem] text-[color:var(--faint)]">{s.number}</span>
+                    <span className={cn('flex-1 text-[0.9rem] font-semibold', active ? 'text-white' : 'text-white/75')}>
+                      {bi(s.title)}
+                    </span>
+                    <span className="font-mono text-[0.62rem] text-white/40">{s.number}</span>
                   </button>
                 );
               })}
@@ -351,8 +357,8 @@ export function RequestFlowScreen({ kind, serviceId }: { kind: RequestKind; serv
         {step === 'photos' && (
           <div>
             <Label hint={t('field.optional')}>{t('field.photos')}</Label>
-            <label className="flex cursor-pointer flex-col items-center gap-3 rounded-[var(--radius-md)] border border-dashed border-[color:var(--line-strong)] bg-[color:var(--elevated)] px-5 py-9 text-center">
-              <Glyph name="camera" size={26} className="text-[color:var(--primary)]" />
+            <label className="flex cursor-pointer flex-col items-center gap-3 rounded-[20px] border border-dashed border-white/20 bg-white/[0.035] px-5 py-9 text-center shadow-[inset_0_1px_0_0_rgba(255,255,255,0.05)] backdrop-blur-xl transition-colors hover:bg-white/[0.06]">
+              <Glyph name="camera" size={26} className="text-[color:var(--primary)] drop-shadow-[0_0_8px_var(--glow)]" />
               <span className="text-[0.82rem] font-semibold">{t('field.photos')}</span>
               <span className="text-[0.7rem] text-[color:var(--faint)]">{t('field.photosHint')}</span>
               <input type="file" accept="image/*" multiple className="hidden" onChange={onPhotos} />
@@ -360,13 +366,13 @@ export function RequestFlowScreen({ kind, serviceId }: { kind: RequestKind; serv
             {form.photos.length > 0 && (
               <div className="mt-4 grid grid-cols-3 gap-2.5">
                 {form.photos.map((src, i) => (
-                  <div key={i} className="relative aspect-square overflow-hidden rounded-[var(--radius-sm)]">
+                  <div key={i} className="relative aspect-square overflow-hidden rounded-[12px] border border-white/10 shadow-[0_10px_20px_-10px_rgba(0,0,0,0.9)]">
                     <img src={src} alt="" className="h-full w-full object-cover" />
                     <button
                       type="button"
                       onClick={() => set('photos', form.photos.filter((_, j) => j !== i))}
                       aria-label={t('search.clear')}
-                      className="absolute end-1.5 top-1.5 grid h-7 w-7 place-items-center rounded-full bg-black/70 text-white"
+                      className="absolute end-1.5 top-1.5 grid h-7 w-7 place-items-center rounded-full bg-black/60 text-white backdrop-blur-md transition-colors hover:bg-black/90"
                     >
                       <Glyph name="close" size={13} />
                     </button>
@@ -398,7 +404,7 @@ export function RequestFlowScreen({ kind, serviceId }: { kind: RequestKind; serv
         )}
 
         {step === 'review' && (
-          <div className="overflow-hidden rounded-[var(--radius-md)] border border-[color:var(--line)]">
+          <div className="overflow-hidden rounded-[20px] border border-white/10 bg-white/[0.025] shadow-[0_20px_50px_-30px_rgba(0,0,0,0.9),inset_0_1px_0_0_rgba(255,255,255,0.05)] backdrop-blur-2xl">
             <ReviewRow label={t('step.service')} value={selected ? bi(selected.title) : '—'} />
             {form.propertyType && <ReviewRow label={t('step.property')} value={t(form.propertyType as TranslationKey)} />}
             <ReviewRow
@@ -417,18 +423,18 @@ export function RequestFlowScreen({ kind, serviceId }: { kind: RequestKind; serv
         )}
       </div>
 
-      {/* Sticky actions */}
+      {/* Sticky actions — Glass Panel */}
       <div className="fixed inset-x-0 bottom-[5.5rem] z-30 px-5">
-        <div className="flex gap-3 rounded-[var(--radius-md)] border border-[color:var(--line)] bg-[color:var(--elevated)]/95 p-2.5 backdrop-blur-xl">
-          <Button variant="ghost" onClick={prev} className="flex-1">
+        <div className="flex gap-3 rounded-[20px] border border-white/10 bg-[color:var(--bg)]/80 p-2.5 shadow-[0_20px_50px_-20px_rgba(0,0,0,0.9),inset_0_1px_0_0_rgba(255,255,255,0.08)] backdrop-blur-2xl">
+          <Button variant="ghost" onClick={prev} className="flex-1 rounded-[14px]">
             {index === 0 ? t('flow.cancel') : t('flow.back')}
           </Button>
           {step === 'review' ? (
-            <Button onClick={submit} disabled={submitting} className="flex-[1.6]">
+            <Button onClick={submit} disabled={submitting} className="flex-[1.6] rounded-[14px]">
               {t('flow.submit')}
             </Button>
           ) : (
-            <Button onClick={next} className="flex-[1.6]" icon="arrow">
+            <Button onClick={next} className="flex-[1.6] rounded-[14px]" icon="arrow">
               {t('flow.next')}
             </Button>
           )}
@@ -440,9 +446,9 @@ export function RequestFlowScreen({ kind, serviceId }: { kind: RequestKind; serv
 
 function ReviewRow({ label, value }: { label: string; value: string }) {
   return (
-    <div className="flex items-start justify-between gap-4 border-b border-[color:var(--line)] bg-[color:var(--elevated)] px-4 py-3.5 last:border-0">
+    <div className="flex items-start justify-between gap-4 border-b border-white/5 bg-white/[0.015] px-4 py-3.5 last:border-0">
       <span className="text-[0.75rem] text-[color:var(--muted)]">{label}</span>
       <span className="max-w-[60%] text-end text-[0.82rem] font-semibold">{value}</span>
     </div>
   );
-}
+    }
