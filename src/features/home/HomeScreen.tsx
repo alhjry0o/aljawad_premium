@@ -80,10 +80,9 @@ function Hero({ onMenuClick }: { onMenuClick: () => void }) {
 
       {/* ✅ Unified Fixed Glassmorphic Header (Transparent for Hero) */}
       <header className="fixed inset-x-0 top-0 z-50 mx-auto w-full max-w-[520px] px-5 pb-3.5 pt-[calc(env(safe-area-inset-top)+1rem)]">
-  {/* نجبر الحاوية على LTR لضمان بقاء الزر في اليسار دائماً */}      
+         {/* نجبر الحاوية على LTR لضمان بقاء الزر في اليسار دائماً */}      
         <div className="flex items-center justify-between" dir="ltr">
-    
-    {/* الجهة اليسرى: زر القائمة */}      
+          {/* الجهة اليسرى: زر القائمة */}      
           <button
             type="button"
             onClick={onMenuClick}
@@ -92,8 +91,7 @@ function Hero({ onMenuClick }: { onMenuClick: () => void }) {
           >
             <Glyph name="menu" size={22} strokeWidth={2} />
        </button>
-
-    {/* الجهة اليمنى: الشعار */}      
+          {/* الجهة اليمنى: الشعار */}      
           <div className="relative flex items-center gap-3" dir="rtl">
             <div
               className="pointer-events-none absolute -inset-3 -z-10 rounded-full opacity-40 blur-2xl"
