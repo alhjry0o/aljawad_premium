@@ -10,6 +10,7 @@ import { externalActions } from '../../core/actions';
 import { BrandMark, Glyph, MaterialIcon3D } from '../../components/icons';
 import { Button, Counter, DemoBadge, Reveal, SectionHead, useScrollY } from '../../components/kit';
 import { ServiceCarousel } from '../services/ServiceCarousel';
+import { SideDrawer } from '../../components/SideDrawer';
 import { uiEvents } from '../../core/uiEvents';
 import { cn } from '../../utils/cn';
 
@@ -34,7 +35,7 @@ function HeroSearchButton() {
   );
 }
 
-function Hero() {
+function Hero({ onMenuClick }: { onMenuClick: () => void }) {
   const { t, bi } = useI18n();
   const { push } = useNav();
   const { config: appConfig } = useCompany();
@@ -76,11 +77,13 @@ function Hero() {
       <div className="jw-grid absolute inset-0 opacity-[0.07]" />
 
       <div className="relative flex min-h-[94svh] flex-col px-5 pb-10 pt-[calc(env(safe-area-inset-top)+1.5rem)]">
-        {/* Header with subtle glow */}
+        
+        {/* Header: Logo + Menu Button */}
         <div
           className="flex items-center justify-between"
           style={{ opacity: reducedMotion ? 1 : Math.max(0, 1 - p / 480) }}
         >
+          {/* Logo Section */}
           <div className="relative flex items-center gap-2.5">
             <div
               className="pointer-events-none absolute -inset-4 -z-10 rounded-full opacity-30 blur-2xl"
@@ -94,6 +97,16 @@ function Hero() {
               <div className="text-[0.6rem] uppercase tracking-[0.25em] text-white/45">ALJAWAD</div>
             </div>
           </div>
+
+          {/* Hamburger Menu Button */}
+          <button
+            type="button"
+            onClick={onMenuClick}
+            aria-label="Open Menu"
+            className="grid h-10 w-10 place-items-center rounded-full border border-white/10 bg-white/5 text-white backdrop-blur-md transition-all duration-300 active:scale-95 hover:bg-white/10"
+          >
+            <Glyph name="menu" size={22} />
+          </button>
         </div>
 
         {/* Hero Text Content */}
@@ -767,9 +780,12 @@ export function BrandFooter() {
 export function HomeScreen() {
   const { t } = useI18n();
   const { push } = useNav();
+  const [drawerOpen, setDrawerOpen] = useState(false); // ✅ حالة القائمة
+
   return (
     <div>
-      <Hero />
+      <Hero onMenuClick={() => setDrawerOpen(true)} /> {/* ✅ تمرير الحدث */}
+      
       <section className="pt-16">
         <SectionHead
           kicker={t('services.kicker')}
@@ -785,6 +801,8 @@ export function HomeScreen() {
       <ServiceHighlight />
       <ClosingCTA />
       <BrandFooter />
+
+      <SideDrawer open={drawerOpen} onClose={() => setDrawerOpen(false)} /> {/* ✅ استدعاء القائمة */}
     </div>
   );
 }
