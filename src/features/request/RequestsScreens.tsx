@@ -108,7 +108,6 @@ export function RequestsScreen() {
       <ScreenHeader
         title={t('requests.title')}
         subtitle={`${requests.length} ${t('requests.count')}`}
-        trailing={<DemoBadge label={t('common.demo')} />}
       />
 
       {requests.length === 0 ? (
