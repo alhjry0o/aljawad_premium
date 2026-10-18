@@ -80,10 +80,9 @@ function Hero({ onMenuClick }: { onMenuClick: () => void }) {
 
       {/* ✅ Unified Fixed Header (100% Solid) */}
       <header className="fixed inset-x-0 top-0 z-50 mx-auto w-full max-w-[520px] border-b border-[color:var(--line)] bg-[color:var(--bg)] px-5 pb-3.5 pt-[calc(env(safe-area-inset-top)+1rem)] transition-all duration-300">
-        {/* نجبر الحاوية على LTR لضمان بقاء الزر في اليسار دائماً */}
         <div className="flex items-center justify-between" dir="ltr">
           
-          {/* الجهة اليسرى: زر القائمة */}
+          {/* Menu Button */}
           <button
             type="button"
             onClick={onMenuClick}
@@ -93,7 +92,7 @@ function Hero({ onMenuClick }: { onMenuClick: () => void }) {
             <Glyph name="menu" size={22} strokeWidth={2} />
           </button>
 
-          {/* الجهة اليمنى: الشعار */}
+          {/* Logo */}
           <div className="relative flex items-center gap-3" dir="rtl">
             <div
               className="pointer-events-none absolute -inset-3 -z-10 rounded-full opacity-40 blur-2xl"
@@ -113,7 +112,6 @@ function Hero({ onMenuClick }: { onMenuClick: () => void }) {
       </header>
 
       {/* Main Scrollable Content */}
-      {/* لاحظ أننا قمنا بزيادة الـ pt قليلاً لتعويض المساحة التي كان يشغلها الهيدر الشفاف */}
       <div className="relative flex min-h-[94svh] flex-col px-5 pb-10 pt-[calc(env(safe-area-inset-top)+6rem)]">
         
         {/* Hero Text Content */}
@@ -125,7 +123,9 @@ function Hero({ onMenuClick }: { onMenuClick: () => void }) {
             <span className="h-px w-8 bg-[#5fe0a5]/50" />
             {t('hero.eyebrow')}
           </div>
-          <h1 className="max-w-[18ch] text-[clamp(2.3rem,10vw,3.4rem)] font-extrabold leading-[1.08] tracking-tight text-[color:var(--text)]">
+          
+          {/* ✅ العنوان الرئيسي المصغر بنسبة 30% مع الحفاظ على 3 أسطر وتلوين السطر الثاني */}
+          <h1 className="max-w-[22ch] text-[clamp(1.6rem,7vw,2.4rem)] font-extrabold leading-[1.15] tracking-tight text-[color:var(--text)]">
             <span className="jw-rise block" style={{ animationDelay: '60ms' }}>
               {t('hero.title.1')}
             </span>
@@ -139,6 +139,7 @@ function Hero({ onMenuClick }: { onMenuClick: () => void }) {
               {t('hero.title.3')}
             </span>
           </h1>
+          
           <p
             className="jw-rise mt-5 max-w-[42ch] text-[0.92rem] leading-relaxed text-[color:var(--muted)]"
             style={{ animationDelay: '340ms' }}
