@@ -78,8 +78,8 @@ function Hero({ onMenuClick }: { onMenuClick: () => void }) {
       />
       <div className="jw-grid absolute inset-0 opacity-[0.07]" />
 
-      {/* ✅ Unified Fixed Glassmorphic Header with Smart Frosted Glass */}
-      <header className="fixed inset-x-0 top-0 z-50 mx-auto w-full max-w-[520px] border-b border-white/5 bg-black/15 px-5 pb-3.5 pt-[calc(env(safe-area-inset-top)+1rem)] backdrop-blur-xl transition-all duration-300">
+      {/* ✅ Unified Fixed Header (100% Solid) */}
+      <header className="fixed inset-x-0 top-0 z-50 mx-auto w-full max-w-[520px] border-b border-[color:var(--line)] bg-[color:var(--bg)] px-5 pb-3.5 pt-[calc(env(safe-area-inset-top)+1rem)] transition-all duration-300">
         {/* نجبر الحاوية على LTR لضمان بقاء الزر في اليسار دائماً */}
         <div className="flex items-center justify-between" dir="ltr">
           
@@ -88,7 +88,7 @@ function Hero({ onMenuClick }: { onMenuClick: () => void }) {
             type="button"
             onClick={onMenuClick}
             aria-label="Menu"
-            className="grid h-11 w-11 place-items-center rounded-full border border-white/10 bg-white/[0.06] text-white shadow-[inset_0_1px_0_0_rgba(255,255,255,0.08)] backdrop-blur-md transition-all duration-300 hover:bg-white/15 active:scale-95"
+            className="grid h-11 w-11 place-items-center rounded-full border border-[color:var(--line)] bg-[color:var(--elevated)] text-[color:var(--text)] shadow-[inset_0_1px_0_0_rgba(255,255,255,0.08)] transition-all duration-300 hover:bg-[color:var(--surface)] active:scale-95"
           >
             <Glyph name="menu" size={22} strokeWidth={2} />
           </button>
@@ -101,10 +101,10 @@ function Hero({ onMenuClick }: { onMenuClick: () => void }) {
             />
             <BrandMark size={38} className="drop-shadow-[0_4px_12px_rgba(43,211,140,0.2)]" />
             <div className="leading-tight text-right">
-              <div className="text-[1.05rem] font-extrabold tracking-tight text-white">
+              <div className="text-[1.05rem] font-extrabold tracking-tight text-[color:var(--text)]">
                 {bi(appConfig.appName)}
               </div>
-              <div className="text-[0.62rem] uppercase tracking-[0.25em] text-white/50">
+              <div className="text-[0.62rem] uppercase tracking-[0.25em] text-[color:var(--muted)]">
                 ALJAWAD
               </div>
             </div>
@@ -113,7 +113,8 @@ function Hero({ onMenuClick }: { onMenuClick: () => void }) {
       </header>
 
       {/* Main Scrollable Content */}
-      <div className="relative flex min-h-[94svh] flex-col px-5 pb-10 pt-[calc(env(safe-area-inset-top)+5.5rem)]">
+      {/* لاحظ أننا قمنا بزيادة الـ pt قليلاً لتعويض المساحة التي كان يشغلها الهيدر الشفاف */}
+      <div className="relative flex min-h-[94svh] flex-col px-5 pb-10 pt-[calc(env(safe-area-inset-top)+6rem)]">
         
         {/* Hero Text Content */}
         <div
@@ -124,7 +125,7 @@ function Hero({ onMenuClick }: { onMenuClick: () => void }) {
             <span className="h-px w-8 bg-[#5fe0a5]/50" />
             {t('hero.eyebrow')}
           </div>
-          <h1 className="max-w-[18ch] text-[clamp(2.3rem,10vw,3.4rem)] font-extrabold leading-[1.08] tracking-tight text-white">
+          <h1 className="max-w-[18ch] text-[clamp(2.3rem,10vw,3.4rem)] font-extrabold leading-[1.08] tracking-tight text-[color:var(--text)]">
             <span className="jw-rise block" style={{ animationDelay: '60ms' }}>
               {t('hero.title.1')}
             </span>
@@ -139,7 +140,7 @@ function Hero({ onMenuClick }: { onMenuClick: () => void }) {
             </span>
           </h1>
           <p
-            className="jw-rise mt-5 max-w-[42ch] text-[0.92rem] leading-relaxed text-white/60"
+            className="jw-rise mt-5 max-w-[42ch] text-[0.92rem] leading-relaxed text-[color:var(--muted)]"
             style={{ animationDelay: '340ms' }}
           >
             {t('hero.support')}
