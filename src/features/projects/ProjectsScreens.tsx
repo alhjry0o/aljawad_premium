@@ -57,7 +57,6 @@ export function ProjectsScreen() {
       <ScreenHeader
         title={t('projects.title')}
         subtitle={t('projects.demoNote')}
-        trailing={<DemoBadge label={t('common.demo')} />}
       />
 
       {/* Filter chips — glassmorphic */}
