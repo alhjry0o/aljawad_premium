@@ -78,18 +78,29 @@ function Hero({ onMenuClick }: { onMenuClick: () => void }) {
       />
       <div className="jw-grid absolute inset-0 opacity-[0.07]" />
 
-      {/* ✅ Unified Fixed Glassmorphic Header */}
-      <header className="fixed inset-x-0 top-0 z-50 mx-auto w-full max-w-[520px] border-b border-white/5 bg-[color:var(--bg)]/40 backdrop-blur-xl transition-all duration-300">
-        <div className="flex items-center justify-between px-5 pb-3.5 pt-[calc(env(safe-area-inset-top)+1rem)]">
-          
-          {/* Logo Section (Left in RTL) */}
-          <div className="relative flex items-center gap-3">
+      {/* ✅ Unified Fixed Glassmorphic Header (Transparent for Hero) */}
+      <header className="fixed inset-x-0 top-0 z-50 mx-auto w-full max-w-[520px] px-5 pb-3.5 pt-[calc(env(safe-area-inset-top)+1rem)]">
+  {/* نجبر الحاوية على LTR لضمان بقاء الزر في اليسار دائماً */}      
+        <div className="flex items-center justify-between" dir="ltr">
+    
+    {/* الجهة اليسرى: زر القائمة */}      
+          <button
+            type="button"
+            onClick={onMenuClick}
+            aria-label="Menu"
+            className="grid h-11 w-11 place-items-center rounded-full border border-white/10 bg-black/20 text-white shadow-[inset_0_1px_0_0_rgba(255,255,255,0.08)] backdrop-blur-md transition-all duration-300 hover:bg-black/40 active:scale-95"
+          >
+            <Glyph name="menu" size={22} strokeWidth={2} />
+       </button>
+
+    {/* الجهة اليمنى: الشعار */}      
+          <div className="relative flex items-center gap-3" dir="rtl">
             <div
               className="pointer-events-none absolute -inset-3 -z-10 rounded-full opacity-40 blur-2xl"
               style={{ background: 'radial-gradient(circle, #2bd38c, transparent 70%)' }}
             />
             <BrandMark size={38} className="drop-shadow-[0_4px_12px_rgba(43,211,140,0.2)]" />
-            <div className="leading-tight">
+            <div className="leading-tight text-right">
               <div className="text-[1.05rem] font-extrabold tracking-tight text-white">
                 {bi(appConfig.appName)}
               </div>
@@ -98,6 +109,8 @@ function Hero({ onMenuClick }: { onMenuClick: () => void }) {
               </div>
             </div>
           </div>
+        </div>
+      </header>
 
           {/* Menu Button (Right in RTL) */}
           <button
