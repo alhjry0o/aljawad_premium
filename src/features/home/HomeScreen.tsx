@@ -80,9 +80,10 @@ function Hero({ onMenuClick }: { onMenuClick: () => void }) {
 
       {/* ✅ Unified Fixed Glassmorphic Header (Transparent for Hero) */}
       <header className="fixed inset-x-0 top-0 z-50 mx-auto w-full max-w-[520px] px-5 pb-3.5 pt-[calc(env(safe-area-inset-top)+1rem)]">
-         {/* نجبر الحاوية على LTR لضمان بقاء الزر في اليسار دائماً */}      
+        {/* نجبر الحاوية على LTR لضمان بقاء الزر في اليسار دائماً */}
         <div className="flex items-center justify-between" dir="ltr">
-          {/* الجهة اليسرى: زر القائمة */}      
+          
+          {/* الجهة اليسرى: زر القائمة */}
           <button
             type="button"
             onClick={onMenuClick}
@@ -90,8 +91,9 @@ function Hero({ onMenuClick }: { onMenuClick: () => void }) {
             className="grid h-11 w-11 place-items-center rounded-full border border-white/10 bg-black/20 text-white shadow-[inset_0_1px_0_0_rgba(255,255,255,0.08)] backdrop-blur-md transition-all duration-300 hover:bg-black/40 active:scale-95"
           >
             <Glyph name="menu" size={22} strokeWidth={2} />
-       </button>
-          {/* الجهة اليمنى: الشعار */}      
+          </button>
+
+          {/* الجهة اليمنى: الشعار */}
           <div className="relative flex items-center gap-3" dir="rtl">
             <div
               className="pointer-events-none absolute -inset-3 -z-10 rounded-full opacity-40 blur-2xl"
@@ -110,20 +112,8 @@ function Hero({ onMenuClick }: { onMenuClick: () => void }) {
         </div>
       </header>
 
-          {/* Menu Button (Right in RTL) */}
-          <button
-            type="button"
-            onClick={onMenuClick}
-            aria-label="Menu"
-            className="grid h-11 w-11 place-items-center rounded-full border border-white/10 bg-white/[0.04] text-white shadow-[inset_0_1px_0_0_rgba(255,255,255,0.08)] backdrop-blur-md transition-all duration-300 hover:bg-white/10 active:scale-95"
-          >
-            <Glyph name="menu" size={22} strokeWidth={2} />
-          </button>
-        </div>
-      </header>
-
       {/* Main Scrollable Content */}
-      <div className="relative flex min-h-[94svh] flex-col px-5 pb-10 pt-[calc(env(safe-area-inset-top)+6rem)]">
+      <div className="relative flex min-h-[94svh] flex-col px-5 pb-10 pt-[calc(env(safe-area-inset-top)+5.5rem)]">
         
         {/* Hero Text Content */}
         <div
