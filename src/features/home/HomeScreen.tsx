@@ -78,8 +78,8 @@ function Hero({ onMenuClick }: { onMenuClick: () => void }) {
       />
       <div className="jw-grid absolute inset-0 opacity-[0.07]" />
 
-      {/* ✅ Unified Fixed Glassmorphic Header (Transparent for Hero) */}
-      <header className="fixed inset-x-0 top-0 z-50 mx-auto w-full max-w-[520px] px-5 pb-3.5 pt-[calc(env(safe-area-inset-top)+1rem)]">
+      {/* ✅ Unified Fixed Glassmorphic Header with Smart Frosted Glass */}
+      <header className="fixed inset-x-0 top-0 z-50 mx-auto w-full max-w-[520px] border-b border-white/5 bg-black/15 px-5 pb-3.5 pt-[calc(env(safe-area-inset-top)+1rem)] backdrop-blur-xl transition-all duration-300">
         {/* نجبر الحاوية على LTR لضمان بقاء الزر في اليسار دائماً */}
         <div className="flex items-center justify-between" dir="ltr">
           
@@ -88,7 +88,7 @@ function Hero({ onMenuClick }: { onMenuClick: () => void }) {
             type="button"
             onClick={onMenuClick}
             aria-label="Menu"
-            className="grid h-11 w-11 place-items-center rounded-full border border-white/10 bg-black/20 text-white shadow-[inset_0_1px_0_0_rgba(255,255,255,0.08)] backdrop-blur-md transition-all duration-300 hover:bg-black/40 active:scale-95"
+            className="grid h-11 w-11 place-items-center rounded-full border border-white/10 bg-white/[0.06] text-white shadow-[inset_0_1px_0_0_rgba(255,255,255,0.08)] backdrop-blur-md transition-all duration-300 hover:bg-white/15 active:scale-95"
           >
             <Glyph name="menu" size={22} strokeWidth={2} />
           </button>
