@@ -11,6 +11,7 @@ import { cn } from '../utils/cn';
 import { Glyph, type GlyphName } from './icons';
 import { useI18n } from '../core/i18n';
 import { useNav } from '../core/navigation';
+import { useDrawer } from '../core/drawer';
 
 /* ---------------------------------------------------------- Reveal */
 
@@ -195,12 +196,27 @@ export function ScreenHeader({
   subtitle?: string;
   trailing?: ReactNode;
 }) {
-  const { back, canGoBack } = useNav();
+  const { back, canGoBack, route } = useNav();
   const { t } = useI18n();
+  const { openDrawer } = useDrawer(); // ✅ جلب دالة فتح القائمة
+
+  // التحقق مما إذا كانت الشاشة الحالية من الشاشات الأساسية (باستثناء الرئيسية لأنها تطبق الهيدر الخاص بها)
+  const isMainTab = ['services', 'requests', 'projects', 'more'].includes(route.name);
+
   return (
     <header className="sticky top-[env(safe-area-inset-top)] z-30 border-b border-[color:var(--line)] bg-[color:var(--bg)]/85 px-5 py-3.5 backdrop-blur-xl">
       <div className="flex items-center gap-3">
-        {canGoBack && (
+        {/* ✅ الزر الذكي: هامبرغر للشاشات الأساسية، وسهم للفرعية */}
+        {isMainTab ? (
+          <button
+            type="button"
+            onClick={openDrawer}
+            aria-label="Menu"
+            className="grid h-10 w-10 shrink-0 place-items-center rounded-full border border-white/10 bg-white/5 text-white transition-colors hover:bg-white/10"
+          >
+            <Glyph name="menu" size={22} />
+          </button>
+        ) : canGoBack ? (
           <button
             type="button"
             onClick={back}
@@ -209,7 +225,8 @@ export function ScreenHeader({
           >
             <Glyph name="arrow" size={18} className="ltr:-scale-x-100" />
           </button>
-        )}
+        ) : null}
+
         <div className="min-w-0 flex-1">
           <h1 className="truncate text-[1.05rem] font-bold tracking-tight">{title}</h1>
           {subtitle && <p className="truncate text-[0.72rem] text-[color:var(--muted)]">{subtitle}</p>}
@@ -219,7 +236,6 @@ export function ScreenHeader({
     </header>
   );
 }
-
 /* ---------------------------------------------------------- Form fields */
 
 export function Label({ children, hint }: { children: ReactNode; hint?: string }) {
