@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom';
 import { useI18n } from '../core/i18n';
 import { useNav, type TabKey } from '../core/navigation';
 import { useCompany } from '../core/companyStore';
+import { useTheme } from '../core/theme'; // ✅ أضف هذا
 import { BrandMark, Glyph, type GlyphName } from './icons';
 import { cn } from '../utils/cn';
 
@@ -18,8 +19,8 @@ export function SideDrawer({ open, onClose }: { open: boolean; onClose: () => vo
   const { t, bi, lang, setLang } = useI18n();
   const { tab, goTab, push } = useNav();
   const { config: appConfig } = useCompany();
+  const { mode, setMode } = useTheme(); // ✅ جلب الثيم الحالي
 
-  // إغلاق القائمة عند الضغط على زر الرجوع في الهاتف (اختياري، لكن جيد للتجربة)
   useEffect(() => {
     if (!open) return;
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -52,14 +53,12 @@ export function SideDrawer({ open, onClose }: { open: boolean; onClose: () => vo
           open ? 'translate-x-0' : 'ltr:-translate-x-full rtl:translate-x-full',
         )}
       >
-        {/* ============ Header ============ */}
+        {/* Header */}
         <div className="relative overflow-hidden px-6 pb-8 pt-[calc(env(safe-area-inset-top)+2rem)]">
-          {/* Soft glow behind logo */}
           <div
             className="pointer-events-none absolute -top-10 start-1/4 h-40 w-40 -translate-x-1/2 rounded-full opacity-40 blur-3xl"
             style={{ background: 'radial-gradient(circle, var(--glow), transparent 70%)' }}
           />
-
           <div className="relative flex items-center gap-3.5">
             <div className="relative shrink-0">
               <div
@@ -79,7 +78,7 @@ export function SideDrawer({ open, onClose }: { open: boolean; onClose: () => vo
           </div>
         </div>
 
-        {/* ============ Menu Items ============ */}
+        {/* Menu Items */}
         <div className="no-scrollbar flex-1 overflow-y-auto px-4 py-2">
           <ul className="space-y-1.5">
             {MENU_ITEMS.map((item) => {
@@ -118,17 +117,44 @@ export function SideDrawer({ open, onClose }: { open: boolean; onClose: () => vo
           </ul>
         </div>
 
-        {/* ============ Footer ============ */}
+        {/* Footer */}
         <div className="mt-auto px-5 pb-[calc(env(safe-area-inset-bottom)+1.5rem)] pt-6">
-          {/* Divider */}
-          <div className="mb-5 h-px w-full bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+          <div className="mb-4 h-px w-full bg-gradient-to-r from-transparent via-white/10 to-transparent" />
 
-          {/* Language Toggle Capsule */}
+          {/* ✅ Theme Switcher (Dark / Light) */}
+          <div className="mb-3 flex rounded-full border border-white/10 bg-white/[0.035] p-1 backdrop-blur-xl">
+            <button
+              type="button"
+              onClick={() => setMode('dark')}
+              className={cn(
+                'flex flex-1 items-center justify-center gap-2 rounded-full py-2 text-[0.75rem] font-semibold transition-all duration-300',
+                mode === 'dark'
+                  ? 'bg-[color:var(--elevated)] text-white shadow-sm'
+                  : 'text-white/40 hover:text-white/70',
+              )}
+            >
+              <Glyph name="moon" size={15} />
+              {bi({ ar: 'داكن', en: 'Dark' })}
+            </button>
+            <button
+              type="button"
+              onClick={() => setMode('light')}
+              className={cn(
+                'flex flex-1 items-center justify-center gap-2 rounded-full py-2 text-[0.75rem] font-semibold transition-all duration-300',
+                mode === 'light'
+                  ? 'bg-[color:var(--elevated)] text-white shadow-sm'
+                  : 'text-white/40 hover:text-white/70',
+              )}
+            >
+              <Glyph name="sun" size={15} />
+              {bi({ ar: 'فاتح', en: 'Light' })}
+            </button>
+          </div>
+
+          {/* Language Toggle */}
           <button
             type="button"
-            onClick={() => {
-              setLang(lang === 'ar' ? 'en' : 'ar');
-            }}
+            onClick={() => setLang(lang === 'ar' ? 'en' : 'ar')}
             className="flex w-full items-center justify-between rounded-full border border-white/10 bg-white/[0.035] px-5 py-3 backdrop-blur-xl transition-colors hover:bg-white/[0.06]"
           >
             <span className="flex items-center gap-2 text-[0.82rem] font-semibold text-white/80">
@@ -141,7 +167,7 @@ export function SideDrawer({ open, onClose }: { open: boolean; onClose: () => vo
           </button>
 
           {/* Bottom Links */}
-          <div className="mt-6 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-[0.72rem] font-medium text-white/35">
+          <div className="mt-5 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-[0.72rem] font-medium text-white/35">
             <button
               type="button"
               onClick={() => {
