@@ -13,6 +13,7 @@ import { ServiceCarousel } from '../services/ServiceCarousel';
 import { SideDrawer } from '../../components/SideDrawer';
 import { uiEvents } from '../../core/uiEvents';
 import { cn } from '../../utils/cn';
+import { useDrawer } from '../../core/drawer';
 
 function HeroSearchButton() {
   const { t } = useI18n();
@@ -780,19 +781,14 @@ export function BrandFooter() {
 export function HomeScreen() {
   const { t } = useI18n();
   const { push } = useNav();
-  const [drawerOpen, setDrawerOpen] = useState(false); // ✅ حالة القائمة
+  const { openDrawer } = useDrawer(); // ✅ استخدام الـ Context
 
   return (
     <div>
-      <Hero onMenuClick={() => setDrawerOpen(true)} /> {/* ✅ تمرير الحدث */}
+      <Hero onMenuClick={openDrawer} /> {/* ✅ تمرير دالة الفتح من الـ Context */}
       
       <section className="pt-16">
-        <SectionHead
-          kicker={t('services.kicker')}
-          title={t('services.title')}
-          action={t('services.all')}
-          onAction={() => push({ name: 'services' })}
-        />
+        <SectionHead ... />
         <ServiceCarousel />
       </section>
       <BrandStatement />
@@ -801,8 +797,6 @@ export function HomeScreen() {
       <ServiceHighlight />
       <ClosingCTA />
       <BrandFooter />
-
-      <SideDrawer open={drawerOpen} onClose={() => setDrawerOpen(false)} /> {/* ✅ استدعاء القائمة */}
     </div>
   );
 }
