@@ -53,6 +53,7 @@ function Hero({ onMenuClick }: { onMenuClick: () => void }) {
 
   return (
     <section className="relative min-h-[94svh] bg-[#030605]">
+      {/* Background Image & Overlays */}
       <div className="absolute inset-0 overflow-hidden">
         <div
           className="absolute inset-0 will-change-transform"
@@ -66,7 +67,7 @@ function Hero({ onMenuClick }: { onMenuClick: () => void }) {
           />
         </div>
       </div>
-      <div className="absolute inset-0 bg-gradient-to-b from-[#030605]/75 via-[#030605]/55 to-[#030605]" />
+      <div className="absolute inset-0 bg-gradient-to-b from-[#030605]/80 via-[#030605]/50 to-[#030605]" />
       <div
         className="absolute inset-0 opacity-70"
         style={{ background: 'radial-gradient(85% 55% at 15% 12%, rgba(31,163,106,0.3), transparent 60%)' }}
@@ -77,37 +78,41 @@ function Hero({ onMenuClick }: { onMenuClick: () => void }) {
       />
       <div className="jw-grid absolute inset-0 opacity-[0.07]" />
 
-      {/* ✅ الهيدر الثابت (Fixed Header) */}
-      <div className="pointer-events-none fixed inset-x-0 top-0 z-50 mx-auto flex w-full max-w-[520px] items-center justify-between bg-gradient-to-b from-[#030605]/90 via-[#030605]/50 to-transparent px-5 pb-6 pt-[calc(env(safe-area-inset-top)+1.5rem)]">
-        
-        {/* ✅ زر القائمة (في الجهة اليمنى للغة العربية) */}
-        <button
-          type="button"
-          onClick={onMenuClick}
-          aria-label="Menu"
-          className="pointer-events-auto grid h-10 w-10 place-items-center rounded-full border border-white/10 bg-black/20 text-white backdrop-blur-md transition-all duration-300 hover:bg-black/40 active:scale-95"
-        >
-          <Glyph name="menu" size={22} />
-        </button>
-
-        {/* ✅ الشعار واسم الشركة (في الجهة اليسرى للغة العربية) */}
-        <div className="pointer-events-auto relative flex items-center gap-2.5">
-          <div
-            className="pointer-events-none absolute -inset-4 -z-10 rounded-full opacity-30 blur-2xl"
-            style={{ background: 'radial-gradient(circle, #2bd38c, transparent 70%)' }}
-          />
-          <BrandMark size={34} />
-          <div className="leading-tight">
-            <div className="text-[0.95rem] font-extrabold tracking-tight text-white">
-              {bi(appConfig.appName)}
+      {/* ✅ Unified Fixed Glassmorphic Header */}
+      <header className="fixed inset-x-0 top-0 z-50 mx-auto w-full max-w-[520px] border-b border-white/5 bg-[color:var(--bg)]/40 backdrop-blur-xl transition-all duration-300">
+        <div className="flex items-center justify-between px-5 pb-3.5 pt-[calc(env(safe-area-inset-top)+1rem)]">
+          
+          {/* Logo Section (Left in RTL) */}
+          <div className="relative flex items-center gap-3">
+            <div
+              className="pointer-events-none absolute -inset-3 -z-10 rounded-full opacity-40 blur-2xl"
+              style={{ background: 'radial-gradient(circle, #2bd38c, transparent 70%)' }}
+            />
+            <BrandMark size={38} className="drop-shadow-[0_4px_12px_rgba(43,211,140,0.2)]" />
+            <div className="leading-tight">
+              <div className="text-[1.05rem] font-extrabold tracking-tight text-white">
+                {bi(appConfig.appName)}
+              </div>
+              <div className="text-[0.62rem] uppercase tracking-[0.25em] text-white/50">
+                ALJAWAD
+              </div>
             </div>
-            <div className="text-[0.6rem] uppercase tracking-[0.25em] text-white/45">ALJAWAD</div>
           </div>
-        </div>
-      </div>
 
-      {/* محتوى الشاشة الرئيسية (قابل للتمرير تحت الهيدر) */}
-      <div className="relative flex min-h-[94svh] flex-col px-5 pb-10 pt-[calc(env(safe-area-inset-top)+5rem)]">
+          {/* Menu Button (Right in RTL) */}
+          <button
+            type="button"
+            onClick={onMenuClick}
+            aria-label="Menu"
+            className="grid h-11 w-11 place-items-center rounded-full border border-white/10 bg-white/[0.04] text-white shadow-[inset_0_1px_0_0_rgba(255,255,255,0.08)] backdrop-blur-md transition-all duration-300 hover:bg-white/10 active:scale-95"
+          >
+            <Glyph name="menu" size={22} strokeWidth={2} />
+          </button>
+        </div>
+      </header>
+
+      {/* Main Scrollable Content */}
+      <div className="relative flex min-h-[94svh] flex-col px-5 pb-10 pt-[calc(env(safe-area-inset-top)+6rem)]">
         
         {/* Hero Text Content */}
         <div
