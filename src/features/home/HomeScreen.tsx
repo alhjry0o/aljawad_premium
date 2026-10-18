@@ -77,39 +77,38 @@ function Hero({ onMenuClick }: { onMenuClick: () => void }) {
       />
       <div className="jw-grid absolute inset-0 opacity-[0.07]" />
 
-      <div className="relative flex min-h-[94svh] flex-col px-5 pb-10 pt-[calc(env(safe-area-inset-top)+1.5rem)]">
+      {/* ✅ الهيدر الثابت (Fixed Header) */}
+      <div className="pointer-events-none fixed inset-x-0 top-0 z-50 mx-auto flex w-full max-w-[520px] items-center justify-between bg-gradient-to-b from-[#030605]/90 via-[#030605]/50 to-transparent px-5 pb-6 pt-[calc(env(safe-area-inset-top)+1.5rem)]">
         
-        {/* Header: Logo + Menu Button */}
-        <div
-          className="flex items-center justify-between"
-          style={{ opacity: reducedMotion ? 1 : Math.max(0, 1 - p / 480) }}
+        {/* ✅ زر القائمة (في الجهة اليمنى للغة العربية) */}
+        <button
+          type="button"
+          onClick={onMenuClick}
+          aria-label="Menu"
+          className="pointer-events-auto grid h-10 w-10 place-items-center rounded-full border border-white/10 bg-black/20 text-white backdrop-blur-md transition-all duration-300 hover:bg-black/40 active:scale-95"
         >
-          {/* Logo Section */}
-          <div className="relative flex items-center gap-2.5">
-            <div
-              className="pointer-events-none absolute -inset-4 -z-10 rounded-full opacity-30 blur-2xl"
-              style={{ background: 'radial-gradient(circle, #2bd38c, transparent 70%)' }}
-            />
-            <BrandMark size={34} />
-            <div className="leading-tight">
-              <div className="text-[0.95rem] font-extrabold tracking-tight text-white">
-                {bi(appConfig.appName)}
-              </div>
-              <div className="text-[0.6rem] uppercase tracking-[0.25em] text-white/45">ALJAWAD</div>
+          <Glyph name="menu" size={22} />
+        </button>
+
+        {/* ✅ الشعار واسم الشركة (في الجهة اليسرى للغة العربية) */}
+        <div className="pointer-events-auto relative flex items-center gap-2.5">
+          <div
+            className="pointer-events-none absolute -inset-4 -z-10 rounded-full opacity-30 blur-2xl"
+            style={{ background: 'radial-gradient(circle, #2bd38c, transparent 70%)' }}
+          />
+          <BrandMark size={34} />
+          <div className="leading-tight">
+            <div className="text-[0.95rem] font-extrabold tracking-tight text-white">
+              {bi(appConfig.appName)}
             </div>
+            <div className="text-[0.6rem] uppercase tracking-[0.25em] text-white/45">ALJAWAD</div>
           </div>
-
-          {/* Hamburger Menu Button */}
-          <button
-            type="button"
-            onClick={onMenuClick}
-            aria-label="Open Menu"
-            className="grid h-10 w-10 place-items-center rounded-full border border-white/10 bg-white/5 text-white backdrop-blur-md transition-all duration-300 active:scale-95 hover:bg-white/10"
-          >
-            <Glyph name="menu" size={22} />
-          </button>
         </div>
+      </div>
 
+      {/* محتوى الشاشة الرئيسية (قابل للتمرير تحت الهيدر) */}
+      <div className="relative flex min-h-[94svh] flex-col px-5 pb-10 pt-[calc(env(safe-area-inset-top)+5rem)]">
+        
         {/* Hero Text Content */}
         <div
           className="mt-auto pt-16"
