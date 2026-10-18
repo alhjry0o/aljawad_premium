@@ -190,48 +190,49 @@ export function SectionHead({
 export function ScreenHeader({
   title,
   subtitle,
-  trailing,
 }: {
   title: string;
   subtitle?: string;
-  trailing?: ReactNode;
 }) {
   const { back, canGoBack, route } = useNav();
   const { t } = useI18n();
-  const { openDrawer } = useDrawer(); // ✅ جلب دالة فتح القائمة
+  const { openDrawer } = useDrawer();
 
-  // التحقق مما إذا كانت الشاشة الحالية من الشاشات الأساسية (باستثناء الرئيسية لأنها تطبق الهيدر الخاص بها)
   const isMainTab = ['services', 'requests', 'projects', 'more'].includes(route.name);
 
   return (
-    <header className="sticky top-[env(safe-area-inset-top)] z-30 border-b border-[color:var(--line)] bg-[color:var(--bg)]/85 px-5 py-3.5 backdrop-blur-xl">
-      <div className="flex items-center gap-3">
-        {/* ✅ الزر الذكي: هامبرغر للشاشات الأساسية، وسهم للفرعية */}
-        {isMainTab ? (
-          <button
-            type="button"
-            onClick={openDrawer}
-            aria-label="Menu"
-            className="grid h-10 w-10 shrink-0 place-items-center rounded-full border border-white/10 bg-white/5 text-white transition-colors hover:bg-white/10"
-          >
-            <Glyph name="menu" size={22} />
-          </button>
-        ) : canGoBack ? (
-          <button
-            type="button"
-            onClick={back}
-            aria-label={t('common.back')}
-            className="grid h-10 w-10 shrink-0 place-items-center rounded-[var(--radius-sm)] border border-[color:var(--line)] text-[color:var(--text)] transition-colors hover:border-[color:var(--line-strong)]"
-          >
-            <Glyph name="arrow" size={18} className="ltr:-scale-x-100" />
-          </button>
-        ) : null}
+    <header className="sticky top-[env(safe-area-inset-top)] z-30 border-b border-white/5 bg-[color:var(--bg)]/60 px-5 py-3.5 backdrop-blur-xl">
+      {/* نجبر الحاوية على LTR لضمان بقاء الزر في اليسار دائماً */}
+      <div className="flex items-center justify-between" dir="ltr">
+        
+        {/* الجهة اليسرى: زر القائمة أو الرجوع */}
+        <div className="flex items-center">
+          {isMainTab ? (
+            <button
+              type="button"
+              onClick={openDrawer}
+              aria-label="Menu"
+              className="grid h-10 w-10 shrink-0 place-items-center rounded-full border border-white/10 bg-white/5 text-white shadow-[inset_0_1px_0_0_rgba(255,255,255,0.08)] backdrop-blur-md transition-colors hover:bg-white/10 active:scale-95"
+            >
+              <Glyph name="menu" size={22} />
+            </button>
+          ) : canGoBack ? (
+            <button
+              type="button"
+              onClick={back}
+              aria-label={t('common.back')}
+              className="grid h-10 w-10 shrink-0 place-items-center rounded-full border border-white/10 bg-white/5 text-white shadow-[inset_0_1px_0_0_rgba(255,255,255,0.08)] backdrop-blur-md transition-colors hover:bg-white/10 active:scale-95"
+            >
+              <Glyph name="arrow" size={18} className="ltr:-scale-x-100" />
+            </button>
+          ) : null}
+        </div>
 
-        <div className="min-w-0 flex-1">
+        {/* الجهة اليمنى: العنوان */}
+        <div className="min-w-0 text-right" dir="rtl">
           <h1 className="truncate text-[1.05rem] font-bold tracking-tight">{title}</h1>
           {subtitle && <p className="truncate text-[0.72rem] text-[color:var(--muted)]">{subtitle}</p>}
         </div>
-        {trailing}
       </div>
     </header>
   );
