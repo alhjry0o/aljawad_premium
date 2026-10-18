@@ -781,16 +781,22 @@ export function BrandFooter() {
 export function HomeScreen() {
   const { t } = useI18n();
   const { push } = useNav();
-  const { openDrawer } = useDrawer(); // ✅ استخدام الـ Context
+  const { openDrawer } = useDrawer();
 
   return (
     <div>
-      <Hero onMenuClick={openDrawer} /> {/* ✅ تمرير دالة الفتح من الـ Context */}
+      <Hero onMenuClick={openDrawer} />
       
       <section className="pt-16">
-        <SectionHead ... />
+        <SectionHead
+          kicker={t('services.kicker')}
+          title={t('services.title')}
+          action={t('services.all')}
+          onAction={() => push({ name: 'services' })}
+        />
         <ServiceCarousel />
       </section>
+      
       <BrandStatement />
       <WhyAljawad />
       <FeaturedProjects />
