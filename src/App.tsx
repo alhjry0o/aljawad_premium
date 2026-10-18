@@ -30,6 +30,8 @@ import {
 } from './features/more/MoreScreens';
 import { cn } from './utils/cn';
 import { OnboardingScreen, ONBOARDING_KEY } from './features/onboarding/OnboardingScreen';
+import { DrawerProvider, useDrawer } from './core/drawer';
+import { SideDrawer } from './components/SideDrawer';
 
 /* ----------------------------------------------------- Bottom navigation */
 
@@ -352,16 +354,15 @@ function Outlet() {
 function Shell() {
   const backToast = useAndroidBackButton();
   useKeyboardWatcher();
+  const { isOpen, closeDrawer } = useDrawer(); // ✅ جلب حالة القائمة
+
   return (
     <div className="mx-auto min-h-[100svh] w-full max-w-[520px] bg-[color:var(--bg)] text-[color:var(--text)] shadow-[0_0_120px_rgba(0,0,0,0.45)]">
-      {/* طبقة تغطية منطقة شريط الإشعارات — تطبَّق على كل الشاشات */}
       <div
         aria-hidden
         className="pointer-events-none fixed inset-x-0 top-0 z-20 mx-auto w-full max-w-[520px] bg-[color:var(--bg)]"
         style={{ height: 'env(safe-area-inset-top)' }}
       />
-
-      {/* طبقة سفلية شبه شفافة لمنطقة أزرار التنقل في النظام */}
       <div
         aria-hidden
         className="pointer-events-none fixed inset-x-0 bottom-0 z-30 mx-auto w-full max-w-[520px] bg-[color:var(--bg)]/75 backdrop-blur-xl"
@@ -371,39 +372,32 @@ function Shell() {
       <Outlet />
       <BottomNav />
       {backToast && <Toast message={backToast} />}
+      
+      {/* ✅ تركيب القائمة الجانبية هنا لتظهر فوق كل شيء */}
+      <SideDrawer open={isOpen} onClose={closeDrawer} />
     </div>
   );
 }
 
 function Root() {
   const [showOnboarding, setShowOnboarding] = useState(() => {
-    try {
-      return !localStorage.getItem(ONBOARDING_KEY);
-    } catch {
-      return false;
-    }
+    try { return !localStorage.getItem(ONBOARDING_KEY); } catch { return false; }
   });
-
   const complete = () => {
-    try {
-      localStorage.setItem(ONBOARDING_KEY, '1');
-    } catch {
-      /* ignore */
-    }
+    try { localStorage.setItem(ONBOARDING_KEY, '1'); } catch {}
     setShowOnboarding(false);
   };
 
-  if (showOnboarding) {
-    return <OnboardingScreen onComplete={complete} />;
-  }
+  if (showOnboarding) return <OnboardingScreen onComplete={complete} />;
 
   return (
-    <NavigationProvider>
-      <Shell />
-    </NavigationProvider>
+    <DrawerProvider> {/* ✅ أضف هذا */}
+      <NavigationProvider>
+        <Shell />
+      </NavigationProvider>
+    </DrawerProvider>
   );
 }
-
 export default function App() {
   return (
     <ThemeProvider>
