@@ -1,135 +1,134 @@
 # الجواد — Aljawad
 
-تجربة رقمية فاخرة لشركة **الجواد الدولية العربية** (Aljawad International Arabia Company).
-
-> **ملاحظة صريحة حول البيئة التقنية**
-> طُلب في الوصف الأصلي بناء التطبيق بـ React Native. بيئة التنفيذ الحالية هي بيئة ويب
-> (React + TypeScript + Vite + Tailwind) ولا تدعم تشغيل أو بناء مشروع React Native / Android.
-> لذلك تم تنفيذ المنتج كاملاً بنفس المعمارية والهوية والتجربة (Mobile-first, RTL-first, Offline-first)
-> على شكل تطبيق ويب قابل للمعاينة فعلياً، مع فصل واضح بين الطبقات يجعل نقل الطبقة التقديمية إلى
-> React Native مباشراً (الـ Data / Repositories / i18n / Theme Tokens / Navigation model مستقلة عن DOM).
-> **لم يتم** تنفيذ Android build أو Release build أو اختبارات Jest في هذه البيئة، ولا يُدّعى نجاحها.
+تطبيق جوال فاخر (Premium Mobile App) لشركة **الجواد الدولية العربية** (Aljawad International Arabia Company).
 
 ---
 
 ## Overview
 
-- اللغة الافتراضية: **العربية + RTL**، مع تفعيل **English + LTR** من الإعدادات.
-- الوضع الافتراضي: **Dark** (أسود شبه نقي + أخضر عميق + كحلي)، مع **Light** بهوية خضراء/كحلية مُشبعة (ليس White UI تقليدي) و**System**.
-- يعمل بالكامل دون اتصال: الخدمات، المشاريع، البحث، إنشاء الطلبات، الطلبات المحفوظة، الإعدادات.
-- لا يوجد Backend، ولا Login، ولا AI، ولا ادعاء بإرسال الطلبات للشركة.
+- **اللغة الافتراضية**: العربية + RTL، مع دعم كامل للغة الإنجليزية + LTR.
+- **الهوية البصرية**: تصميم زجاجي فاخر (Glassmorphic UI)، وضع افتراضي داكن (أسود شبه نقي + أخضر عميق)، ووضع فاتح (كحلي/أخضر).
+- **دعم بدون اتصال (Offline-first)**: يعمل التطبيق بكفاءة عالية حتى مع انقطاع الإنترنت، مع مزامنة تلقائية للبيانات عند توفر الاتصال.
+- **محتوى ديناميكي (Dynamic Content)**: يتم جلب بيانات الشركة والمشاريع عبر ملفات JSON خارجية، مما يتيح تحديث التطبيق فوراً دون الحاجة لبناء نسخة جديدة.
+- **تجربة تنقل ذكية**: قائمة جانبية (Side Drawer) فاخرة، تنقل سفلي عائم، وحركات انتقال ناعمة (Slide & Fade Animations).
+- **الطلبات**: معالج متعدد الخطوات (Multi-step Flow) لطلب الخدمات وعروض الأسعار والمعاينات، مع حفظ محلي آمن للطلبات.
 
 ## Tech Stack
 
 | الطبقة | التقنية |
 | --- | --- |
-| UI | React 19 + TypeScript (strict) |
-| Build | Vite 7 |
+| UI / Framework | React 19 + TypeScript (strict) |
+| Build Tool | Vite 7 |
+| Mobile Wrapper | Capacitor 8 (Android) |
 | Styling | Tailwind CSS v4 + Design Tokens (CSS Variables) |
-| Motion | CSS/IntersectionObserver + scroll-driven transforms (UI-thread) |
-| Icons | نظام أيقونات SVG أصلي + Material-Based 3D Icons (SVG متعدد الطبقات) |
-| State | React Context (Theme / i18n / Navigation / Requests) |
-| Persistence | localStorage عبر `LocalRequestRepository` |
+| Animations | CSS Transitions + IntersectionObserver (UI-thread) |
+| Icons | Custom SVG System + 3D Material Icons |
+| State | React Context (Theme, i18n, Navigation, Drawer, Data Stores) |
+| Native Plugins | `@capacitor/status-bar`, `@capacitor/share`, `@capacitor/app` |
+| CI/CD | GitHub Actions (يتم بناء وتوقيع APK/AAB تلقائياً) |
+
+## Key Features
+
+- **Onboarding**: شاشات تعريفية تفاعلية عند أول تشغيل.
+- **Dynamic Data Stores**: مزامنة فورية لبيانات الشركة والمشاريع عبر `companyStore.tsx` و `projectsStore.tsx`.
+- **Premium UI**: تأثيرات زجاجية (Frosted Glass)، تدرجات نيون، ورسوم بيانية متحركة.
+- **Smart Back Navigation**: دعم زر الرجوع في أندرويد مع رسالة تأكيد الخروج.
+- **WhatsApp Integration**: مشاركة التطبيق والخدمات والمشاريع مباشرة عبر واتساب.
 
 ## Architecture
 
 ```
-src/
-├── App.tsx                     # Shell + Bottom Navigation + Router outlet
-├── core/
-│   ├── theme.tsx               # Theme modes (system/light/dark) + reduced motion
-│   ├── i18n.tsx                # ar/en dictionaries + direction + persistence
-│   ├── navigation.tsx          # Type-safe Route model + stack + tabs
-│   ├── store.tsx               # Requests provider (ViewModel layer)
-│   └── actions.ts              # External actions: phone / WhatsApp / email / maps
-├── data/
-│   ├── company.ts              # AppConfiguration + ContactInfo + Asset Registry
-│   ├── services.ts             # 11 services + Arabic-aware search
-│   ├── projects.ts             # Demo projects (clearly labelled)
-│   └── requests.ts             # Models + RequestRepository + LocalRequestRepository
-├── components/
-│   ├── icons.tsx               # Glyph system + MaterialIcon3D + BrandMark
-│   └── kit.tsx                 # Buttons, fields, reveal, headers, toast…
-└── features/
-    ├── home/                   # Cinematic hero, search, carousel, why, featured…
-    ├── services/               # List + editorial carousel + immersive detail
-    ├── request/                # Multi-step flows + my requests + detail + success
-    ├── projects/               # Cinematic showcase + case-study detail
-    └── more/                   # Brand utility hub, about, contact, settings, legal, developer
-```
 
-الفصل محفوظ بين: **Presentation → State → Domain → Data → Configuration**.
+src/
+├── App.tsx                     # Shell + Providers + Router outlet
+├── core/
+│   ├── theme.tsx               # إدارة الثيم + Status Bar
+│   ├── i18n.tsx                # القواميس والترجمة
+│   ├── navigation.tsx          # إدارة المسارات والتنقل
+│   ├── drawer.tsx              # حالة القائمة الجانبية
+│   ├── companyStore.tsx        # جلب بيانات الشركة ديناميكياً
+│   ├── projectsStore.tsx       # جلب بيانات المشاريع ديناميكياً
+│   ├── store.tsx               # إدارة الطلبات محلياً
+│   ├── actions.ts              # دوال خارجية (مكالمات، مشاركة، واتساب)
+│   └── uiEvents.ts             # أحداث واجهة المستخدم (مثل تركيز البحث)
+├── data/
+│   ├── company.ts              # النماذج والبيانات الافتراضية للشركة
+│   ├── services.ts             # الخدمات الـ 11
+│   ├── projects.ts             # نماذج المشاريع
+│   └── requests.ts             # نماذج الطلبات و LocalRepository
+├── components/
+│   ├── icons.tsx               # الأيقونات (SVG)
+│   ├── kit.tsx                 # مكونات الواجهة (أزرار، حقول، هيدر)
+│   └── SideDrawer.tsx          # القائمة الجانبية الفاخرة
+└── features/
+├── onboarding/             # شاشات الترحيب
+├── home/                   # الشاشة الرئيسية (Hero, Sliders, Stats)
+├── services/               # الخدمات والتفاصيل
+├── request/                # الطلبات ومعالج الخطوات
+├── projects/               # المشاريع والتفاصيل
+└── more/                   # الإعدادات، اللغات، الأسئلة الشائعة
+
+```
 
 ## Installation & Development
 
 ```bash
+# 1. تثبيت الحزم
 npm install
-npm run dev      # development
-npm run build    # production build (dist/index.html)
-npm run preview  # preview built output
+
+# 2. تشغيل بيئة التطوير
+npm run dev
+
+# 3. بناء نسخة الويب (التي يعتمد عليها Capacitor)
+npm run build
+
+# 4. مزامنة ملفات الويب مع مشروع أندرويد
+npx cap sync android
+
+# 5. فتح المشروع في Android Studio (إن لزم)
+npx cap open android
 ```
 
-## Localization
+Build & Deployment
 
-- القواميس: `src/core/i18n.tsx` (`ar` و `en`) — كل نص في التطبيق يمر عبر `t()` أو `bi()`.
-- الاتجاه يتغير تلقائياً (`dir=rtl|ltr`) ويتم حفظ اللغة محلياً.
-- لإضافة مفتاح جديد: أضفه في `ar` ثم في `en` (TypeScript يفرض اكتمال الترجمة).
+يتم بناء التطبيق وتوقيعه تلقائياً عبر GitHub Actions.
 
-## Theme
+· يتم توليد ملفات APK و AAB عند كل push إلى فرع main.
+· ملفات التوقيع (Keystore) مؤمنة ومحفوظة في أسرار المستودع (GitHub Secrets).
+· يمكن تحميل نسخة الـ APK الجاهزة للتثبيت من قسم Artifacts في صفحة Actions.
 
-- التوكنز في `src/index.css` (`:root` / `[data-theme="light"]`) ثم تُعرض لـ Tailwind عبر `@theme inline`.
-- التوكنز تشمل: background, surface, elevated, panel, line, text, muted, primary, navy, accent, success, warning, error, radii, motion.
-- Light و Dark **ليسا انعكاساً** لبعضهما: الفاتح مبني على أسطح خضراء/كحلية باردة، والداكن على أسود شبه نقي.
+Dynamic Content System
 
-## Assets
+التطبيق مصمم ليكون قابلاً للتحديث دون إعادة بناء:
 
-| Asset | Location (registry) | Purpose |
-| --- | --- | --- |
-| Logo | `BrandMark` في `src/components/icons.tsx` | شعار مؤقت (Placeholder) — يُستبدل بالشعار الرسمي |
-| Hero | `appAssets.hero` | صورة الواجهة الرئيسية |
-| Services | `appAssets.services.*` | صورة لكل خدمة من الخدمات الـ11 |
-| Projects | `appAssets.projects.*` | أغلفة ومعارض المشاريع |
-| About / Contact | `appAssets.aboutVisual`, `appAssets.contactVisual` | صور الصفحات التعريفية |
-| 3D Icons | `MaterialIcon3D` (SVG) | أيقونات مادية ثلاثية الأبعاد خفيفة بلا ملفات ضخمة |
+1. بيانات الشركة: تُجلب من public/data/company.json (الأرقام، الهاتف، العنوان، الإحصائيات).
+2. المشاريع: تُجلب من public/data/projects.json.
+3. يتم تخزين هذه البيانات في localStorage كنسخة احتياطية لضمان العمل بدون إنترنت.
+4. للتحديث: قم بتعديل ملف JSON ورفعه، وسيتم تحديث المحتوى لجميع المستخدمين في غضون دقائق.
 
-**كيفية استبدال صورة الواجهة:**
-1. ضع الصورة في `public/images/hero/home_hero.jpg`.
-2. عدّل `appAssets.hero` في `src/data/company.ts` إلى `/images/hero/home_hero.jpg`.
-3. أعد البناء: `npm run build`.
+Localization
 
-نفس الطريقة لصور الخدمات (`/images/services/...`) والمشاريع (`/images/projects/...`).
-جميع الصور الحالية صور تجريبية (Stock) وليست صوراً رسمية للشركة.
+· القواميس في src/core/i18n.tsx (تدعم العربية والإنجليزية).
+· يتم تغيير اتجاه التطبيق (RTL/LTR) تلقائياً بناءً على اللغة المختارة.
+· يمكن إضافة لغات جديدة بسهولة (متاح حالياً عبر Bottom Sheet في شاشة "المزيد").
 
-## Local Data & Backend Integration
+Assets
 
-- العقد: `RequestRepository` في `src/data/requests.ts`.
-- التنفيذ الحالي: `LocalRequestRepository` (localStorage).
-- للربط بـ Backend مستقبلاً: أنشئ `RemoteRequestRepository implements RequestRepository`
-  وبدّل التصدير `export const requestRepository = new RemoteRequestRepository()` فقط.
-  لا حاجة لتعديل أي شاشة. نفس النمط ينطبق على الخدمات والمشاريع (`services.ts` / `projects.ts`).
+· Logo: public/images/logo.png (يُستخدم كأيقونة للتطبيق).
+· Hero & Services: مسارات محلية داخل public/images/ أو عبر روابط CDN للمشاريع الديناميكية.
 
-## Content Integrity
+Content Integrity
 
-- بيانات الشركة الرسمية (الاسم، الهاتف، الجوال، واتساب، البريد، العنوان، الموقع) في `src/data/company.ts` فقط.
-- عدد المشاريع (`projectsCount`) قيمة مركزية واحدة.
-- المشاريع المعروضة **نماذج تجريبية** معلّمة بوضوح (`DEMO · 0x`) وقابلة للاستبدال.
-- لا توجد أسعار، ولا مواعيد مؤكدة، ولا إشعارات، ولا حالات قادمة من الشركة.
-- نصوص الخصوصية والشروط **Placeholder** معلّمة صراحة.
+· بيانات الشركة (الأرقام، العناوين) مركزية في company.json.
+· المشاريع الحالية حقيقية (مستخرجة من موقع الشركة الرسمي).
+· بعض المشاريع التجريبية لا تزال تحمل وسم (Demo) للتمييز.
 
-## Tested / Not Tested
+Developer / Credits
 
-| البند | الحالة |
-| --- | --- |
-| TypeScript strict type-check | ✅ تم (ضمن البناء) |
-| Production build (`npm run build`) | ✅ تم بنجاح |
-| مراجعة بصرية (Light/Dark, RTL/LTR) | ✅ مراجعة تصميمية يدوية |
-| Jest / React Testing Library | ❌ لم تُنفذ (غير متاحة في هذه البيئة) |
-| Android Debug / Release build | ❌ غير متاح في هذه البيئة |
-
-## Developer / Credits
-
-**Developed by:** Abdullah AL-Hjry
-**الاسم بالعربية:** عبدالله الحجري
-**Contact:** +967779966185
+Developed by: Abdullah AL-Hjry
+الاسم بالعربية: عبدالله الحجري
+Contact: +967779966185
 
 Designed & Developed by Abdullah AL-Hjry.
+
+```
