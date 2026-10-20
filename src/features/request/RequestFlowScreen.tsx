@@ -178,6 +178,7 @@ const submit = async () => {
       location: { city: form.city, address: form.address },
       status: 'submitted', // الحالة الافتراضية (جديد)
       createdAt: Date.now(),
+      deviceId: localStorage.getItem('aljawad.deviceId'),
     });
     console.log('تم إرسال الطلب إلى لوحة التحكم بنجاح');
   } catch (error) {
