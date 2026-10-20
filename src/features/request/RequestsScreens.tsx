@@ -1,4 +1,5 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { collection, query, where, onSnapshot } from 'firebase/firestore';
 import { getService } from '../../data/services';
 import type { AppRequest, RequestKind, RequestStatus } from '../../data/requests';
 import { useI18n, type TranslationKey } from '../../core/i18n';
@@ -8,6 +9,7 @@ import { Glyph, MaterialIcon3D } from '../../components/icons';
 import { Button, Chip, DemoBadge, Reveal, ScreenHeader } from '../../components/kit';
 import { normalize } from '../../data/services';
 import { cn } from '../../utils/cn';
+import { db } from '../../lib/firebase'; // ✅ استيراد قاعدة البيانات
 
 const statusKey = (status: RequestStatus): TranslationKey => `status.${status}` as TranslationKey;
 const kindKey = (kind: RequestKind): TranslationKey => `requests.type.${kind}` as TranslationKey;
@@ -26,7 +28,7 @@ const STATUS_TONE: Record<RequestStatus, string> = {
 
 function StatusPill({ status }: { status: RequestStatus }) {
   const { t } = useI18n();
-  const tone = STATUS_TONE[status];
+  const tone = STATUS_TONE[status] || 'var(--primary)';
   return (
     <span
       className="inline-flex items-center gap-1.5 rounded-full border border-white/5 px-2.5 py-1 text-[0.66rem] font-semibold backdrop-blur-md"
@@ -190,6 +192,27 @@ export function RequestDetailScreen({ id }: { id: string }) {
   const { byId, remove } = useRequests();
   const { back, goTab } = useNav();
   const request = byId(id);
+  
+  // ✅ حالة جديدة لمزامنة الحالة مع Firebase
+  const [liveStatus, setLiveStatus] = useState<RequestStatus | null>(null);
+
+  useEffect(() => {
+    if (!request) return;
+    
+    // البحث عن الطلب في Firebase باستخدام الرقم المرجعي
+    const q = query(collection(db, 'requests'), where('reference', '==', request.reference));
+    
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      if (!snapshot.empty) {
+        const remoteData = snapshot.docs[0].data();
+        if (remoteData.status) {
+          setLiveStatus(remoteData.status as RequestStatus);
+        }
+      }
+    });
+
+    return () => unsubscribe();
+  }, [request]);
 
   if (!request) {
     return (
@@ -201,7 +224,10 @@ export function RequestDetailScreen({ id }: { id: string }) {
   }
 
   const service = getService(request.serviceId);
-  const reached = TIMELINE_ORDER.indexOf(request.status);
+  
+  // نستخدم الحالة الحية إذا وُجدت، وإلا الحالة المحلية
+  const currentStatus = liveStatus || request.status;
+  const reached = TIMELINE_ORDER.indexOf(currentStatus);
 
   return (
     <div className="pb-32">
@@ -215,7 +241,8 @@ export function RequestDetailScreen({ id }: { id: string }) {
               {service ? bi(service.title) : '—'}
             </h2>
             <div className="mt-2">
-              <StatusPill status={request.status} />
+              {/* ✅ عرض الحالة الحية */}
+              <StatusPill status={currentStatus} />
             </div>
           </div>
         </div>
