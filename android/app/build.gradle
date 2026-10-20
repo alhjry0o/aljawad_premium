@@ -65,12 +65,11 @@ try {
     logger.info("google-services.json not found, google-services plugin not applied. Push Notifications won't work")
 }
 
-// الكود الحديث لتغيير اسم ملف APK في الإصدارات الجديدة من Android Gradle Plugin
 androidComponents {
     onVariants(selector().all()) { variant ->
-        variant.outputs.each { output ->
-            def versionName = variant.versionName.get()
-            output.outputFileName.set("Aljawad-v${versionName}.apk")
+        variant.outputs.forEach { output ->
+            def apkName = "Aljawad-v${output.versionName.get()}.apk"
+            (output as com.android.build.api.variant.impl.VariantOutputImpl).outputFileName.set(apkName)
         }
     }
 }
