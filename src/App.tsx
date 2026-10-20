@@ -32,6 +32,8 @@ import { cn } from './utils/cn';
 import { OnboardingScreen, ONBOARDING_KEY } from './features/onboarding/OnboardingScreen';
 import { DrawerProvider, useDrawer } from './core/drawer';
 import { SideDrawer } from './components/SideDrawer';
+import { useEffect } from 'react';
+import { registerPushNotifications } from './core/notifications';
 
 /* ----------------------------------------------------- Bottom navigation */
 
@@ -399,13 +401,28 @@ function Root() {
   );
 }
 export default function App() {
+  
+  useEffect(() => {
+  
+    let deviceId = localStorage.getItem('aljawad.deviceId');
+    if (!deviceId) {
+    
+      deviceId = `device-${Math.random().toString(36).substring(2, 15)}`;
+      localStorage.setItem('aljawad.deviceId', deviceId);
+    }
+    
+    registerPushNotifications(deviceId);
+  }, []); 
+
   return (
     <ThemeProvider>
       <I18nProvider>
         <CompanyProvider>
           <RequestsProvider>
             <ProjectsProvider>
-              <Root />
+              <DrawerProvider>
+                <Root />
+              </DrawerProvider>
             </ProjectsProvider>
           </RequestsProvider>
         </CompanyProvider>
