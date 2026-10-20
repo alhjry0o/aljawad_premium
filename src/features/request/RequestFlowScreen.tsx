@@ -7,6 +7,8 @@ import { useRequests } from '../../core/store';
 import { Glyph, MaterialIcon3D } from '../../components/icons';
 import { Button, OptionGrid, ScreenHeader, TextArea, TextField, Label } from '../../components/kit';
 import { cn } from '../../utils/cn';
+import { collection, addDoc } from 'firebase/firestore';
+import { db } from '../../lib/firebase';
 
 type StepId = 'service' | 'property' | 'specs' | 'location' | 'schedule' | 'details' | 'photos' | 'contact' | 'review';
 
@@ -147,23 +149,45 @@ export function RequestFlowScreen({ kind, serviceId }: { kind: RequestKind; serv
     else setIndex(index - 1);
   };
 
-  const submit = async () => {
-    if (!form.serviceId) return;
-    setSubmitting(true);
-    const created = await create({
-      kind,
+const submit = async () => {
+  if (!form.serviceId) return;
+  setSubmitting(true);
+  
+  // 1. الحفظ المحلي (لدعم العمل بدون إنترنت)
+  const created = await create({
+    kind,
+    serviceId: form.serviceId,
+    propertyType: form.propertyType,
+    location: { city: form.city, district: form.district, address: form.address, extra: form.extra },
+    schedule: form.date ? { date: form.date, time: form.time } : undefined,
+    notes: form.notes,
+    photos: form.photos,
+    contact: { name: form.name.trim(), phone: form.phone.trim() },
+    specs: Object.keys(form.specs).length ? form.specs : undefined,
+  });
+  
+  // 2. الإرسال إلى Firebase (لتظهر في لوحة التحكم)
+  try {
+    await addDoc(collection(db, 'requests'), {
+      reference: created.reference, // نفس الرقم المرجعي
       serviceId: form.serviceId,
-      propertyType: form.propertyType,
-      location: { city: form.city, district: form.district, address: form.address, extra: form.extra },
-      schedule: form.date ? { date: form.date, time: form.time } : undefined,
-      notes: form.notes,
-      photos: form.photos,
+      serviceName: selected?.title.ar || 'خدمة', // اسم الخدمة
       contact: { name: form.name.trim(), phone: form.phone.trim() },
-      specs: Object.keys(form.specs).length ? form.specs : undefined,
+      notes: form.notes,
+      propertyType: form.propertyType,
+      location: { city: form.city, address: form.address },
+      status: 'submitted', // الحالة الافتراضية (جديد)
+      createdAt: Date.now(),
     });
-    setSubmitting(false);
-    push({ name: 'success', id: created.id });
-  };
+    console.log('تم إرسال الطلب إلى لوحة التحكم بنجاح');
+  } catch (error) {
+    console.error('خطأ في الاتصال بـ Firebase:', error);
+    // لا نوقف العملية، الطلب محفوظ محلياً على الأقل
+  }
+
+  setSubmitting(false);
+  push({ name: 'success', id: created.id });
+};
 
   const onPhotos = async (e: ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files ?? []).slice(0, 4);
