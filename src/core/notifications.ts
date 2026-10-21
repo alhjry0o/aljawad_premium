@@ -1,27 +1,34 @@
 import { PushNotifications } from '@capacitor/push-notifications';
-import { FCM } from '@capacitor-community/fcm';
 import { doc, setDoc } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 import { Capacitor } from '@capacitor/core';
 
-export async function registerPushNotifications(userId: string) {
+export async function registerPushNotifications(deviceId: string) {
   if (!Capacitor.isNativePlatform()) return;
 
+  // 1. طلب إذن الإشعارات
   let permStatus = await PushNotifications.checkPermissions();
   if (permStatus.receive === 'prompt') {
     permStatus = await PushNotifications.requestPermissions();
   }
-  if (permStatus.receive !== 'granted') return;
+  if (permStatus.receive !== 'granted') {
+    alert('لم يتم منح إذن الإشعارات. يرجى تفعيله من إعدادات الهاتف.');
+    return;
+  }
 
+  // 2. تسجيل الجهاز في Firebase
   await PushNotifications.register();
 
+  // 3. الاستماع لحدث التسجيل واستخراج الرمز
   PushNotifications.addListener('registration', async (token) => {
+    
+    // ✅ هذا السطر سيقوم بطباعة الرمز كرسالة تنبيه على شاشة الهاتف
+    alert('🔑 رمز الإشعارات الخاص بهاتفك هو:\n\n' + token.value);
+
+    // حفظ الرمز في قاعدة البيانات (Firestore)
     try {
-      // الحصول على FCM Token (لأندرويد)
-      const fcmToken = await FCM.getToken();
-      // حفظ التوكن في Firestore تحت مستخدم معين (أو جهاز)
-      await setDoc(doc(db, 'users', userId), {
-        fcmToken: fcmToken.token,
+      await setDoc(doc(db, 'users', deviceId), {
+        fcmToken: token.value,
         platform: Capacitor.getPlatform(),
         updatedAt: Date.now(),
       }, { merge: true });
@@ -30,13 +37,8 @@ export async function registerPushNotifications(userId: string) {
     }
   });
 
-  PushNotifications.addListener('pushNotificationReceived', (notification) => {
-    console.log('Notification received:', notification);
-    // يمكنك هنا تحديث الواجهة أو إظهار Toast
-  });
-
-  PushNotifications.addListener('pushNotificationActionPerformed', (action) => {
-    console.log('Notification action:', action);
-    // يمكنك هنا توجيه المستخدم لصفحة معينة
+  // في حال حدوث خطأ
+  PushNotifications.addListener('registrationError', (error) => {
+    alert('حدث خطأ أثناء تسجيل الإشعارات: ' + JSON.stringify(error));
   });
 }
