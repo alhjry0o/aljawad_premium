@@ -21,9 +21,6 @@ export async function registerPushNotifications(deviceId: string) {
 
   // 3. الاستماع لحدث التسجيل واستخراج الرمز
   PushNotifications.addListener('registration', async (token) => {
-    
-    // ✅ هذا السطر سيقوم بطباعة الرمز كرسالة تنبيه على شاشة الهاتف
-    alert('🔑 رمز الإشعارات الخاص بهاتفك هو:\n\n' + token.value);
 
     // حفظ الرمز في قاعدة البيانات (Firestore)
     try {
