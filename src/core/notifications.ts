@@ -39,3 +39,4 @@ export async function registerPushNotifications(deviceId: string) {
   PushNotifications.addListener('registrationError', (error) => {
     alert('خطأ في تسجيل الإشعارات: ' + JSON.stringify(error));
   });
+}
