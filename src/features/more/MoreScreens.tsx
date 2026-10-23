@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { appAssets } from '../../data/company';
 import { useCompany } from '../../core/companyStore';
@@ -152,6 +152,87 @@ function LanguageRow() {
   );
 }
 
+/* ------------------------------------------------------------ Notifications Sheet */
+
+function NotificationsSheet({ 
+  open, 
+  onClose, 
+  enabled, 
+  setEnabled 
+}: { 
+  open: boolean; 
+  onClose: () => void; 
+  enabled: boolean; 
+  setEnabled: (val: boolean) => void; 
+}) {
+  const { bi } = useI18n();
+
+  if (!open) return null;
+
+  return createPortal(
+    <div className="fixed inset-0 z-[60] flex items-end justify-center" onClick={onClose}>
+      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
+      <div
+        className="relative mx-auto w-full max-w-[520px] overflow-hidden rounded-t-[28px] border-t border-white/10 bg-[color:var(--elevated)]/95 backdrop-blur-2xl pb-[max(env(safe-area-inset-bottom),1rem)] shadow-[0_-20px_60px_-20px_rgba(0,0,0,0.95)]"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="mx-auto mb-2 mt-3 h-1 w-10 rounded-full bg-white/15" />
+        <div className="px-5 pb-3 pt-2">
+          <h3 className="text-[0.95rem] font-bold tracking-tight text-[color:var(--primary)]">
+            {bi({ ar: 'تعديل الإشعارات', en: 'Edit Notifications' })}
+          </h3>
+        </div>
+
+        <ul>
+          <li>
+            <button
+              type="button"
+              onClick={() => { setEnabled(true); window.setTimeout(onClose, 120); }}
+              className="flex w-full items-center gap-4 px-5 py-4 text-start transition-colors active:bg-white/5"
+            >
+              <div className="min-w-0 flex-1">
+                <div className={`text-[1rem] font-semibold ${enabled ? 'text-[color:var(--text)]' : 'text-white/75'}`}>
+                  {bi({ ar: 'تفعيل الإشعارات', en: 'Enable Notifications' })}
+                </div>
+                <div className="mt-0.5 text-[0.75rem] text-white/40">
+                  {bi({ ar: 'استلام تحديثات الطلبات والأخبار', en: 'Receive order updates and news' })}
+                </div>
+              </div>
+              <span className={`grid h-5 w-5 shrink-0 place-items-center rounded-full border-2 transition-all ${enabled ? 'border-[color:var(--accent)] bg-[color:var(--accent)]' : 'border-white/25'}`}>
+                {enabled && <span className="h-2 w-2 rounded-full bg-white" />}
+              </span>
+            </button>
+            <div className="mx-5 h-px bg-white/8" />
+          </li>
+
+          <li>
+            <button
+              type="button"
+              onClick={() => { setEnabled(false); window.setTimeout(onClose, 120); }}
+              className="flex w-full items-center gap-4 px-5 py-4 text-start transition-colors active:bg-white/5"
+            >
+              <div className="min-w-0 flex-1">
+                <div className={`text-[1rem] font-semibold ${!enabled ? 'text-[color:var(--text)]' : 'text-white/75'}`}>
+                  {bi({ ar: 'كتم الإشعارات', en: 'Mute Notifications' })}
+                </div>
+                <div className="mt-0.5 text-[0.75rem] text-white/40">
+                  {bi({ ar: 'إيقاف استلام جميع الإشعارات مؤقتاً', en: 'Temporarily stop receiving all notifications' })}
+                </div>
+              </div>
+              <span className={`grid h-5 w-5 shrink-0 place-items-center rounded-full border-2 transition-all ${!enabled ? 'border-[color:var(--accent)] bg-[color:var(--accent)]' : 'border-white/25'}`}>
+                {!enabled && <span className="h-2 w-2 rounded-full bg-white" />}
+              </span>
+            </button>
+          </li>
+        </ul>
+      </div>
+    </div>,
+    document.body,
+  );
+}
+
+/* ------------------------------------------------------------ Share & Rate */
+
 function ShareAppRow() {
   const { t, bi } = useI18n();
   const { config: appConfig } = useCompany();
@@ -247,6 +328,8 @@ function RateAppRow() {
     </button>
   );
 }
+
+/* ------------------------------------------------------------ More Screen */
 
 export function MoreScreen() {
   const { t, bi } = useI18n();
@@ -519,11 +602,23 @@ export function ContactScreen() {
 /* ------------------------------------------------------------ Settings */
 
 export function SettingsScreen() {
-  const { t } = useI18n();
+  const { t, bi } = useI18n();
   const { mode, setMode, reducedMotion, setReducedMotion } = useTheme();
   const { clear } = useRequests();
   const { config: appConfig } = useCompany();
   const [toast, setToast] = useState<string | null>(null);
+
+  // ✅ حالات الإشعارات
+  const [notificationsEnabled, setNotificationsEnabled] = useState(() => {
+    const stored = localStorage.getItem('aljawad.notifications');
+    return stored !== 'false'; // افتراضياً مفعلة
+  });
+  const [notifSheetOpen, setNotifSheetOpen] = useState(false);
+
+  // حفظ حالة الإشعارات في ذاكرة الهاتف
+  useEffect(() => {
+    localStorage.setItem('aljawad.notifications', String(notificationsEnabled));
+  }, [notificationsEnabled]);
 
   const modes: { value: ThemeMode; label: string; icon: GlyphName }[] = [
     { value: 'system', label: t('settings.theme.system'), icon: 'spark' },
@@ -573,12 +668,30 @@ export function SettingsScreen() {
           />
         </label>
         <div className="mx-4 h-px bg-white/8" />
-        <div className="px-4 py-4">
-          <span className="block text-[0.88rem] font-semibold">{t('settings.notifications')}</span>
-          <span className="mt-0.5 block text-[0.72rem] text-[color:var(--muted)]">
-            {t('settings.notificationsHint')}
+        
+        {/* ✅ زر تعديل الإشعارات الجديد */}
+        <button
+          type="button"
+          onClick={() => setNotifSheetOpen(true)}
+          className="group flex w-full items-center justify-between gap-4 px-4 py-4 text-start transition-colors hover:bg-white/[0.03]"
+        >
+          <span className="flex items-center gap-3.5">
+            <span className="grid h-9 w-9 shrink-0 place-items-center rounded-[10px] border border-[color:var(--primary)]/25 bg-[color:var(--primary)]/8 text-[color:var(--primary)]">
+              <Glyph name="info" size={17} strokeWidth={1.9} />
+            </span>
+            <span>
+              <span className="block text-[0.88rem] font-semibold">
+                {bi({ ar: 'تعديل الإشعارات', en: 'Edit Notifications' })}
+              </span>
+              <span className="mt-0.5 block text-[0.72rem] text-[color:var(--muted)]">
+                {notificationsEnabled
+                  ? bi({ ar: 'الإشعارات مفعلة', en: 'Notifications enabled' })
+                  : bi({ ar: 'الإشعارات غير مفعلة', en: 'Notifications disabled' })}
+              </span>
+            </span>
           </span>
-        </div>
+          <Glyph name="arrow" size={14} className="shrink-0 text-white/25 rtl:-scale-x-100" />
+        </button>
       </Section>
 
       <Section title={t('settings.data')}>
@@ -604,6 +717,14 @@ export function SettingsScreen() {
           <span className="font-mono text-[0.78rem] text-[color:var(--muted)]">{appConfig.version}</span>
         </div>
       </Section>
+
+      {/* ✅ استدعاء نافذة الإشعارات */}
+      <NotificationsSheet
+        open={notifSheetOpen}
+        onClose={() => setNotifSheetOpen(false)}
+        enabled={notificationsEnabled}
+        setEnabled={setNotificationsEnabled}
+      />
 
       <Toast message={toast} />
     </div>
