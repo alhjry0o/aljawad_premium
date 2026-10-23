@@ -1,4 +1,4 @@
-import { PushNotifications } from '@capacitor/push-notifications';
+import { PushNotifications, Channel } from '@capacitor/push-notifications';
 import { doc, setDoc } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 import { Capacitor } from '@capacitor/core';
@@ -11,6 +11,23 @@ export async function registerPushNotifications(deviceId: string) {
     permStatus = await PushNotifications.requestPermissions();
   }
   if (permStatus.receive !== 'granted') return;
+
+  // ✅ إنشاء قناة إشعارات مخصصة بأهمية عالية (لظهور النافذة المنبثقة والاهتزاز)
+  const channel: Channel = {
+    id: 'aljawad_high_importance',
+    name: 'إشعارات الجواد',
+    description: 'إشعارات التحديثات والطلبات',
+    importance: 5, // 5 = IMPORTANCE_HIGH (نافذة منبثقة وصوت)
+    visibility: 1, // 1 = VISIBILITY_PUBLIC (يظهر على شاشة القفل)
+    vibration: true,
+    lights: true,
+  };
+
+  try {
+    await PushNotifications.createChannel(channel);
+  } catch (e) {
+    console.error('Error creating notification channel', e);
+  }
 
   await PushNotifications.register();
 
