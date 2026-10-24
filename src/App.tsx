@@ -437,7 +437,7 @@ export default function App() {
       localStorage.setItem('aljawad.deviceId', deviceId);
     }
     
-    registerPushNotifications(deviceId);
+    setupPushNotifications(deviceId);
   }, []); 
 
   return (
