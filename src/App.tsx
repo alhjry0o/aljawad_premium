@@ -427,19 +427,6 @@ function Root() {
 }
     
 export default function App() {
-  
-  useEffect(() => {
-  
-    let deviceId = localStorage.getItem('aljawad.deviceId');
-    if (!deviceId) {
-    
-      deviceId = `device-${Math.random().toString(36).substring(2, 15)}`;
-      localStorage.setItem('aljawad.deviceId', deviceId);
-    }
-    
-    setupPushNotifications(deviceId);
-  }, []); 
-
   return (
     <ThemeProvider>
       <I18nProvider>
