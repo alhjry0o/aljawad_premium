@@ -343,14 +343,6 @@ export function MoreScreen() {
   return (
     <div className="pb-32">
       <ScreenHeader title={t('more.title')} />
-      <Section title={t('more.app')}>
-        <HubRow 
-          icon="bell" 
-          label={bi({ ar: 'الإشعارات', en: 'Notifications' })} 
-          meta={unreadCount > 0 ? String(unreadCount) : undefined} // ✅ يظهر عدد الإشعارات
-          onClick={go({ name: 'notifications' })} 
-        />
-        <HubRow icon="settings" label={t('more.settings')} onClick={go({ name: 'settings' })} />
 
       {/* ============ Header with glow ============ */}
       <Reveal className="relative overflow-hidden px-5 py-10">
@@ -394,6 +386,12 @@ export function MoreScreen() {
       </Section>
 
       <Section title={t('more.app')}>
+        <HubRow 
+          icon="bell" 
+          label={bi({ ar: 'الإشعارات', en: 'Notifications' })} 
+          meta={unreadCount > 0 ? String(unreadCount) : undefined} // ✅ يظهر عدد الإشعارات
+          onClick={go({ name: 'notifications' })} 
+        />
         <HubRow icon="settings" label={t('more.settings')} onClick={go({ name: 'settings' })} />
         <LanguageRow />
         <HubRow
