@@ -34,6 +34,9 @@ import { DrawerProvider, useDrawer } from './core/drawer';
 import { SideDrawer } from './components/SideDrawer';
 import { useEffect } from 'react';
 import { registerPushNotifications } from './core/notifications';
+import { NotificationProvider, useNotificationsStore } from './core/notificationsStore';
+import { setupPushNotifications, clearSystemNotifications } from './core/notifications';
+import { NotificationsScreen } from './features/more/NotificationsScreen';
 
 /* ----------------------------------------------------- Bottom navigation */
 
@@ -52,6 +55,7 @@ const TABS: { key: TabKey; icon: GlyphName; labelKey: Parameters<ReturnType<type
 function BottomNav() {
   const { tab, goTab, route } = useNav();
   const { t } = useI18n();
+  const { unreadCount } = useNotificationsStore(); // ✅ جلب عدد الإشعارات غير المقروءة
 
   if (!isMainTabRoute(route.name)) return null;
 
@@ -66,7 +70,7 @@ function BottomNav() {
     >
       <div className="pointer-events-auto relative mx-auto max-w-[92vw]">
         
-        {/* 1. هالة النيون الخلفية العميقة - تم تكثيفها لإعطاء فخامة للثيم */}
+        {/* 1. هالة النيون الخلفية العميقة */}
         <div
           aria-hidden
           className="pointer-events-none absolute -inset-4 rounded-full opacity-50 blur-3xl transition-all duration-500"
@@ -75,8 +79,7 @@ function BottomNav() {
           }}
         />
 
-        {/* 2. الشريط الزجاجي الاحترافي (Frosted Glass Container) */}
-        {/* تم تحسين الشفافية وإضافة ظلال Neumorphic لإعطاء عمق ملموس للشريط */}
+        {/* 2. الشريط الزجاجي الاحترافي */}
         <div className="relative overflow-hidden rounded-full border border-white/15 bg-[color:var(--elevated)]/45 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.85),inset_0_1px_2px_rgba(255,255,255,0.15),inset_0_-1px_1px_rgba(0,0,0,0.4)] backdrop-blur-3xl">
           
           {/* خط لمعان زجاجي علوي حاد */}
@@ -85,7 +88,7 @@ function BottomNav() {
             className="pointer-events-none absolute inset-x-8 top-0 h-[1.5px] bg-gradient-to-r from-transparent via-white/30 to-transparent"
           />
 
-          {/* توهج النيون الأرضي المتحرك أسفل الأيقونة النشطة */}
+          {/* توهج النيون الأرضي المتحرك */}
           <span
             aria-hidden
             className="pointer-events-none absolute bottom-0 h-8 w-16 rounded-full opacity-80 blur-xl transition-[inset-inline-start] duration-500 ease-[cubic-bezier(.16,1,.3,1)]"
@@ -106,17 +109,16 @@ function BottomNav() {
                     aria-current={active ? 'page' : undefined}
                     className={cn(
                       'group relative flex flex-col items-center justify-center gap-1 rounded-full px-4 py-2.5 transition-all duration-300 active:scale-[0.90]',
-                      // 3. تأثير الزر النشط المجسم (3D Glass Active Button)
                       active
                         ? 'bg-gradient-to-b from-white/10 to-transparent text-[color:var(--primary)] shadow-[0_8px_16px_-4px_rgba(0,0,0,0.5),inset_0_1px_1px_rgba(255,255,255,0.2),inset_0_0_0_1px_rgba(255,255,255,0.05)] font-bold'
                         : 'text-[color:var(--faint)] hover:text-white/80',
                     )}
                   >
-                    {/* 4. محاكي الأيقونة ثلاثية الأبعاد (3D Icon Simulator Container) */}
-                    {/* تم دمج ظلال ناعمة ومتعددة الطبقات للأيقونة النشطة لتبدو بارزة ومجسمة وتطفو حقيقة داخل الزجاج */}
+                    {/* 4. محاكي الأيقونة ثلاثية الأبعاد */}
+                    {/* ✅ أضفنا 'relative' هنا لكي تتمركز النقطة الحمراء بشكل صحيح */}
                     <div 
                       className={cn(
-                        "transition-all duration-300 transform",
+                        "relative transition-all duration-300 transform",
                         active ? "scale-110 -translate-y-0.5 drop-shadow-[0_4px_6px_rgba(0,0,0,0.6)]" : "drop-shadow-[0_1px_2px_rgba(0,0,0,0.3)]"
                       )}
                     >
@@ -124,12 +126,19 @@ function BottomNav() {
                         name={item.icon} 
                         size={active ? 20 : 18} 
                         strokeWidth={active ? 2.2 : 1.5} 
-                        // تأثير نيون خفيف داخل خطوط الأيقونة النشطة نفسها
                         style={active ? { filter: 'drop-shadow(0 0 5px var(--primary))' } : undefined}
                       />
+
+                      {/* ✅ النقطة الحمراء للإشعارات غير المقروءة (تظهر فقط على زر المزيد) */}
+                      {item.key === 'more' && unreadCount > 0 && (
+                        <span className="absolute -top-1.5 -right-1.5 flex h-2.5 w-2.5">
+                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                          <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500 border border-[#0d1a17]"></span>
+                        </span>
+                      )}
                     </div>
 
-                    {/* النص التوضيحي الصغير أسفل الأيقونة */}
+                    {/* النص التوضيحي */}
                     <span
                       className={cn(
                         'text-[0.6rem] tracking-wide transition-all duration-300 font-medium',
@@ -139,7 +148,7 @@ function BottomNav() {
                       {t(item.labelKey)}
                     </span>
 
-                    {/* مؤشر نقطي مضيء متوهج أسفل النص للأيقونة النشطة */}
+                    {/* مؤشر نقطي مضيء متوهج أسفل النص */}
                     {active && (
                       <span className="absolute bottom-1 h-1 w-1 rounded-full bg-[color:var(--primary)] shadow-[0_0_8px_var(--primary)] animate-pulse" />
                     )}
@@ -335,6 +344,7 @@ function Outlet() {
       case 'terms': return <LegalScreen kind="terms" />;
       case 'faq': return <FaqScreen />;
       case 'developer': return <DeveloperScreen />;
+      case 'notifications': return <NotificationsScreen />;
       default: return <HomeScreen />;
     }
   })();
@@ -356,8 +366,22 @@ function Outlet() {
 function Shell() {
   const backToast = useAndroidBackButton();
   useKeyboardWatcher();
-  const { isOpen, closeDrawer } = useDrawer(); // ✅ جلب حالة القائمة
+  const { isOpen, closeDrawer } = useDrawer();
+  const { addNotification } = useNotificationsStore();
+  
+  useEffect(() => {
+    clearSystemNotifications();
+    let deviceId = localStorage.getItem('aljawad.deviceId');
+    if (!deviceId) {
+      deviceId = `device-${Math.random().toString(36).substring(2, 15)}`;
+      localStorage.setItem('aljawad.deviceId', deviceId);
+    }
 
+    setupPushNotifications(deviceId, (notif) => {
+      addNotification(notif);
+    });
+  }, [addNotification]);
+  
   return (
     <div className="mx-auto min-h-[100svh] w-full max-w-[520px] bg-[color:var(--bg)] text-[color:var(--text)] shadow-[0_0_120px_rgba(0,0,0,0.45)]">
       <div
@@ -393,13 +417,14 @@ function Root() {
   if (showOnboarding) return <OnboardingScreen onComplete={complete} />;
 
   return (
-    <DrawerProvider> {/* ✅ أضف هذا */}
-      <NavigationProvider>
-        <Shell />
-      </NavigationProvider>
+    <DrawerProvider>
+      <NotificationProvider> {/* ✅ أضف هذا */}
+        <NavigationProvider>
+          <Shell />
+        </NavigationProvider>
+      </NotificationProvider>
     </DrawerProvider>
-  );
-}
+    
 export default function App() {
   
   useEffect(() => {
