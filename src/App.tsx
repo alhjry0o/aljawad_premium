@@ -418,12 +418,14 @@ function Root() {
 
   return (
     <DrawerProvider>
-      <NotificationProvider> {/* ✅ أضف هذا */}
+      <NotificationProvider>
         <NavigationProvider>
           <Shell />
         </NavigationProvider>
       </NotificationProvider>
     </DrawerProvider>
+  );
+}
     
 export default function App() {
   
