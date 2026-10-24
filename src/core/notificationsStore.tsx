@@ -24,9 +24,13 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
   const [notifications, setNotifications] = useState<AppNotification[]>(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
-      return saved ? JSON.parse(saved) : [];
-    } catch {
-      return [];
+      if (!saved) return [];
+      const parsed = JSON.parse(saved);
+      // ✅ التأكد من أن البيانات مصفوفة وليست شيئاً آخر
+      return Array.isArray(parsed) ? parsed : [];
+    } catch (error) {
+      console.warn('Failed to parse notifications from localStorage', error);
+      return []; // في حال فشل القراءة، نبدأ بمصفوفة فارغة
     }
   });
 
