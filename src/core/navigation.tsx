@@ -19,6 +19,7 @@ export type Route =
   | { name: 'privacy' }
   | { name: 'terms' }
   | { name: 'faq' }
+  | { name: 'notifications' }
   | { name: 'developer' }
   | { name: 'flow'; kind: RequestKind; serviceId?: ServiceIconKey }
   | { name: 'success'; id: string };
@@ -38,6 +39,7 @@ const TAB_OF: Record<Route['name'], TabKey> = {
   privacy: 'more',
   terms: 'more',
   faq: 'more',
+  notifications: 'more',
   developer: 'more',
   flow: 'requests',
   success: 'requests',
