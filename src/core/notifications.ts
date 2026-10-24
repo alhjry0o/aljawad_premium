@@ -62,6 +62,10 @@ export async function setupPushNotifications(
 // ✅ مسح جميع الإشعارات من شريط إشعارات الهاتف عند فتح التطبيق
 export async function clearSystemNotifications() {
   if (Capacitor.isNativePlatform()) {
-    await PushNotifications.removeAllDeliveredNotifications();
+    try {
+      await PushNotifications.removeAllDeliveredNotifications();
+    } catch (e) {
+      console.error('Error clearing notifications:', e);
+    }
   }
 }
