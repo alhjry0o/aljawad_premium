@@ -369,16 +369,43 @@ function Shell() {
   const { addNotification } = useNotificationsStore();
   
   useEffect(() => {
-    clearSystemNotifications();
-    let deviceId = localStorage.getItem('aljawad.deviceId');
-    if (!deviceId) {
-      deviceId = `device-${Math.random().toString(36).substring(2, 15)}`;
-      localStorage.setItem('aljawad.deviceId', deviceId);
+    // ✅ دالة آمنة لمسح الإشعارات
+    const safeClearNotifications = async () => {
+      try {
+        await clearSystemNotifications();
+      } catch (e) {
+        console.error('Error clearing notifications:', e);
+      }
+    };
+
+    // ✅ مسح الإشعارات عند العودة للتطبيق (بعد أن يستقر)
+    const appStateListener = CapacitorApp.addListener('appStateChange', ({ isActive }) => {
+      if (isActive) {
+        safeClearNotifications();
+      }
+    });
+
+    // ✅ تشغيل الإشعارات بحماية
+    try {
+      let deviceId = localStorage.getItem('aljawad.deviceId');
+      if (!deviceId) {
+        deviceId = `device-${Math.random().toString(36).substring(2, 15)}`;
+        localStorage.setItem('aljawad.deviceId', deviceId);
+      }
+
+      setupPushNotifications(deviceId, (notif) => {
+        addNotification(notif);
+      });
+    } catch (error) {
+      console.error('Failed to setup push notifications:', error);
     }
 
-    setupPushNotifications(deviceId, (notif) => {
-      addNotification(notif);
-    });
+    // ✅ مسح الإشعارات فوراً بعد التحميل (لمرة واحدة)
+    safeClearNotifications();
+
+    return () => {
+      appStateListener.then(listener => listener.remove());
+    };
   }, [addNotification]);
   
   return (
