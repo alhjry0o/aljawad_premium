@@ -1,4 +1,6 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
+import { collection, onSnapshot, query, orderBy } from 'firebase/firestore';
+import { db } from '../lib/firebase';
 
 export interface AppNotification {
   id: string;
@@ -6,69 +8,68 @@ export interface AppNotification {
   body: string;
   date: number;
   read: boolean;
-  data?: any;
 }
 
 interface NotificationContextType {
   notifications: AppNotification[];
   unreadCount: number;
-  addNotification: (notif: Omit<AppNotification, 'id' | 'date' | 'read'>) => void;
   markAllAsRead: () => void;
   deleteNotification: (id: string) => void;
 }
 
 const NotificationContext = createContext<NotificationContextType | null>(null);
-const STORAGE_KEY = 'aljawad.notifications';
+const STORAGE_KEY = 'aljawad.notifications_read';
 
 export function NotificationProvider({ children }: { children: ReactNode }) {
-  const [notifications, setNotifications] = useState<AppNotification[]>(() => {
+  const [remoteNotifications, setRemoteNotifications] = useState<AppNotification[]>([]);
+  const [readIds, setReadIds] = useState<string[]>(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
-      if (!saved) return [];
-      const parsed = JSON.parse(saved);
-      // ✅ التأكد من أن البيانات مصفوفة وليست شيئاً آخر
-      return Array.isArray(parsed) ? parsed : [];
-    } catch (error) {
-      console.warn('Failed to parse notifications from localStorage', error);
-      return []; // في حال فشل القراءة، نبدأ بمصفوفة فارغة
-    }
+      return saved ? JSON.parse(saved) : [];
+    } catch { return []; }
   });
 
+  // ✅ الاستماع المباشر للإشعارات من Firebase
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(notifications));
-  }, [notifications]);
-
-  const addNotification = (notif: Omit<AppNotification, 'id' | 'date' | 'read'>) => {
-    setNotifications((prev) => {
-      // منع التكرار بناءً على العنوان والنص والتاريخ (إذا كان خلال 5 ثواني)
-      const isDuplicate = prev.some(
-        (n) => n.title === notif.title && n.body === notif.body && Date.now() - n.date < 5000
-      );
-      if (isDuplicate) return prev;
-
-      const newNotif: AppNotification = {
-        ...notif,
-        id: Math.random().toString(36).substr(2, 9),
-        date: Date.now(),
-        read: false,
-      };
-      return [newNotif, ...prev];
+    const q = query(collection(db, 'notifications'), orderBy('createdAt', 'desc'));
+    const unsub = onSnapshot(q, (snap) => {
+      const data = snap.docs.map(doc => ({
+        id: doc.id,
+        title: doc.data().title,
+        body: doc.data().body,
+        date: doc.data().createdAt,
+        read: false, // سيتم تحديدها بناءً على readIds
+      }));
+      setRemoteNotifications(data);
     });
-  };
+    return () => unsub();
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(readIds));
+  }, [readIds]);
+
+  // دمج الإشعارات البعيدة مع حالة القراءة المحلية
+  const notifications = remoteNotifications.map(n => ({
+    ...n,
+    read: readIds.includes(n.id)
+  }));
 
   const markAllAsRead = () => {
-    setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
+    const allIds = notifications.map(n => n.id);
+    setReadIds(prev => Array.from(new Set([...prev, ...allIds])));
   };
 
   const deleteNotification = (id: string) => {
-    setNotifications((prev) => prev.filter((n) => n.id !== id));
+    // الحذف من الواجهة فقط (لأن الإشعار في قاعدة البيانات مشترك)
+    setReadIds(prev => [...prev, id]);
   };
 
   const unreadCount = notifications.filter((n) => !n.read).length;
 
   return (
     <NotificationContext.Provider
-      value={{ notifications, unreadCount, addNotification, markAllAsRead, deleteNotification }}
+      value={{ notifications, unreadCount, markAllAsRead, deleteNotification }}
     >
       {children}
     </NotificationContext.Provider>
