@@ -33,7 +33,7 @@ function HubRow({
 }: {
   icon: GlyphName;
   label: string;
-  meta?: string;
+  meta?: React.ReactNode;
   onClick: () => void;
 }) {
   return (
@@ -389,7 +389,14 @@ export function MoreScreen() {
         <HubRow 
           icon="bell" 
           label={bi({ ar: 'الإشعارات', en: 'Notifications' })} 
-          meta={unreadCount > 0 ? String(unreadCount) : undefined} // ✅ يظهر عدد الإشعارات
+          meta={
+            unreadCount > 0 ? (
+              <span className="flex items-center gap-1.5">
+                <span className="text-[0.72rem] font-bold text-red-500">{unreadCount}</span>
+                <span className="h-2 w-2 rounded-full bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.8)]" />
+              </span>
+            ) : undefined
+          } 
           onClick={go({ name: 'notifications' })} 
         />
         <HubRow icon="settings" label={t('more.settings')} onClick={go({ name: 'settings' })} />
