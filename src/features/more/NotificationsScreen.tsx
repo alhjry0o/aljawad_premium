@@ -12,14 +12,16 @@ export function NotificationsScreen() {
   const [pressTimer, setPressTimer] = useState<any>(null);
 
   const handlePressStart = (e: React.MouseEvent | React.TouchEvent, id: string) => {
-    const clientX = 'touches' in e ? e.touches[0].clientX : (e as React.MouseEvent).clientX;
-    const clientY = 'touches' in e ? e.touches[0].clientY : (e as React.MouseEvent).clientY;
-    const { notifications, deleteNotification, markAllAsRead } = useNotificationsStore();
+  const clientX = 'touches' in e ? e.touches[0].clientX : (e as React.MouseEvent).clientX;
+  const clientY = 'touches' in e ? e.touches[0].clientY : (e as React.MouseEvent).clientY;
+  const { notifications, unreadCount, deleteNotification, markAllAsRead } = useNotificationsStore();
   
-  // ✅ وضع علامة "مقروء" على جميع الإشعارات عند فتح الشاشة
+  // ✅ مراقبة عدد الإشعارات غير المقروءة، وتحديدها كمقروءة بمجرد توفرها
   useEffect(() => {
-    markAllAsRead();
-  }, [markAllAsRead]);
+    if (unreadCount > 0) {
+      markAllAsRead();
+    }
+  }, [unreadCount, markAllAsRead]);
     
     const timer = setTimeout(() => {
       setContextMenu({ id, x: clientX, y: clientY });
