@@ -366,47 +366,26 @@ function Shell() {
   const backToast = useAndroidBackButton();
   useKeyboardWatcher();
   const { isOpen, closeDrawer } = useDrawer();
-  const { addNotification } = useNotificationsStore();
-  
+
   useEffect(() => {
-    // ✅ دالة آمنة لمسح الإشعارات
-    const safeClearNotifications = async () => {
-      try {
-        await clearSystemNotifications();
-      } catch (e) {
-        console.error('Error clearing notifications:', e);
-      }
+    const safeClear = async () => {
+      try { await clearSystemNotifications(); } catch (e) {}
     };
 
-    // ✅ مسح الإشعارات عند العودة للتطبيق (بعد أن يستقر)
-    const appStateListener = CapacitorApp.addListener('appStateChange', ({ isActive }) => {
-      if (isActive) {
-        safeClearNotifications();
-      }
-    });
-
-    // ✅ تشغيل الإشعارات بحماية
     try {
       let deviceId = localStorage.getItem('aljawad.deviceId');
       if (!deviceId) {
         deviceId = `device-${Math.random().toString(36).substring(2, 15)}`;
         localStorage.setItem('aljawad.deviceId', deviceId);
       }
-
-      setupPushNotifications(deviceId, (notif) => {
-        addNotification(notif);
-      });
+      // نمرر دالة فارغة لأن المخزن أصبح يقرأ من Firebase
+      setupPushNotifications(deviceId, () => {});
     } catch (error) {
-      console.error('Failed to setup push notifications:', error);
+      console.error('Setup error:', error);
     }
 
-    // ✅ مسح الإشعارات فوراً بعد التحميل (لمرة واحدة)
-    safeClearNotifications();
-
-    return () => {
-      appStateListener.then(listener => listener.remove());
-    };
-  }, [addNotification]);
+    safeClear();
+  }, []);
   
   return (
     <div className="mx-auto min-h-[100svh] w-full max-w-[520px] bg-[color:var(--bg)] text-[color:var(--text)] shadow-[0_0_120px_rgba(0,0,0,0.45)]">
