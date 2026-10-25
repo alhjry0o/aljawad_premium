@@ -1,36 +1,40 @@
-import { useState } from 'react';
-import { useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNotificationsStore, type AppNotification } from '../../core/notificationsStore';
 import { useI18n } from '../../core/i18n';
 import { Glyph } from '../../components/icons';
 import { ScreenHeader } from '../../components/kit';
 
 export function NotificationsScreen() {
-  const { t, bi } = useI18n();
-  const { notifications, deleteNotification } = useNotificationsStore();
-  const [contextMenu, setContextMenu] = useState<{ id: string; x: number; y: number } | null>(null);
-  const [pressTimer, setPressTimer] = useState<any>(null);
-
-  const handlePressStart = (e: React.MouseEvent | React.TouchEvent, id: string) => {
-  const clientX = 'touches' in e ? e.touches[0].clientX : (e as React.MouseEvent).clientX;
-  const clientY = 'touches' in e ? e.touches[0].clientY : (e as React.MouseEvent).clientY;
+  const { bi } = useI18n();
+  // ✅ تم نقل هذا السطر ليكون في أعلى المكون (كان بالخطأ داخل دالة الضغط)
   const { notifications, unreadCount, deleteNotification, markAllAsRead } = useNotificationsStore();
   
-  // ✅ مراقبة عدد الإشعارات غير المقروءة، وتحديدها كمقروءة بمجرد توفرها
+  const [contextMenu, setContextMenu] = useState<{ id: string; x: number; y: number } | null>(null);
+  
+  // ✅ استخدام useRef بدلاً من useState للمؤقت (أفضل للأداء ولا يسبب إعادة رندر)
+  const pressTimer = useRef<any>(null);
+
+  // ✅ تحديد الإشعارات كمقروءة عند الدخول
   useEffect(() => {
     if (unreadCount > 0) {
       markAllAsRead();
     }
   }, [unreadCount, markAllAsRead]);
-    
-    const timer = setTimeout(() => {
-      setContextMenu({ id, x: clientX, y: clientY });
+
+  // ✅ دوال الضغط المطول باستخدام Pointer Events
+  const handlePointerDown = (e: React.PointerEvent, id: string) => {
+    pressTimer.current = setTimeout(() => {
+      setContextMenu({ id, x: e.clientX, y: e.clientY });
     }, 600); // 600ms للضغط المطول
-    setPressTimer(timer);
   };
 
-  const handlePressEnd = () => {
-    if (pressTimer) clearTimeout(pressTimer);
+  const handlePointerUp = () => {
+    if (pressTimer.current) clearTimeout(pressTimer.current);
+  };
+
+  // ✅ إذا قام المستخدم بتمرير الشاشة (التحريك)، نلغي المؤقت لكي لا تظهر القائمة
+  const handlePointerMove = () => {
+    if (pressTimer.current) clearTimeout(pressTimer.current);
   };
 
   const handleCopy = (notif: AppNotification) => {
@@ -57,12 +61,12 @@ export function NotificationsScreen() {
           notifications.map((notif) => (
             <div
               key={notif.id}
-              onMouseDown={(e) => handlePressStart(e, notif.id)}
-              onMouseUp={handlePressEnd}
-              onMouseLeave={handlePressEnd}
-              onTouchStart={(e) => handlePressStart(e, notif.id)}
-              onTouchEnd={handlePressEnd}
-              className={`relative p-4 rounded-[16px] border backdrop-blur-xl transition-all ${
+              // ✅ استبدلنا أحداث الماوس واللمس بـ Pointer Events لتعمل بسلاسة
+              onPointerDown={(e) => handlePointerDown(e, notif.id)}
+              onPointerUp={handlePointerUp}
+              onPointerLeave={handlePointerUp}
+              onPointerMove={handlePointerMove}
+              className={`relative p-4 rounded-[16px] border backdrop-blur-xl transition-all select-none ${
                 notif.read 
                   ? 'bg-white/[0.02] border-white/5' 
                   : 'bg-[color:var(--primary)]/10 border-[color:var(--primary)]/30'
@@ -88,10 +92,17 @@ export function NotificationsScreen() {
       {/* قائمة الخيارات (حذف / نسخ) */}
       {contextMenu && (
         <>
-          <div className="fixed inset-0 z-40" onClick={() => setContextMenu(null)} />
           <div 
-            className="fixed z-50 glass-panel rounded-xl overflow-hidden shadow-xl border border-white/20 flex flex-col min-w-[120px]"
-            style={{ top: Math.min(contextMenu.y, window.innerHeight - 120), left: Math.min(contextMenu.x, window.innerWidth - 140) }}
+            className="fixed inset-0 z-40" 
+            onClick={() => setContextMenu(null)} 
+            onPointerDown={() => setContextMenu(null)} 
+          />
+          <div 
+            className="fixed z-50 glass-panel rounded-xl overflow-hidden shadow-xl border border-white/20 flex flex-col min-w-[120px] animate-in fade-in zoom-in duration-200"
+            style={{ 
+              top: Math.min(contextMenu.y, window.innerHeight - 120), 
+              left: Math.min(contextMenu.x, window.innerWidth - 140) 
+            }}
           >
             <button 
               onClick={() => {
