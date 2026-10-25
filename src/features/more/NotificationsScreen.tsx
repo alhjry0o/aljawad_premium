@@ -6,33 +6,26 @@ import { ScreenHeader } from '../../components/kit';
 
 export function NotificationsScreen() {
   const { bi } = useI18n();
-  // ✅ تم نقل هذا السطر ليكون في أعلى المكون (كان بالخطأ داخل دالة الضغط)
   const { notifications, unreadCount, deleteNotification, markAllAsRead } = useNotificationsStore();
-  
   const [contextMenu, setContextMenu] = useState<{ id: string; x: number; y: number } | null>(null);
-  
-  // ✅ استخدام useRef بدلاً من useState للمؤقت (أفضل للأداء ولا يسبب إعادة رندر)
   const pressTimer = useRef<any>(null);
 
-  // ✅ تحديد الإشعارات كمقروءة عند الدخول
   useEffect(() => {
     if (unreadCount > 0) {
       markAllAsRead();
     }
   }, [unreadCount, markAllAsRead]);
-
-  // ✅ دوال الضغط المطول باستخدام Pointer Events
+  
   const handlePointerDown = (e: React.PointerEvent, id: string) => {
     pressTimer.current = setTimeout(() => {
       setContextMenu({ id, x: e.clientX, y: e.clientY });
-    }, 600); // 600ms للضغط المطول
+    }, 600); 
   };
 
   const handlePointerUp = () => {
     if (pressTimer.current) clearTimeout(pressTimer.current);
   };
 
-  // ✅ إذا قام المستخدم بتمرير الشاشة (التحريك)، نلغي المؤقت لكي لا تظهر القائمة
   const handlePointerMove = () => {
     if (pressTimer.current) clearTimeout(pressTimer.current);
   };
