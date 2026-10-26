@@ -55,6 +55,8 @@ function BottomNav() {
   const { tab, goTab, route } = useNav();
   const { t } = useI18n();
   const { unreadCount } = useNotificationsStore(); // ✅ جلب عدد الإشعارات غير المقروءة
+  const { requests, hasUnreadUpdate } = useRequests();
+  const hasUnreadRequests = requests.some(r => hasUnreadUpdate(r));
 
   if (!isMainTabRoute(route.name)) return null;
 
@@ -127,6 +129,14 @@ function BottomNav() {
                         strokeWidth={active ? 2.2 : 1.5} 
                         style={active ? { filter: 'drop-shadow(0 0 5px var(--primary))' } : undefined}
                       />
+
+                     {/* النقطة الحمراء لتبويب طلباتي */}
+                     {item.key === 'requests' && hasUnreadRequests && (
+                       <span className="absolute -top-1.5 -right-1.5 flex h-2.5 w-2.5">
+                         <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                         <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500 border border-[#0d1a17]"></span>
+                       </span>
+                     )}
 
                       {/* ✅ النقطة الحمراء للإشعارات غير المقروءة (تظهر فقط على زر المزيد) */}
                       {item.key === 'more' && unreadCount > 0 && (
