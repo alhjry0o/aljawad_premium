@@ -36,18 +36,18 @@ export function RequestsProvider({ children }: { children: ReactNode }) {
   });
 
   // ✅ دالة لحفظ الحالة كـ "مقروءة" عند فتح الطلب
-  const markRequestAsSeen = (id: string, status: string) => {
-    setSeenStatuses((prev) => {
-      const updated = { ...prev, [id]: status };
-      localStorage.setItem('aljawad.seenStatuses', JSON.stringify(updated));
-      return updated;
-    });
-  };
+const markRequestAsSeen = useCallback((id: string, status: string) => {
+  setSeenStatuses((prev) => {
+    if (prev[id] === status) return prev; // يمنع التحديث إذا كانت الحالة نفسها
+    const updated = { ...prev, [id]: status };
+    localStorage.setItem('aljawad.seenStatuses', JSON.stringify(updated));
+    return updated;
+  });
+}, []);
 
-  // ✅ دالة للتحقق مما إذا كان الطلب يحتوي على تحديث جديد
-  const hasUnreadUpdate = (request: any) => {
-    return seenStatuses[request.id] !== request.status;
-  };
+const hasUnreadUpdate = useCallback((request: any) => {
+  return seenStatuses[request.id] !== request.status;
+}, [seenStatuses]);
   
   const [loading, setLoading] = useState(true);
 
@@ -90,9 +90,9 @@ export function RequestsProvider({ children }: { children: ReactNode }) {
       markRequestAsSeen,
       hasUnreadUpdate,
     }),
-    [requests, loading, create, remove, clear, seenStatuses],
+    // ✅ أضفنا الدالتين هنا لكي يعرف React أنهما ثابتتان ولا تتغيران
+    [requests, loading, create, remove, clear, seenStatuses, markRequestAsSeen, hasUnreadUpdate],
   );
-
   return <RequestsContext.Provider value={value}>{children}</RequestsContext.Provider>;
 }
 
