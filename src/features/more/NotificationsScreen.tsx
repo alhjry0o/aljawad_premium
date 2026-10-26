@@ -10,11 +10,13 @@ export function NotificationsScreen() {
   const [contextMenu, setContextMenu] = useState<{ id: string; x: number; y: number } | null>(null);
   const pressTimer = useRef<any>(null);
 
+  // ✅ تحديد الإشعارات كمقروءة عند الدخول (تعمل مرة واحدة فقط)
   useEffect(() => {
     if (unreadCount > 0) {
       markAllAsRead();
     }
-  }, [unreadCount, markAllAsRead]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   
   const handlePointerDown = (e: React.PointerEvent, id: string) => {
     pressTimer.current = setTimeout(() => {
