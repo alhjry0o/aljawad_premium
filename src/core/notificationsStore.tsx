@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
-import { collection, onSnapshot, query, orderBy } from 'firebase/firestore';
+import { collection, onSnapshot, query, orderBy, where } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 
 export interface AppNotification {
@@ -19,9 +19,20 @@ interface NotificationContextType {
 
 const NotificationContext = createContext<NotificationContextType | null>(null);
 const STORAGE_KEY = 'aljawad.notifications_read';
+const INSTALL_TIME_KEY = 'aljawad.install_time'; // ✅ مفتاح لحفظ وقت أول تثبيت
 
 export function NotificationProvider({ children }: { children: ReactNode }) {
   const [remoteNotifications, setRemoteNotifications] = useState<AppNotification[]>([]);
+  
+  // ✅ جلب أو إنشاء وقت التثبيت
+  const [installTime] = useState<number>(() => {
+    const saved = localStorage.getItem(INSTALL_TIME_KEY);
+    if (saved) return Number(saved);
+    const now = Date.now();
+    localStorage.setItem(INSTALL_TIME_KEY, String(now));
+    return now;
+  });
+
   const [readIds, setReadIds] = useState<string[]>(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
@@ -29,27 +40,32 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
     } catch { return []; }
   });
 
-  // ✅ الاستماع المباشر للإشعارات من Firebase
+  // ✅ الاستماع المباشر للإشعارات من Firebase، مع فلترة القديم
   useEffect(() => {
-    const q = query(collection(db, 'notifications'), orderBy('createdAt', 'desc'));
+    // نجلب الإشعارات التي أُرسلت فقط بعد تاريخ تثبيت التطبيق
+    const q = query(
+      collection(db, 'notifications'), 
+      where('createdAt', '>=', installTime),
+      orderBy('createdAt', 'desc')
+    );
+
     const unsub = onSnapshot(q, (snap) => {
       const data = snap.docs.map(doc => ({
         id: doc.id,
         title: doc.data().title,
         body: doc.data().body,
         date: doc.data().createdAt,
-        read: false, // سيتم تحديدها بناءً على readIds
+        read: false,
       }));
       setRemoteNotifications(data);
     });
     return () => unsub();
-  }, []);
+  }, [installTime]);
 
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(readIds));
   }, [readIds]);
 
-  // دمج الإشعارات البعيدة مع حالة القراءة المحلية
   const notifications = remoteNotifications.map(n => ({
     ...n,
     read: readIds.includes(n.id)
@@ -61,7 +77,6 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
   };
 
   const deleteNotification = (id: string) => {
-    // الحذف من الواجهة فقط (لأن الإشعار في قاعدة البيانات مشترك)
     setReadIds(prev => [...prev, id]);
   };
 
