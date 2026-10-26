@@ -326,6 +326,7 @@ const submit = async () => {
                 key={field.key}
                 label={field.label}
                 value={form.specs[field.key] ?? ''}
+                placeholder={bi({ ar: 'أدخل القيمة هنا...', en: 'Enter value here...' })}
                 onChange={(e) => set('specs', { ...form.specs, [field.key]: e.target.value })}
               />
             ),
@@ -337,18 +338,21 @@ const submit = async () => {
               label={t('field.city')}
               value={form.city}
               error={errors.city}
+              placeholder={bi({ ar: 'مثال: الرياض', en: 'e.g. Riyadh' })}
               onChange={(e) => set('city', e.target.value)}
             />
             <TextField
               label={t('field.district')}
               hint={t('field.optional')}
               value={form.district}
+              placeholder={bi({ ar: 'مثال: حي العليا', en: 'e.g. Al Olaya' })}
               onChange={(e) => set('district', e.target.value)}
             />
             <TextField
               label={t('field.address')}
               value={form.address}
               error={errors.address}
+              placeholder={bi({ ar: 'مثال: شارع الملك فهد، مبنى 12', en: 'e.g. King Fahd Road, Building 12' })}
               onChange={(e) => set('address', e.target.value)}
             />
             <TextArea
@@ -356,6 +360,7 @@ const submit = async () => {
               hint={t('field.optional')}
               rows={3}
               value={form.extra}
+              placeholder={bi({ ar: 'مثال: بجانب مول الرياض جاليري، الدور الثالث...', en: 'e.g. Next to Riyadh Gallery Mall, 3rd floor...' })}
               onChange={(e) => set('extra', e.target.value)}
             />
           </>
@@ -386,6 +391,7 @@ const submit = async () => {
             hint={t('field.optional')}
             rows={6}
             value={form.notes}
+            placeholder={bi({ ar: 'اكتب أي تفاصيل تساعدنا في فهم طلبك بشكل أفضل (مثل: عدد الغرف، نوع الأرضيات، إلخ)...', en: 'Write any details that help us understand your request better (e.g. number of rooms, floor type)...' })}
             onChange={(e) => set('notes', e.target.value)}
           />
         )}
@@ -425,6 +431,7 @@ const submit = async () => {
               label={t('field.name')}
               value={form.name}
               error={errors.name}
+              placeholder={bi({ ar: 'مثال: عبدالله محمد', en: 'e.g. Abdullah Mohammed' })}
               onChange={(e) => set('name', e.target.value)}
             />
             <TextField
@@ -434,6 +441,7 @@ const submit = async () => {
               dir="ltr"
               value={form.phone}
               error={errors.phone}
+              placeholder="05XXXXXXXX"
               onChange={(e) => set('phone', e.target.value)}
             />
           </>
