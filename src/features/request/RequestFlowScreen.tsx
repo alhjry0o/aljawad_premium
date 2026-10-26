@@ -168,18 +168,29 @@ const submit = async () => {
   
   // 2. الإرسال إلى Firebase (لتظهر في لوحة التحكم)
   try {
-    await addDoc(collection(db, 'requests'), {
-      reference: created.reference, // نفس الرقم المرجعي
-      serviceId: form.serviceId,
-      serviceName: selected?.title.ar || 'خدمة', // اسم الخدمة
-      contact: { name: form.name.trim(), phone: form.phone.trim() },
-      notes: form.notes,
-      propertyType: form.propertyType,
-      location: { city: form.city, address: form.address },
-      status: 'submitted', // الحالة الافتراضية (جديد)
-      createdAt: Date.now(),
-      deviceId: localStorage.getItem('aljawad.deviceId'),
-    });
+      await addDoc(collection(db, 'requests'), {
+        reference: created.reference,
+        serviceId: form.serviceId,
+        serviceName: selected?.title.ar || 'خدمة',
+        contact: { name: form.name.trim(), phone: form.phone.trim() },
+        notes: form.notes,             // ✅ تفاصيل الطلب
+        propertyType: form.propertyType, // ✅ نوع الموقع
+        location: { 
+          city: form.city, 
+          district: form.district, 
+          address: form.address,
+          extra: form.extra           // ✅ تفاصيل إضافية
+        },
+        schedule: form.date ? { 
+          date: form.date, 
+          time: form.time             // ✅ الوقت
+        } : null,
+        photos: form.photos,           // ✅ الصور
+        specs: form.specs,             // ✅ المواصفات
+        status: 'submitted',
+        createdAt: Date.now(),
+        deviceId: localStorage.getItem('aljawad.deviceId'), 
+      });
     console.log('تم إرسال الطلب إلى لوحة التحكم بنجاح');
   } catch (error) {
     console.error('خطأ في الاتصال بـ Firebase:', error);
