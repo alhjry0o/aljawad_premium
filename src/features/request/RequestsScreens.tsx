@@ -236,12 +236,13 @@ export function RequestDetailScreen({ id }: { id: string }) {
   
   // نستخدم الحالة الحية إذا وُجدت، وإلا الحالة المحلية
   const currentStatus = liveStatus || request.status;
-  // ✅ تسجيل الحالة كـ "مقروءة" بمجرد فتح الطلب
+  // ✅ تسجيل الحالة كـ "مقروءة" عند فتح الشاشة (تعمل فقط عند تغيير الطلب)
   useEffect(() => {
     if (request) {
       markRequestAsSeen(request.id, currentStatus);
     }
-  }, [request, currentStatus, markRequestAsSeen]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [request?.id]);
   
   const reached = TIMELINE_ORDER.indexOf(currentStatus);
 
