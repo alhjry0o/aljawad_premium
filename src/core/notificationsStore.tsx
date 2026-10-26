@@ -1,7 +1,6 @@
-import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
+import { createContext, useContext, useEffect, useState, useMemo, useCallback, type ReactNode } from 'react';
 import { collection, onSnapshot, query, orderBy, where } from 'firebase/firestore';
 import { db } from '../lib/firebase';
-import { limit } from 'firebase/firestore';
 
 export interface AppNotification {
   id: string;
@@ -20,12 +19,11 @@ interface NotificationContextType {
 
 const NotificationContext = createContext<NotificationContextType | null>(null);
 const STORAGE_KEY = 'aljawad.notifications_read';
-const INSTALL_TIME_KEY = 'aljawad.install_time'; // ✅ مفتاح لحفظ وقت أول تثبيت
+const INSTALL_TIME_KEY = 'aljawad.install_time';
 
 export function NotificationProvider({ children }: { children: ReactNode }) {
   const [remoteNotifications, setRemoteNotifications] = useState<AppNotification[]>([]);
   
-  // ✅ جلب أو إنشاء وقت التثبيت
   const [installTime] = useState<number>(() => {
     const saved = localStorage.getItem(INSTALL_TIME_KEY);
     if (saved) return Number(saved);
@@ -41,26 +39,30 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
     } catch { return []; }
   });
 
-  // ✅ الاستماع المباشر للإشعارات من Firebase، مع فلترة القديم
   useEffect(() => {
-    // نجلب الإشعارات التي أُرسلت فقط بعد تاريخ تثبيت التطبيق
     const q = query(
       collection(db, 'notifications'), 
       where('createdAt', '>=', installTime),
-      orderBy('createdAt', 'desc'),
-      limit(50) // ✅ جلب آخر 50 إشعاراً فقط للحفاظ على سرعة التطبيق
+      orderBy('createdAt', 'desc')
     );
 
-    const unsub = onSnapshot(q, (snap) => {
-      const data = snap.docs.map(doc => ({
-        id: doc.id,
-        title: doc.data().title,
-        body: doc.data().body,
-        date: doc.data().createdAt,
-        read: false,
-      }));
-      setRemoteNotifications(data);
-    });
+    const unsub = onSnapshot(
+      q, 
+      (snap) => {
+        const data = snap.docs.map(doc => ({
+          id: doc.id,
+          title: doc.data().title,
+          body: doc.data().body,
+          date: doc.data().createdAt,
+          read: false,
+        }));
+        setRemoteNotifications(data);
+      },
+      (error) => {
+        console.warn("Firebase Notifications Query Error:", error.message);
+      }
+    );
+    
     return () => unsub();
   }, [installTime]);
 
@@ -68,26 +70,33 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(readIds));
   }, [readIds]);
 
-  const notifications = remoteNotifications.map(n => ({
-    ...n,
-    read: readIds.includes(n.id)
-  }));
+  const notifications = useMemo(() => {
+    return remoteNotifications.map(n => ({
+      ...n,
+      read: readIds.includes(n.id)
+    }));
+  }, [remoteNotifications, readIds]);
 
-  const markAllAsRead = () => {
+  const markAllAsRead = useCallback(() => {
     const allIds = notifications.map(n => n.id);
-    setReadIds(prev => Array.from(new Set([...prev, ...allIds])));
-  };
+    setReadIds(prev => {
+      const newIds = Array.from(new Set([...prev, ...allIds]));
+      return newIds.length === prev.length ? prev : newIds;
+    });
+  }, [notifications]);
 
-  const deleteNotification = (id: string) => {
-    setReadIds(prev => [...prev, id]);
-  };
+  const deleteNotification = useCallback((id: string) => {
+    setReadIds(prev => prev.includes(id) ? prev : [...prev, id]);
+  }, []);
 
-  const unreadCount = notifications.filter((n) => !n.read).length;
+  const unreadCount = useMemo(() => notifications.filter((n) => !n.read).length, [notifications]);
+
+  const value = useMemo(() => ({
+    notifications, unreadCount, markAllAsRead, deleteNotification
+  }), [notifications, unreadCount, markAllAsRead, deleteNotification]);
 
   return (
-    <NotificationContext.Provider
-      value={{ notifications, unreadCount, markAllAsRead, deleteNotification }}
-    >
+    <NotificationContext.Provider value={value}>
       {children}
     </NotificationContext.Provider>
   );
