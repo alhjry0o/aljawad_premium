@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
 import { collection, onSnapshot, query, orderBy, where } from 'firebase/firestore';
 import { db } from '../lib/firebase';
+import { limit } from 'firebase/firestore';
 
 export interface AppNotification {
   id: string;
@@ -46,7 +47,8 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
     const q = query(
       collection(db, 'notifications'), 
       where('createdAt', '>=', installTime),
-      orderBy('createdAt', 'desc')
+      orderBy('createdAt', 'desc'),
+      limit(50) // ✅ جلب آخر 50 إشعاراً فقط للحفاظ على سرعة التطبيق
     );
 
     const unsub = onSnapshot(q, (snap) => {
