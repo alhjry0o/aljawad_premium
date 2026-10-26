@@ -5,7 +5,7 @@ import {
   useEffect,
   useMemo,
   useState,
-  type ReactNode, useEffect,
+  type ReactNode,
 } from 'react';
 import { requestRepository, type AppRequest } from '../data/requests';
 
@@ -18,15 +18,16 @@ interface RequestsValue {
   remove: (id: string) => Promise<void>;
   clear: () => Promise<void>;
   byId: (id: string) => AppRequest | undefined;
-  markRequestAsSeen: (id: string, status: string) => void; // ✅
-  hasUnreadUpdate: (request: AppRequest) => boolean;      // ✅
+  markRequestAsSeen: (id: string, status: string) => void; 
+  hasUnreadUpdate: (request: AppRequest) => boolean;      
 }
 
 const RequestsContext = createContext<RequestsValue | null>(null);
 
 export function RequestsProvider({ children }: { children: ReactNode }) {
   const [requests, setRequests] = useState<AppRequest[]>([]);
- // ✅ حالة لتتبع الحالات التي رآها المستخدم
+  const [loading, setLoading] = useState(true);
+
   const [seenStatuses, setSeenStatuses] = useState<Record<string, string>>(() => {
     try {
       return JSON.parse(localStorage.getItem('aljawad.seenStatuses') || '{}');
@@ -35,21 +36,18 @@ export function RequestsProvider({ children }: { children: ReactNode }) {
     }
   });
 
-  // ✅ دالة لحفظ الحالة كـ "مقروءة" عند فتح الطلب
-const markRequestAsSeen = useCallback((id: string, status: string) => {
-  setSeenStatuses((prev) => {
-    if (prev[id] === status) return prev; // يمنع التحديث إذا كانت الحالة نفسها
-    const updated = { ...prev, [id]: status };
-    localStorage.setItem('aljawad.seenStatuses', JSON.stringify(updated));
-    return updated;
-  });
-}, []);
+  const markRequestAsSeen = useCallback((id: string, status: string) => {
+    setSeenStatuses((prev) => {
+      if (prev[id] === status) return prev;
+      const updated = { ...prev, [id]: status };
+      localStorage.setItem('aljawad.seenStatuses', JSON.stringify(updated));
+      return updated;
+    });
+  }, []);
 
-const hasUnreadUpdate = useCallback((request: any) => {
-  return seenStatuses[request.id] !== request.status;
-}, [seenStatuses]);
-  
-  const [loading, setLoading] = useState(true);
+  const hasUnreadUpdate = useCallback((request: any) => {
+    return seenStatuses[request.id] !== request.status;
+  }, [seenStatuses]);
 
   useEffect(() => {
     let active = true;
@@ -90,9 +88,9 @@ const hasUnreadUpdate = useCallback((request: any) => {
       markRequestAsSeen,
       hasUnreadUpdate,
     }),
-    // ✅ أضفنا الدالتين هنا لكي يعرف React أنهما ثابتتان ولا تتغيران
     [requests, loading, create, remove, clear, seenStatuses, markRequestAsSeen, hasUnreadUpdate],
   );
+
   return <RequestsContext.Provider value={value}>{children}</RequestsContext.Provider>;
 }
 
