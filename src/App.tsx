@@ -388,10 +388,12 @@ function Shell() {
         deviceId = `device-${Math.random().toString(36).substring(2, 15)}`;
         localStorage.setItem('aljawad.deviceId', deviceId);
       }
-      // نمرر دالة فارغة لأن المخزن أصبح يقرأ من Firebase
-      setupPushNotifications(deviceId, () => {});
+      // ✅ الحماية: إذا فشلت الإشعارات، لن ينهار التطبيق
+      setupPushNotifications(deviceId, () => {}).catch((err) => {
+        console.error('Notification Setup Failed:', err);
+      });
     } catch (error) {
-      console.error('Setup error:', error);
+      console.error('Sync Setup Error:', error);
     }
 
     safeClear();
@@ -399,22 +401,11 @@ function Shell() {
   
   return (
     <div className="mx-auto min-h-[100svh] w-full max-w-[520px] bg-[color:var(--bg)] text-[color:var(--text)] shadow-[0_0_120px_rgba(0,0,0,0.45)]">
-      <div
-        aria-hidden
-        className="pointer-events-none fixed inset-x-0 top-0 z-20 mx-auto w-full max-w-[520px] bg-[color:var(--bg)]"
-        style={{ height: 'env(safe-area-inset-top)' }}
-      />
-      <div
-        aria-hidden
-        className="pointer-events-none fixed inset-x-0 bottom-0 z-30 mx-auto w-full max-w-[520px] bg-[color:var(--bg)]/75 backdrop-blur-xl"
-        style={{ height: 'max(env(safe-area-inset-bottom), 0.75rem)' }}
-      />
-
+      <div aria-hidden className="pointer-events-none fixed inset-x-0 top-0 z-20 mx-auto w-full max-w-[520px] bg-[color:var(--bg)]" style={{ height: 'env(safe-area-inset-top)' }} />
+      <div aria-hidden className="pointer-events-none fixed inset-x-0 bottom-0 z-30 mx-auto w-full max-w-[520px] bg-[color:var(--bg)]/75 backdrop-blur-xl" style={{ height: 'max(env(safe-area-inset-bottom), 0.75rem)' }} />
       <Outlet />
       <BottomNav />
       {backToast && <Toast message={backToast} />}
-      
-      {/* ✅ تركيب القائمة الجانبية هنا لتظهر فوق كل شيء */}
       <SideDrawer open={isOpen} onClose={closeDrawer} />
     </div>
   );
