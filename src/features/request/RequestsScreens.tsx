@@ -43,6 +43,7 @@ function StatusPill({ status }: { status: RequestStatus }) {
 function RequestCard({ request, onOpen }: { request: AppRequest; onOpen: () => void }) {
   const { t, bi } = useI18n();
   const service = getService(request.serviceId);
+  const { hasUnreadUpdate } = useRequests();
   
   return (
     <button
@@ -57,6 +58,14 @@ function RequestCard({ request, onOpen }: { request: AppRequest; onOpen: () => v
             {request.reference}
           </span>
           <span className="text-[0.66rem] text-white/40">· {t(kindKey(request.kind))}</span>
+          
+          {/* ✅ النقطة الحمراء تظهر هنا إذا كان هناك تحديث */}
+          {hasUnreadUpdate(request) && (
+            <span className="ml-auto flex h-2.5 w-2.5">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500"></span>
+            </span>
+          )}
         </span>
         <span className="mt-1 block truncate text-[0.95rem] font-bold tracking-tight text-white/90">
           {service ? bi(service.title) : '—'}
@@ -189,7 +198,7 @@ const TIMELINE_ORDER: RequestStatus[] = [
 
 export function RequestDetailScreen({ id }: { id: string }) {
   const { t, bi } = useI18n();
-  const { byId, remove } = useRequests();
+  const { byId, remove, markRequestAsSeen } = useRequests(); 
   const { back, goTab } = useNav();
   const request = byId(id);
   
@@ -227,6 +236,13 @@ export function RequestDetailScreen({ id }: { id: string }) {
   
   // نستخدم الحالة الحية إذا وُجدت، وإلا الحالة المحلية
   const currentStatus = liveStatus || request.status;
+  // ✅ تسجيل الحالة كـ "مقروءة" بمجرد فتح الطلب
+  useEffect(() => {
+    if (request) {
+      markRequestAsSeen(request.id, currentStatus);
+    }
+  }, [request, currentStatus, markRequestAsSeen]);
+  
   const reached = TIMELINE_ORDER.indexOf(currentStatus);
 
   return (
