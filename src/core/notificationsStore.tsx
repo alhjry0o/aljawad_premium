@@ -40,28 +40,33 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
   });
 
   useEffect(() => {
-    const q = query(
-      collection(db, 'notifications'), 
-      where('createdAt', '>=', installTime),
-      orderBy('createdAt', 'desc')
-    );
+    let unsub = () => {};
+    try {
+      const q = query(
+        collection(db, 'notifications'), 
+        where('createdAt', '>=', installTime),
+        orderBy('createdAt', 'desc')
+      );
 
-    const unsub = onSnapshot(
-      q, 
-      (snap) => {
-        const data = snap.docs.map(doc => ({
-          id: doc.id,
-          title: doc.data().title,
-          body: doc.data().body,
-          date: doc.data().createdAt,
-          read: false,
-        }));
-        setRemoteNotifications(data);
-      },
-      (error) => {
-        console.warn("Firebase Notifications Query Error:", error.message);
-      }
-    );
+      unsub = onSnapshot(
+        q, 
+        (snap) => {
+          const data = snap.docs.map(doc => ({
+            id: doc.id,
+            title: doc.data().title,
+            body: doc.data().body,
+            date: doc.data().createdAt,
+            read: false,
+          }));
+          setRemoteNotifications(data);
+        },
+        (error) => {
+          console.warn("Firebase Notifications Query Error:", error.message);
+        }
+      );
+    } catch (err) {
+      console.error("Sync error in notifications query:", err);
+    }
     
     return () => unsub();
   }, [installTime]);
