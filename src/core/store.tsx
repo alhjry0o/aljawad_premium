@@ -5,8 +5,7 @@ import {
   useEffect,
   useMemo,
   useState,
-  type ReactNode,
-  useEffect,
+  type ReactNode, useEffect,
 } from 'react';
 import { requestRepository, type AppRequest } from '../data/requests';
 
