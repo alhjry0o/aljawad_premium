@@ -354,9 +354,9 @@ function Row({ label, value }: { label: string; value: string }) {
 
 export function SuccessScreen({ id }: { id: string }) {
   const { t, bi } = useI18n();
-  const { byId } = useRequests();
+  const { byId, requests } = useRequests(); // ✅ جلبنا المصفوفة كاملة
   const { goTab, replace } = useNav();
-  const request = byId(id);
+  const request = byId(id) || requests.find(r => r.reference === id);
   const service = request ? getService(request.serviceId) : undefined;
 
   return (
