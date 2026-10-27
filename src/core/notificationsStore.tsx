@@ -26,6 +26,7 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
   
   const [installTime] = useState<number>(() => {
     const saved = localStorage.getItem(INSTALL_TIME_KEY);
+    const DELETED_KEY = 'aljawad.notifications_deleted';
     if (saved) return Number(saved);
     const now = Date.now();
     localStorage.setItem(INSTALL_TIME_KEY, String(now));
@@ -38,7 +39,14 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
       return saved ? JSON.parse(saved) : [];
     } catch { return []; }
   });
-
+  
+  const [deletedIds, setDeletedIds] = useState<string[]>(() => {
+    try {
+      const saved = localStorage.getItem(DELETED_KEY);
+      return saved ? JSON.parse(saved) : [];
+    } catch { return []; }
+  }); 
+  
   useEffect(() => {
     let unsub = () => {};
     try {
@@ -47,7 +55,11 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
         where('createdAt', '>=', installTime),
         orderBy('createdAt', 'desc')
       );
-
+      
+  useEffect(() => {
+    localStorage.setItem(DELETED_KEY, JSON.stringify(deletedIds));
+  }, [deletedIds]);
+      
       unsub = onSnapshot(
         q, 
         (snap) => {
@@ -76,11 +88,13 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
   }, [readIds]);
 
   const notifications = useMemo(() => {
-    return remoteNotifications.map(n => ({
-      ...n,
-      read: readIds.includes(n.id)
-    }));
-  }, [remoteNotifications, readIds]);
+    return remoteNotifications
+      .filter(n => !deletedIds.includes(n.id)) // ✅ تصفية المحذوفات
+      .map(n => ({
+        ...n,
+        read: readIds.includes(n.id)
+      }));
+  }, [remoteNotifications, readIds, deletedIds]);
 
   const markAllAsRead = useCallback(() => {
     const allIds = notifications.map(n => n.id);
@@ -91,7 +105,7 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
   }, [notifications]);
 
   const deleteNotification = useCallback((id: string) => {
-    setReadIds(prev => prev.includes(id) ? prev : [...prev, id]);
+    setDeletedIds(prev => prev.includes(id) ? prev : [...prev, id]);
   }, []);
 
   const unreadCount = useMemo(() => notifications.filter((n) => !n.read).length, [notifications]);
