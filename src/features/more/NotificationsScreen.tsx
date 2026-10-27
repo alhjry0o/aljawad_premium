@@ -95,10 +95,10 @@ export function NotificationsScreen() {
             onPointerDown={() => setContextMenu(null)} 
           />
           <div 
-            className="fixed z-50 glass-panel rounded-xl overflow-hidden shadow-xl border border-white/20 flex flex-col min-w-[120px] animate-in fade-in zoom-in duration-200"
+            className="fixed z-50 rounded-2xl overflow-hidden shadow-[0_20px_50px_-12px_rgba(0,0,0,0.95),inset_0_1px_0_0_rgba(255,255,255,0.1)] border border-white/10 bg-[#0a1512]/95 backdrop-blur-2xl flex flex-col min-w-[140px] animate-in fade-in zoom-in-95 duration-200"
             style={{ 
               top: Math.min(contextMenu.y, window.innerHeight - 120), 
-              left: Math.min(contextMenu.x, window.innerWidth - 140) 
+              left: Math.min(contextMenu.x, window.innerWidth - 150) 
             }}
           >
             <button 
@@ -106,16 +106,16 @@ export function NotificationsScreen() {
                 const notif = notifications.find(n => n.id === contextMenu.id);
                 if (notif) handleCopy(notif);
               }}
-              className="px-4 py-3 text-sm text-white hover:bg-white/10 flex items-center gap-2 text-start"
+              className="px-5 py-3.5 text-sm font-semibold text-[#5fe0a5] drop-shadow-[0_0_8px_rgba(43,211,140,0.6)] hover:bg-[#5fe0a5]/10 flex items-center gap-3 text-start transition-colors"
             >
-              <Glyph name="quote" size={14} /> {bi({ ar: 'نسخ', en: 'Copy' })}
+              <Glyph name="quote" size={16} className="text-[#5fe0a5]" /> {bi({ ar: 'نسخ', en: 'Copy' })}
             </button>
-            <div className="h-px bg-white/10" />
+            <div className="h-px bg-gradient-to-r from-transparent via-white/10 to-transparent mx-2" />
             <button 
               onClick={() => handleDelete(contextMenu.id)}
-              className="px-4 py-3 text-sm text-red-400 hover:bg-red-500/10 flex items-center gap-2 text-start"
+              className="px-5 py-3.5 text-sm font-semibold text-red-500 drop-shadow-[0_0_8px_rgba(239,68,68,0.6)] hover:bg-red-500/10 flex items-center gap-3 text-start transition-colors"
             >
-              <Glyph name="close" size={14} /> {bi({ ar: 'حذف', en: 'Delete' })}
+              <Glyph name="close" size={16} className="text-red-500" /> {bi({ ar: 'حذف', en: 'Delete' })}
             </button>
           </div>
         </>
