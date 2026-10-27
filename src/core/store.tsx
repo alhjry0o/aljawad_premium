@@ -7,7 +7,7 @@ import {
   useState,
   type ReactNode,
 } from 'react';
-import { collection, onSnapshot, query, orderBy } from 'firebase/firestore';
+import { collection, onSnapshot, query, orderBy, where } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 import { requestRepository, type AppRequest } from '../data/requests';
 
@@ -25,10 +25,20 @@ interface RequestsValue {
 }
 
 const RequestsContext = createContext<RequestsValue | null>(null);
+const INSTALL_TIME_KEY = 'aljawad.install_time'; // ✅ نفس مفتاح وقت التثبيت
 
 export function RequestsProvider({ children }: { children: ReactNode }) {
   const [requests, setRequests] = useState<AppRequest[]>([]);
   const [loading, setLoading] = useState(true);
+
+  // ✅ جلب وقت التثبيت (مشترك مع الإشعارات)
+  const [installTime] = useState<number>(() => {
+    const saved = localStorage.getItem(INSTALL_TIME_KEY);
+    if (saved) return Number(saved);
+    const now = Date.now();
+    localStorage.setItem(INSTALL_TIME_KEY, String(now));
+    return now;
+  });
 
   const [seenStatuses, setSeenStatuses] = useState<Record<string, string>>(() => {
     try {
@@ -38,23 +48,27 @@ export function RequestsProvider({ children }: { children: ReactNode }) {
     }
   });
 
-  // ✅ المزامنة اللحظية مع Firebase
+  // ✅ المزامنة اللحظية مع Firebase مع فلترة الوقت
   useEffect(() => {
-    // جلب البيانات المحلية أولاً (للتجربة السريعة)
+    // 1. جلب الطلبات المحلية (التي أنشأها المستخدم بعد التثبيت)
     requestRepository.list().then((items) => {
-      setRequests(items);
+      const filteredLocal = items.filter(i => new Date(i.createdAt).getTime() >= installTime);
+      setRequests(filteredLocal);
     });
 
-    // الاستماع للتحديثات من Firebase
-    const q = query(collection(db, 'requests'), orderBy('createdAt', 'desc'));
+    // 2. الاستماع للطلبات من Firebase (التي تم إنشاؤها بعد التثبيت فقط)
+    const q = query(
+      collection(db, 'requests'), 
+      where('createdAt', '>=', installTime),
+      orderBy('createdAt', 'desc')
+    );
     
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const remoteRequests = snapshot.docs.map((doc) => {
         const data = doc.data();
         return {
           ...data,
-          id: doc.id, // استخدام معرف Firebase
-          // تحويل التاريخ من رقم إلى نص متوافق مع النوع AppRequest
+          id: doc.id, 
           createdAt: new Date(data.createdAt).toISOString(), 
           timeline: [{ status: data.status || 'submitted', at: new Date().toISOString() }],
           kind: data.kind || 'service',
@@ -65,16 +79,13 @@ export function RequestsProvider({ children }: { children: ReactNode }) {
       });
 
       setRequests((prevLocal) => {
-        // دمج الطلبات البعيدة مع المحلية
+        // دمج الطلبات القادمة من Firebase مع الطلبات المحلية
         const merged = [...remoteRequests];
-        
-        // إضافة الطلبات المحلية التي لم تصل إلى Firebase بعد
         prevLocal.forEach((localReq) => {
           if (!merged.find((r) => r.reference === localReq.reference)) {
             merged.push(localReq);
           }
         });
-        
         return merged.sort((a, b) => 
           new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
         );
@@ -84,7 +95,7 @@ export function RequestsProvider({ children }: { children: ReactNode }) {
     });
 
     return () => unsubscribe();
-  }, []);
+  }, [installTime]);
 
   const markRequestAsSeen = useCallback((id: string, status: string) => {
     setSeenStatuses((prev) => {
@@ -96,14 +107,26 @@ export function RequestsProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const hasUnreadUpdate = useCallback((request: any) => {
-    return seenStatuses[request.id] !== request.status;
+    const seen = seenStatuses[request.id];
+    if (!seen) {
+      // إذا لم نره من قبل، نعتبره مقروءاً إذا كان 'submitted' (طلب جديد أنشأه المستخدم)
+      // وإلا فهو غير مقروء (بسبب تحديث من الإدارة)
+      return request.status !== 'submitted'; 
+    }
+    return seen !== request.status;
   }, [seenStatuses]);
 
   const create = useCallback<RequestsValue['create']>(async (input) => {
     const created = await requestRepository.create(input);
-    // لا نقوم بتحديث الحالة هنا، الاستماع في Firebase سيقوم بذلك
+    
+    // ✅ إضافة الطلب فوراً للواجهة لكي تعمل شاشة النجاح (تحتوي على البيانات والزر)
+    setRequests(prev => [created, ...prev]);
+    
+    // ✅ اعتبار الطلب الجديد مقروءاً فوراً (لا تظهر عليه نقطة حمراء)
+    markRequestAsSeen(created.id, 'submitted');
+    
     return created;
-  }, []);
+  }, [markRequestAsSeen]);
 
   const remove = useCallback(async (id: string) => {
     await requestRepository.remove(id);
