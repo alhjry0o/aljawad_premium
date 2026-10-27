@@ -197,8 +197,9 @@ const submit = async () => {
     // لا نوقف العملية، الطلب محفوظ محلياً على الأقل
   }
 
-    setSubmitting(false);
-    push({ name: 'success', id: created.reference });
+  setSubmitting(false);
+  push({ name: 'success', id: created.reference });
+  }; 
 
   const onPhotos = async (e: ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files ?? []).slice(0, 4);
