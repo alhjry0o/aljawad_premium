@@ -28,7 +28,9 @@ export function NotificationsScreen() {
     if (pressTimer.current) clearTimeout(pressTimer.current);
   };
 
-  const handlePointerMove = () => {
+  const handlePointerMove = (e: React.PointerEvent) => {
+    // ✅ إلغاء المؤقت فقط إذا تحرك الإصبع مسافة كبيرة (للتمرير)
+    // نحتاج إلى حفظ النقطة الأولى، لكن للتبسيط، سنكتفي بإلغاء المؤقت إذا حدث حركة
     if (pressTimer.current) clearTimeout(pressTimer.current);
   };
 
@@ -56,12 +58,12 @@ export function NotificationsScreen() {
           notifications.map((notif) => (
             <div
               key={notif.id}
-              // ✅ استبدلنا أحداث الماوس واللمس بـ Pointer Events لتعمل بسلاسة
               onPointerDown={(e) => handlePointerDown(e, notif.id)}
               onPointerUp={handlePointerUp}
               onPointerLeave={handlePointerUp}
               onPointerMove={handlePointerMove}
-              className={`relative p-4 rounded-[16px] border backdrop-blur-xl transition-all select-none ${
+              onContextMenu={(e) => e.preventDefault()} // ✅ منع قائمة المتصفح الافتراضية
+              className={`relative p-4 rounded-[16px] border backdrop-blur-xl transition-all select-none touch-none ${
                 notif.read 
                   ? 'bg-white/[0.02] border-white/5' 
                   : 'bg-[color:var(--primary)]/10 border-[color:var(--primary)]/30'
