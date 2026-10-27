@@ -37,6 +37,37 @@ import { NotificationProvider, useNotificationsStore } from './core/notification
 import { setupPushNotifications, clearSystemNotifications } from './core/notifications';
 import { NotificationsScreen } from './features/more/NotificationsScreen';
 
+import React, { Component, ErrorInfo, ReactNode } from 'react';
+
+class ErrorBoundary extends Component<{children: ReactNode}, {hasError: boolean, error: Error | null}> {
+  constructor(props: any) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+
+  static getDerivedStateFromError(error: Error) {
+    return { hasError: true, error };
+  }
+
+  componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+    console.error("Uncaught error:", error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div style={{ padding: 20, color: 'white', backgroundColor: '#b91c1c', zIndex: 9999, position: 'absolute', inset: 0, overflow: 'auto', direction: 'ltr' }}>
+          <h1 style={{ color: 'white', fontSize: '20px', fontWeight: 'bold' }}>حدث خطأ برمجي!</h1>
+          <p style={{ marginTop: '10px' }}>الرجاء أخذ لقطة شاشة لهذا الخطأ وإرسالها للمطور:</p>
+          <pre style={{ whiteSpace: 'pre-wrap', fontSize: '12px', marginTop: '10px' }}>{this.state.error?.toString()}</pre>
+          <pre style={{ whiteSpace: 'pre-wrap', fontSize: '10px', marginTop: '10px', opacity: 0.8 }}>{this.state.error?.stack}</pre>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+
 /* ----------------------------------------------------- Bottom navigation */
 
 const MAIN_TAB_ROUTES = ['home', 'services', 'requests', 'projects', 'more'] as const;
@@ -435,18 +466,20 @@ function Root() {
     
 export default function App() {
   return (
-    <ThemeProvider>
-      <I18nProvider>
-        <CompanyProvider>
-          <RequestsProvider>
-            <ProjectsProvider>
-              <DrawerProvider>
-                <Root />
-              </DrawerProvider>
-            </ProjectsProvider>
-          </RequestsProvider>
-        </CompanyProvider>
-      </I18nProvider>
-    </ThemeProvider>
+    <ErrorBoundary>
+      <ThemeProvider>
+        <I18nProvider>
+          <CompanyProvider>
+            <RequestsProvider>
+              <ProjectsProvider>
+                <DrawerProvider>
+                  <Root />
+                </DrawerProvider>
+              </ProjectsProvider>
+            </RequestsProvider>
+          </CompanyProvider>
+        </I18nProvider>
+      </ThemeProvider>
+    </ErrorBoundary>
   );
 }
