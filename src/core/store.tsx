@@ -7,6 +7,8 @@ import {
   useState,
   type ReactNode,
 } from 'react';
+import { collection, onSnapshot, query, orderBy } from 'firebase/firestore';
+import { db } from '../lib/firebase';
 import { requestRepository, type AppRequest } from '../data/requests';
 
 interface RequestsValue {
@@ -36,6 +38,54 @@ export function RequestsProvider({ children }: { children: ReactNode }) {
     }
   });
 
+  // ✅ المزامنة اللحظية مع Firebase
+  useEffect(() => {
+    // جلب البيانات المحلية أولاً (للتجربة السريعة)
+    requestRepository.list().then((items) => {
+      setRequests(items);
+    });
+
+    // الاستماع للتحديثات من Firebase
+    const q = query(collection(db, 'requests'), orderBy('createdAt', 'desc'));
+    
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const remoteRequests = snapshot.docs.map((doc) => {
+        const data = doc.data();
+        return {
+          ...data,
+          id: doc.id, // استخدام معرف Firebase
+          // تحويل التاريخ من رقم إلى نص متوافق مع النوع AppRequest
+          createdAt: new Date(data.createdAt).toISOString(), 
+          timeline: [{ status: data.status || 'submitted', at: new Date().toISOString() }],
+          kind: data.kind || 'service',
+          photos: data.photos || [],
+          location: data.location || { city: '', district: '', address: '' },
+          contact: data.contact || { name: '', phone: '' },
+        } as AppRequest;
+      });
+
+      setRequests((prevLocal) => {
+        // دمج الطلبات البعيدة مع المحلية
+        const merged = [...remoteRequests];
+        
+        // إضافة الطلبات المحلية التي لم تصل إلى Firebase بعد
+        prevLocal.forEach((localReq) => {
+          if (!merged.find((r) => r.reference === localReq.reference)) {
+            merged.push(localReq);
+          }
+        });
+        
+        return merged.sort((a, b) => 
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        );
+      });
+      
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
   const markRequestAsSeen = useCallback((id: string, status: string) => {
     setSeenStatuses((prev) => {
       if (prev[id] === status) return prev;
@@ -49,27 +99,15 @@ export function RequestsProvider({ children }: { children: ReactNode }) {
     return seenStatuses[request.id] !== request.status;
   }, [seenStatuses]);
 
-  useEffect(() => {
-    let active = true;
-    requestRepository.list().then((items) => {
-      if (!active) return;
-      setRequests(items);
-      setLoading(false);
-    });
-    return () => {
-      active = false;
-    };
-  }, []);
-
   const create = useCallback<RequestsValue['create']>(async (input) => {
     const created = await requestRepository.create(input);
-    setRequests(await requestRepository.list());
+    // لا نقوم بتحديث الحالة هنا، الاستماع في Firebase سيقوم بذلك
     return created;
   }, []);
 
   const remove = useCallback(async (id: string) => {
     await requestRepository.remove(id);
-    setRequests(await requestRepository.list());
+    setRequests((prev) => prev.filter((r) => r.id !== id));
   }, []);
 
   const clear = useCallback(async () => {
