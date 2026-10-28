@@ -400,13 +400,13 @@ function Shell() {
       
       // ✅ دالة الاستقبال تستخدم navRef لضمان استخدام أحدث دوال التنقل
       setupPushNotifications(deviceId, (notif) => {
-        console.log('Notification Screen Target:', notif.screen); // للتشخيص
+        // 🚨 رسالة تشخيصية 2: ماذا قرأ التطبيق؟
+        alert('الشاشة المطلوبة: ' + notif.screen); 
         
         if (notif.screen === 'requests') {
           navRef.current.goTab('requests');
         } else if (notif.screen === 'notifications') {
           navRef.current.goTab('more');
-          // تأخير بسيط لضمان اكتمال الانتقال لتبويب "المزيد" قبل فتح الإشعارات
           setTimeout(() => {
             navRef.current.push({ name: 'notifications' });
           }, 100); 
