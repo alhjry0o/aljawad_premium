@@ -20,6 +20,7 @@ interface NotificationContextType {
 const NotificationContext = createContext<NotificationContextType | null>(null);
 const STORAGE_KEY = 'aljawad.notifications_read';
 const INSTALL_TIME_KEY = 'aljawad.install_time';
+const DELETED_KEY = 'aljawad.notifications_deleted'; // ✅ السطر الناقص
 
 export function NotificationProvider({ children }: { children: ReactNode }) {
   const [remoteNotifications, setRemoteNotifications] = useState<AppNotification[]>([]);
