@@ -2,12 +2,10 @@ import { PushNotifications, Channel } from '@capacitor/push-notifications';
 import { doc, setDoc } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 import { Capacitor } from '@capacitor/core';
-import { useNotificationsStore } from './notificationsStore'; // لا يمكن استخدام هوك هنا مباشرة
 
-// بدلاً من ذلك، سنستخدم دالة رد نداء (Callback) يتم تمريرها من App.tsx
 export async function setupPushNotifications(
   deviceId: string,
-  onNotificationReceived: (notif: { title: string; body: string }) => void
+  onNotificationReceived: (notif: { title: string; body: string; screen?: string }) => void
 ) {
   if (!Capacitor.isNativePlatform()) return;
 
@@ -45,21 +43,29 @@ export async function setupPushNotifications(
   // ✅ استقبال الإشعار أثناء فتح التطبيق
   PushNotifications.addListener('pushNotificationReceived', (notification) => {
     if (notification.title && notification.body) {
-      onNotificationReceived({ title: notification.title, body: notification.body });
+      onNotificationReceived({ 
+        title: notification.title, 
+        body: notification.body,
+        screen: notification.data?.screen // ✅ قراءة العلامة
+      });
     }
   });
 
   // ✅ عند فتح التطبيق من خلال الضغط على الإشعار
   PushNotifications.addListener('pushNotificationActionPerformed', (action) => {
     if (action.notification.title && action.notification.body) {
-      onNotificationReceived({ title: action.notification.title, body: action.notification.body });
+      onNotificationReceived({ 
+        title: action.notification.title, 
+        body: action.notification.body,
+        screen: action.notification.data?.screen // ✅ قراءة العلامة
+      });
       // مسح الإشعار من شريط الإشعارات
       PushNotifications.removeAllDeliveredNotifications();
     }
   });
 }
 
-// ✅ مسح جميع الإشعارات من شريط إشعارات الهاتف عند فتح التطبيق
+// ✅ مسح جميع الإشعارات من شريط إشعارات الهاتف
 export async function clearSystemNotifications() {
   if (Capacitor.isNativePlatform()) {
     try {
