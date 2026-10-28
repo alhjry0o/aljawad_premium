@@ -65,6 +65,7 @@ export async function setupPushNotifications(
       PushNotifications.removeAllDeliveredNotifications();
     }
   });
+} 
 
 // ✅ مسح جميع الإشعارات من شريط إشعارات الهاتف
 export async function clearSystemNotifications() {
