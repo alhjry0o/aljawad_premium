@@ -8,30 +8,52 @@ export function NotificationsScreen() {
   const { bi } = useI18n();
   const { notifications, unreadCount, deleteNotification, markAllAsRead } = useNotificationsStore();
   const [contextMenu, setContextMenu] = useState<{ id: string; x: number; y: number } | null>(null);
+  
   const pressTimer = useRef<any>(null);
+  const touchStartPos = useRef<{ x: number; y: number } | null>(null);
 
-  // ✅ تحديد الإشعارات كمقروءة عند الدخول (تعمل مرة واحدة فقط)
   useEffect(() => {
     if (unreadCount > 0) {
       markAllAsRead();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  
-  const handlePointerDown = (e: React.PointerEvent, id: string) => {
+
+  // ✅ دالة بدء الضغط
+  const handleTouchStart = (e: React.TouchEvent, id: string) => {
+    const touch = e.touches[0];
+    touchStartPos.current = { x: touch.clientX, y: touch.clientY };
+    
+    // بدء المؤقت (600 مللي ثانية)
     pressTimer.current = setTimeout(() => {
-      setContextMenu({ id, x: e.clientX, y: e.clientY });
-    }, 600); 
+      setContextMenu({ id, x: touch.clientX, y: touch.clientY });
+    }, 600);
   };
 
-  const handlePointerUp = () => {
-    if (pressTimer.current) clearTimeout(pressTimer.current);
+  // ✅ دالة التحريك (لمنع الإلغاء بسبب اهتزاز الإصبع)
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (!touchStartPos.current || !pressTimer.current) return;
+
+    const touch = e.touches[0];
+    const distance = Math.sqrt(
+      Math.pow(touch.clientX - touchStartPos.current.x, 2) + 
+      Math.pow(touch.clientY - touchStartPos.current.y, 2)
+    );
+
+    // إذا تحرك الإصبع أكثر من 10 بكسل، نلغي المؤقت (لأن المستخدم يمرر الشاشة)
+    if (distance > 10) {
+      clearTimeout(pressTimer.current);
+      pressTimer.current = null;
+    }
   };
 
-  const handlePointerMove = (e: React.PointerEvent) => {
-    // ✅ إلغاء المؤقت فقط إذا تحرك الإصبع مسافة كبيرة (للتمرير)
-    // نحتاج إلى حفظ النقطة الأولى، لكن للتبسيط، سنكتفي بإلغاء المؤقت إذا حدث حركة
-    if (pressTimer.current) clearTimeout(pressTimer.current);
+  // ✅ دالة إنهاء الضغط
+  const handleTouchEnd = () => {
+    if (pressTimer.current) {
+      clearTimeout(pressTimer.current);
+      pressTimer.current = null;
+    }
+    touchStartPos.current = null;
   };
 
   const handleCopy = (notif: AppNotification) => {
@@ -58,12 +80,11 @@ export function NotificationsScreen() {
           notifications.map((notif) => (
             <div
               key={notif.id}
-              onPointerDown={(e) => handlePointerDown(e, notif.id)}
-              onPointerUp={handlePointerUp}
-              onPointerLeave={handlePointerUp}
-              onPointerMove={handlePointerMove}
-              onContextMenu={(e) => e.preventDefault()} // ✅ منع قائمة المتصفح الافتراضية
-              className={`relative p-4 rounded-[16px] border backdrop-blur-xl transition-all select-none touch-none ${
+              // ✅ استخدام أحداث اللمس بدلاً من المؤشرات
+              onTouchStart={(e) => handleTouchStart(e, notif.id)}
+              onTouchMove={handleTouchMove}
+              onTouchEnd={handleTouchEnd}
+              className={`relative p-4 rounded-[16px] border backdrop-blur-xl transition-all select-none touch-manipulation ${
                 notif.read 
                   ? 'bg-white/[0.02] border-white/5' 
                   : 'bg-[color:var(--primary)]/10 border-[color:var(--primary)]/30'
@@ -92,7 +113,7 @@ export function NotificationsScreen() {
           <div 
             className="fixed inset-0 z-40" 
             onClick={() => setContextMenu(null)} 
-            onPointerDown={() => setContextMenu(null)} 
+            onTouchStart={() => setContextMenu(null)} 
           />
           <div 
             className="fixed z-50 rounded-2xl overflow-hidden shadow-[0_20px_50px_-12px_rgba(0,0,0,0.95),inset_0_1px_0_0_rgba(255,255,255,0.1)] border border-white/10 bg-[#0a1512]/95 backdrop-blur-2xl flex flex-col min-w-[140px] animate-in fade-in zoom-in-95 duration-200"
