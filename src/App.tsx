@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState, Component, ErrorInfo, ReactNode } from 'react';
 import { Capacitor } from '@capacitor/core';
 import { App as CapacitorApp } from '@capacitor/app';
 import { I18nProvider, useI18n } from './core/i18n';
@@ -32,13 +32,10 @@ import { cn } from './utils/cn';
 import { OnboardingScreen, ONBOARDING_KEY } from './features/onboarding/OnboardingScreen';
 import { DrawerProvider, useDrawer } from './core/drawer';
 import { SideDrawer } from './components/SideDrawer';
-import { useEffect } from 'react'; 
 import { NotificationProvider, useNotificationsStore } from './core/notificationsStore';
 import { setupPushNotifications, clearSystemNotifications } from './core/notifications';
 import { NotificationsScreen } from './features/more/NotificationsScreen';
 import { useRequests } from './core/store';
-
-import React, { Component, ErrorInfo, ReactNode } from 'react';
 
 class ErrorBoundary extends Component<{children: ReactNode}, {hasError: boolean, error: Error | null}> {
   constructor(props: any) {
@@ -86,7 +83,7 @@ const TABS: { key: TabKey; icon: GlyphName; labelKey: Parameters<ReturnType<type
 function BottomNav() {
   const { tab, goTab, route } = useNav();
   const { t } = useI18n();
-  const { unreadCount } = useNotificationsStore(); // ✅ جلب عدد الإشعارات غير المقروءة
+  const { unreadCount } = useNotificationsStore(); 
   const { requests, hasUnreadUpdate } = useRequests();
   const hasUnreadRequests = requests.some(r => hasUnreadUpdate(r));
 
@@ -102,26 +99,16 @@ function BottomNav() {
       className="hide-on-keyboard pointer-events-none fixed inset-x-0 bottom-0 z-40 flex justify-center pb-[max(env(safe-area-inset-bottom),1.1rem)]"
     >
       <div className="pointer-events-auto relative mx-auto max-w-[92vw]">
-        
-        {/* 1. هالة النيون الخلفية العميقة */}
         <div
           aria-hidden
           className="pointer-events-none absolute -inset-4 rounded-full opacity-50 blur-3xl transition-all duration-500"
-          style={{
-            background: 'radial-gradient(80% 100% at 50% 70%, var(--glow), transparent 70%)',
-          }}
+          style={{ background: 'radial-gradient(80% 100% at 50% 70%, var(--glow), transparent 70%)' }}
         />
-
-        {/* 2. الشريط الزجاجي الاحترافي */}
         <div className="relative overflow-hidden rounded-full border border-white/15 bg-[color:var(--elevated)]/45 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.85),inset_0_1px_2px_rgba(255,255,255,0.15),inset_0_-1px_1px_rgba(0,0,0,0.4)] backdrop-blur-3xl">
-          
-          {/* خط لمعان زجاجي علوي حاد */}
           <span
             aria-hidden
             className="pointer-events-none absolute inset-x-8 top-0 h-[1.5px] bg-gradient-to-r from-transparent via-white/30 to-transparent"
           />
-
-          {/* توهج النيون الأرضي المتحرك */}
           <span
             aria-hidden
             className="pointer-events-none absolute bottom-0 h-8 w-16 rounded-full opacity-80 blur-xl transition-[inset-inline-start] duration-500 ease-[cubic-bezier(.16,1,.3,1)]"
@@ -130,7 +117,6 @@ function BottomNav() {
               insetInlineStart: `calc(${tabCenterPercent}% - 32px)`,
             }}
           />
-
           <ul className="relative flex items-center gap-1.5 px-3 py-2">
             {TABS.map((item) => {
               const active = item.key === tab;
@@ -147,8 +133,6 @@ function BottomNav() {
                         : 'text-[color:var(--faint)] hover:text-white/80',
                     )}
                   >
-                    {/* 4. محاكي الأيقونة ثلاثية الأبعاد */}
-                    {/* ✅ أضفنا 'relative' هنا لكي تتمركز النقطة الحمراء بشكل صحيح */}
                     <div 
                       className={cn(
                         "relative transition-all duration-300 transform",
@@ -161,16 +145,12 @@ function BottomNav() {
                         strokeWidth={active ? 2.2 : 1.5} 
                         style={active ? { filter: 'drop-shadow(0 0 5px var(--primary))' } : undefined}
                       />
-
-                     {/* النقطة الحمراء لتبويب طلباتي */}
                      {item.key === 'requests' && hasUnreadRequests && (
                        <span className="absolute -top-1.5 -right-1.5 flex h-2.5 w-2.5">
                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
                          <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500 border border-[#0d1a17]"></span>
                        </span>
                      )}
-
-                      {/* ✅ النقطة الحمراء للإشعارات غير المقروءة (تظهر فقط على زر المزيد) */}
                       {item.key === 'more' && unreadCount > 0 && (
                         <span className="absolute -top-1.5 -right-1.5 flex h-2.5 w-2.5">
                           <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
@@ -178,8 +158,6 @@ function BottomNav() {
                         </span>
                       )}
                     </div>
-
-                    {/* النص التوضيحي */}
                     <span
                       className={cn(
                         'text-[0.6rem] tracking-wide transition-all duration-300 font-medium',
@@ -188,8 +166,6 @@ function BottomNav() {
                     >
                       {t(item.labelKey)}
                     </span>
-
-                    {/* مؤشر نقطي مضيء متوهج أسفل النص */}
                     {active && (
                       <span className="absolute bottom-1 h-1 w-1 rounded-full bg-[color:var(--primary)] shadow-[0_0_8px_var(--primary)] animate-pulse" />
                     )}
@@ -229,19 +205,16 @@ function useAndroidBackButton() {
       const isMain = isMainTabRoute(s.route.name);
       const isHome = s.route.name === 'home';
 
-      // 1. في شاشة فرعية ← ارجع للخلف
       if (s.canGoBack) {
         s.back();
         return;
       }
 
-      // 2. في تبويب غير الرئيسية ← اذهب للرئيسية
       if (isMain && !isHome) {
         s.goTab('home');
         return;
       }
 
-      // 3. في الرئيسية ← ضغطتان للخروج
       if (isHome) {
         const now = Date.now();
         if (now - lastPressRef.current < 2000) {
@@ -328,7 +301,6 @@ function Outlet() {
   const prevKeyRef = useRef<string>('');
   const currentKey = JSON.stringify(route);
 
-  // حفظ موضع التمرير عند كل تمرير
   useEffect(() => {
     const onScroll = () => {
       const k = prevKeyRef.current;
@@ -338,7 +310,6 @@ function Outlet() {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  // استعادة موضع التمرير عند تغيير المسار
   useLayoutEffect(() => {
     const target = scrollMapRef.current[currentKey] ?? 0;
     prevKeyRef.current = currentKey;
@@ -355,7 +326,6 @@ function Outlet() {
     };
   }, [currentKey]);
 
-  // تأثير fade-in
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
@@ -408,6 +378,7 @@ function Shell() {
   const backToast = useAndroidBackButton();
   useKeyboardWatcher();
   const { isOpen, closeDrawer } = useDrawer();
+  const { goTab, push } = useNav(); // ✅ جلبنا دوال التنقل
 
   useEffect(() => {
     const safeClear = async () => {
@@ -420,8 +391,16 @@ function Shell() {
         deviceId = `device-${Math.random().toString(36).substring(2, 15)}`;
         localStorage.setItem('aljawad.deviceId', deviceId);
       }
-      // ✅ الحماية: إذا فشلت الإشعارات، لن ينهار التطبيق
-      setupPushNotifications(deviceId, () => {}).catch((err) => {
+      
+      setupPushNotifications(deviceId, (notif) => {
+        // ✅ التوجيه الذكي بناءً على العلامة
+        if (notif.screen === 'requests') {
+          goTab('requests');
+        } else if (notif.screen === 'notifications') {
+          goTab('more');
+          push({ name: 'notifications' }); // الانتقال لشاشة الإشعارات
+        }
+      }).catch((err) => {
         console.error('Notification Setup Failed:', err);
       });
     } catch (error) {
@@ -429,7 +408,7 @@ function Shell() {
     }
 
     safeClear();
-  }, []);
+  }, [goTab, push]); // ✅ إضافة الاعتماديات
   
   return (
     <div className="mx-auto min-h-[100svh] w-full max-w-[520px] bg-[color:var(--bg)] text-[color:var(--text)] shadow-[0_0_120px_rgba(0,0,0,0.45)]">
