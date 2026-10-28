@@ -53,17 +53,18 @@ export async function setupPushNotifications(
 
   // ✅ عند فتح التطبيق من خلال الضغط على الإشعار
   PushNotifications.addListener('pushNotificationActionPerformed', (action) => {
+    // 🚨 رسالة تشخيصية 1: ماذا استلم التطبيق؟
+    alert('بيانات الإشعار المستلمة: ' + JSON.stringify(action.notification.data));
+    
     if (action.notification.title && action.notification.body) {
       onNotificationReceived({ 
         title: action.notification.title, 
         body: action.notification.body,
-        screen: action.notification.data?.screen // ✅ قراءة العلامة
+        screen: action.notification.data?.screen
       });
-      // مسح الإشعار من شريط الإشعارات
       PushNotifications.removeAllDeliveredNotifications();
     }
   });
-}
 
 // ✅ مسح جميع الإشعارات من شريط إشعارات الهاتف
 export async function clearSystemNotifications() {
