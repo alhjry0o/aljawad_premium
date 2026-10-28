@@ -378,7 +378,13 @@ function Shell() {
   const backToast = useAndroidBackButton();
   useKeyboardWatcher();
   const { isOpen, closeDrawer } = useDrawer();
-  const { goTab, push } = useNav(); // ✅ جلبنا دوال التنقل
+  const nav = useNav(); // ✅ نجلب كائن التنقل بالكامل
+
+  // ✅ نستخدم useRef لتخزين أحدث نسخة من دوال التنقل
+  const navRef = useRef(nav);
+  useEffect(() => {
+    navRef.current = nav;
+  }, [nav]);
 
   useEffect(() => {
     const safeClear = async () => {
@@ -392,13 +398,18 @@ function Shell() {
         localStorage.setItem('aljawad.deviceId', deviceId);
       }
       
+      // ✅ دالة الاستقبال تستخدم navRef لضمان استخدام أحدث دوال التنقل
       setupPushNotifications(deviceId, (notif) => {
-        // ✅ التوجيه الذكي بناءً على العلامة
+        console.log('Notification Screen Target:', notif.screen); // للتشخيص
+        
         if (notif.screen === 'requests') {
-          goTab('requests');
+          navRef.current.goTab('requests');
         } else if (notif.screen === 'notifications') {
-          goTab('more');
-          push({ name: 'notifications' }); // الانتقال لشاشة الإشعارات
+          navRef.current.goTab('more');
+          // تأخير بسيط لضمان اكتمال الانتقال لتبويب "المزيد" قبل فتح الإشعارات
+          setTimeout(() => {
+            navRef.current.push({ name: 'notifications' });
+          }, 100); 
         }
       }).catch((err) => {
         console.error('Notification Setup Failed:', err);
@@ -408,7 +419,7 @@ function Shell() {
     }
 
     safeClear();
-  }, [goTab, push]); // ✅ إضافة الاعتماديات
+  }, []); // ✅ مصفوفة فارغة: يعمل مرة واحدة فقط عند فتح التطبيق
   
   return (
     <div className="mx-auto min-h-[100svh] w-full max-w-[520px] bg-[color:var(--bg)] text-[color:var(--text)] shadow-[0_0_120px_rgba(0,0,0,0.45)]">
