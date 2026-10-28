@@ -47,19 +47,17 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
     } catch { return []; }
   }); 
   
+  // 1️⃣ التأثير الخاص بجلب الإشعارات من Firebase
   useEffect(() => {
     let unsub = () => {};
     try {
+      // ✅ جلب آخر 50 إشعار بدون تعقيدات الفهارس
       const q = query(
         collection(db, 'notifications'), 
-        where('createdAt', '>=', installTime),
-        orderBy('createdAt', 'desc')
+        orderBy('createdAt', 'desc'),
+        limit(50) 
       );
-      
-  useEffect(() => {
-    localStorage.setItem(DELETED_KEY, JSON.stringify(deletedIds));
-  }, [deletedIds]);
-      
+
       unsub = onSnapshot(
         q, 
         (snap) => {
@@ -69,7 +67,8 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
             body: doc.data().body,
             date: doc.data().createdAt,
             read: false,
-          }));
+          })).filter(d => d.date >= installTime); // ✅ فلترة محلية
+          
           setRemoteNotifications(data);
         },
         (error) => {
@@ -83,9 +82,15 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
     return () => unsub();
   }, [installTime]);
 
+  // 2️⃣ التأثير الخاص بحفظ الإشعارات المقروءة في الذاكرة
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(readIds));
   }, [readIds]);
+
+  // 3️⃣ التأثير الخاص بحفظ الإشعارات المحذوفة في الذاكرة
+  useEffect(() => {
+    localStorage.setItem(DELETED_KEY, JSON.stringify(deletedIds));
+  }, [deletedIds]);
 
   const notifications = useMemo(() => {
     return remoteNotifications
