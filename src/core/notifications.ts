@@ -40,32 +40,33 @@ export async function setupPushNotifications(
     }
   });
 
-  // ✅ استقبال الإشعار أثناء فتح التطبيق
   PushNotifications.addListener('pushNotificationReceived', (notification) => {
     if (notification.title && notification.body) {
       onNotificationReceived({ 
         title: notification.title, 
         body: notification.body,
-        screen: notification.data?.screen // ✅ قراءة العلامة
+        screen: notification.data?.screen
       });
     }
   });
 
-  // ✅ عند فتح التطبيق من خلال الضغط على الإشعار
+  // ✅ الحل السحري: حفظ نية الانتقال في الذاكرة قبل أن يستيقظ التطبيق
   PushNotifications.addListener('pushNotificationActionPerformed', (action) => {
     if (action.notification.title && action.notification.body) {
+      const screen = action.notification.data?.screen;
+      if (screen) {
+        localStorage.setItem('aljawad.pending_route', screen);
+      }
       onNotificationReceived({ 
         title: action.notification.title, 
         body: action.notification.body,
-        screen: action.notification.data?.screen
+        screen: screen
       });
-      // مسح الإشعار من شريط الإشعارات
       PushNotifications.removeAllDeliveredNotifications();
     }
   });
-} 
+}
 
-// ✅ مسح جميع الإشعارات من شريط إشعارات الهاتف
 export async function clearSystemNotifications() {
   if (Capacitor.isNativePlatform()) {
     try {
