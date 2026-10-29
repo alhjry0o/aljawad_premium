@@ -378,13 +378,34 @@ function Shell() {
   const backToast = useAndroidBackButton();
   useKeyboardWatcher();
   const { isOpen, closeDrawer } = useDrawer();
-  const nav = useNav(); // ✅ نجلب كائن التنقل بالكامل
+  const nav = useNav();
 
-  // ✅ نستخدم useRef لتخزين أحدث نسخة من دوال التنقل
   const navRef = useRef(nav);
   useEffect(() => {
     navRef.current = nav;
   }, [nav]);
+
+  // ✅ قراءة "نية الانتقال" المخزنة وتنفيذها بمجرد اكتمال التحميل
+  useEffect(() => {
+    const pendingRoute = localStorage.getItem('aljawad.pending_route');
+    
+    if (pendingRoute) {
+      // مسح النية فوراً حتى لا تتكرر
+      localStorage.removeItem('aljawad.pending_route');
+
+      // تأخير بسيط جداً للتأكد من أن واجهات React قد استقرت
+      setTimeout(() => {
+        if (pendingRoute === 'requests') {
+          navRef.current.goTab('requests');
+        } else if (pendingRoute === 'notifications') {
+          navRef.current.goTab('more');
+          setTimeout(() => {
+            navRef.current.push({ name: 'notifications' });
+          }, 100); 
+        }
+      }, 500);
+    }
+  }, []);
 
   useEffect(() => {
     const safeClear = async () => {
@@ -398,20 +419,8 @@ function Shell() {
         localStorage.setItem('aljawad.deviceId', deviceId);
       }
       
-      // ✅ دالة الاستقبال تستخدم navRef لضمان استخدام أحدث دوال التنقل
-      setupPushNotifications(deviceId, (notif) => {
-        // ✅ تأخير التنفيذ لكي يكتمل تحميل التطبيق
-        setTimeout(() => {
-          if (notif.screen === 'requests') {
-            navRef.current.goTab('requests');
-          } else if (notif.screen === 'notifications') {
-            navRef.current.goTab('more');
-            // تأخير بسيط إضافي للانتقال إلى الشاشة الفرعية
-            setTimeout(() => {
-              navRef.current.push({ name: 'notifications' });
-            }, 100); 
-          }
-        }, 1500); // 1.5 ثانية انتظار
+      setupPushNotifications(deviceId, () => {
+        // لا نحتاج لفعل شيء هنا لأن التوجيه يتم عبر localStorage
       }).catch((err) => {
         console.error('Notification Setup Failed:', err);
       });
@@ -420,7 +429,7 @@ function Shell() {
     }
 
     safeClear();
-  }, []); // ✅ مصفوفة فارغة: يعمل مرة واحدة فقط عند فتح التطبيق
+  }, []);
   
   return (
     <div className="mx-auto min-h-[100svh] w-full max-w-[520px] bg-[color:var(--bg)] text-[color:var(--text)] shadow-[0_0_120px_rgba(0,0,0,0.45)]">
