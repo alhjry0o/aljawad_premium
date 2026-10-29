@@ -400,17 +400,18 @@ function Shell() {
       
       // ✅ دالة الاستقبال تستخدم navRef لضمان استخدام أحدث دوال التنقل
       setupPushNotifications(deviceId, (notif) => {
-        // 🚨 رسالة تشخيصية 2: ماذا قرأ التطبيق؟
-        alert('الشاشة المطلوبة: ' + notif.screen); 
-        
-        if (notif.screen === 'requests') {
-          navRef.current.goTab('requests');
-        } else if (notif.screen === 'notifications') {
-          navRef.current.goTab('more');
-          setTimeout(() => {
-            navRef.current.push({ name: 'notifications' });
-          }, 100); 
-        }
+        // ✅ تأخير التنفيذ لكي يكتمل تحميل التطبيق
+        setTimeout(() => {
+          if (notif.screen === 'requests') {
+            navRef.current.goTab('requests');
+          } else if (notif.screen === 'notifications') {
+            navRef.current.goTab('more');
+            // تأخير بسيط إضافي للانتقال إلى الشاشة الفرعية
+            setTimeout(() => {
+              navRef.current.push({ name: 'notifications' });
+            }, 100); 
+          }
+        }, 1500); // 1.5 ثانية انتظار
       }).catch((err) => {
         console.error('Notification Setup Failed:', err);
       });
